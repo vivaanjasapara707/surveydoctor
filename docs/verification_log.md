@@ -25,7 +25,7 @@ Every item marked **[VERIFY]** in BLUEPRINT.md is listed here. The owner checks 
 **Note 5 — bfi reverse keys (6 October 2026).** Run from `backend/`:
 
 ```
-"C:\Program Files\R\R-4.6.1in\Rscript.exe" -e "library(psych); print(bfi.keys)"
+"C:\Program Files\R\R-4.6.1\bin\Rscript.exe" -e "library(psych); print(bfi.keys)"
 ```
 
 Output (psych 2.6.9):

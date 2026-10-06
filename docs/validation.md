@@ -11,6 +11,12 @@ This file records every comparison between SurveyDoctor and its reference implem
 | Even-odd (raw r) | `careless::evenodd`, correction undone | 1e-4 | Pass (2,696 respondents) | 2026-10-06 | 98 not recoverable because R clamps at −1 |
 | Psychometric synonyms, critval 0.60 | `careless::psychsyn(resample_na = FALSE)` | 1e-4 | Pass: 1 pair in both, missing for every respondent in both | 2026-10-06 | No numeric comparison possible at 0.60 |
 | Psychometric synonyms, critval 0.50 | `careless::psychsyn(resample_na = FALSE)` | 1e-4 | Pass (same 5 pairs; 2,628 values; same missing pattern) | 2026-10-06 | Default `resample_na = TRUE` differs; see below |
+| Cronbach's alpha | `psych::alpha` raw_alpha, complete cases per scale | 1e-3 | Pass (5 scales; max diff 3.3e-16) | 2026-10-06 | |
+| Alpha 95% CI | `psych::alpha` Feldt CI | 1e-3 | Pass (5 scales; max diff 4.6e-4) | 2026-10-06 | Difference comes from pingouin rounding bounds to 3 decimals; see below |
+| Alpha if item deleted | `psych::alpha` alpha.drop raw_alpha | 1e-3 | Pass (25 items; max diff 7.8e-16) | 2026-10-06 | |
+| Corrected item-total r | `psych::alpha` item.stats r.drop | 1e-3 | Pass (25 items; max diff 1.1e-15) | 2026-10-06 | |
+| One-factor loadings | `psych::fa(nfactors = 1, fm = "minres")` | 1e-3 | Pass (25 items; max diff 5.6e-6) | 2026-10-06 | Sign oriented to a non-negative sum on both sides |
+| Omega total | `psych::fa` loadings + same formula | 1e-3 | Pass (5 scales; max diff 2.5e-7) | 2026-10-06 | |
 
 ## Stage 3: careless-response indices — 6 October 2026
 
@@ -44,3 +50,33 @@ All 10 reference tests passed. Mismatches against the packages' *default* behavi
 ### Not compared
 
 - Person-total correlation and seconds per item have no `careless` equivalent listed in BLUEPRINT §8.2. They are covered by the hand-checked unit tests in `tests/test_careless.py`.
+
+## Stage 4: reliability — 6 October 2026
+
+**Setup.** R 4.6.1 with psych 2.6.9, GPArotation 2026.8.2 and jsonlite 2.0.0. `validation/reference_reliability.R` reads `data/sample/bfi.csv` and `bfi_schema.json`, reverse-scores the declared items, and for each of the five scales takes the respondents who answered all of that scale's items. It runs `psych::alpha(check.keys = FALSE)` and `psych::fa(nfactors = 1, fm = "minres", rotate = "none")`, computes omega total from the loadings with SurveyDoctor's formula, and writes `tests/fixtures/reference_reliability.json`. `tests/test_reference_r.py` checks that both sides use the same respondents (row ids), then compares every quantity.
+
+All 16 reliability reference tests passed. The maximum differences in the table were measured by running SurveyDoctor against the fixture in this session.
+
+| Scale | N used | alpha (R) | Feldt 95% CI (R) | omega total (R) |
+|---|---|---|---|---|
+| Agreeableness | 2709 | 0.7038 | 0.6857–0.7210 | 0.7240 |
+| Conscientiousness | 2707 | 0.7293 | 0.7128–0.7451 | 0.7338 |
+| Extraversion | 2713 | 0.7609 | 0.7464–0.7749 | 0.7634 |
+| Neuroticism | 2694 | 0.8133 | 0.8019–0.8242 | 0.8183 |
+| Openness | 2726 | 0.6025 | 0.5785–0.6257 | 0.6181 |
+
+(Values copied from the output of `Rscript validation/reference_reliability.R`, run 6 October 2026.)
+
+### Why complete cases on both sides
+
+`psych::alpha` and `psych::fa` use a **pairwise** correlation or covariance matrix when answers are missing. SurveyDoctor (BLUEPRINT §7.3) uses **listwise** complete cases per scale, and reports how many respondents were left out. The R script is given the same complete cases, so it computes the same definition. Pairwise results on all rows were not compared.
+
+### Alpha confidence interval: rounding, not a different method
+
+Both sides use Feldt's F-distribution interval. pingouin 0.7.0 rounds the bounds to 3 decimals, so they can differ from R by up to 5e-4 (observed maximum 4.6e-4). This is within the 1e-3 tolerance. The point estimate of alpha is not rounded.
+
+A second pingouin detail, which does not affect these results: `pingouin.cronbach_alpha` takes the sample size for the interval **before** its own listwise deletion. With missing values it would compute the interval with too many respondents. SurveyDoctor therefore removes incomplete rows itself before calling pingouin (`cronbach_alpha` refuses data with missing values).
+
+### Factor sign
+
+The sign of a factor is arbitrary. factor_analyzer returned all-negative loadings for Agreeableness on this data, and psych returned all-positive ones. Both sides flip the loadings, when needed, so that their sum is non-negative. Omega is unaffected by the flip because it uses (Σλ)².

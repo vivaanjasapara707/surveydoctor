@@ -19,10 +19,12 @@ import pytest
 
 from surveydoctor.careless import even_odd, irv, longstring, mahalanobis, psychsyn, synonym_pairs
 from surveydoctor.io import PreparedData, load_csv, prepare_data
+from surveydoctor.reliability import reliability
 from surveydoctor.schema import SurveySchema
 from tests.conftest import BFI_CSV, BFI_SCHEMA, FIXTURES
 
 CARELESS_FIXTURE = FIXTURES / "reference_careless.json"
+RELIABILITY_FIXTURE = FIXTURES / "reference_reliability.json"
 
 
 def _load_fixture(path: Path) -> dict[str, Any]:
@@ -161,3 +163,83 @@ def test_psychsyn_at_050_matches_careless(ref, raw):
     present = ~np.isnan(ours)
     assert present.sum() > 0
     np.testing.assert_allclose(ours[present], theirs[present], rtol=0, atol=1e-4)
+
+
+# ---------------------------------------------------------------------------- reliability
+#
+# Tolerances (BLUEPRINT §8.2): alpha 1e-3, omega total 1e-3. The other alpha statistics
+# (Feldt CI, alpha if deleted, corrected item-total r) and the one-factor loadings that feed
+# omega use the same tolerances as the quantity they belong to. pingouin rounds the CI
+# bounds to 3 decimals (error at most 5e-4), which fits within 1e-3.
+
+
+@pytest.fixture(scope="module")
+def rel_ref() -> dict[str, Any]:
+    return _load_fixture(RELIABILITY_FIXTURE)
+
+
+@pytest.fixture(scope="module")
+def rel_ours(rel_ref):
+    schema = SurveySchema.load(BFI_SCHEMA)
+    prepared = prepare_data(load_csv(BFI_CSV), schema)
+    return schema, prepared, reliability(prepared, schema)
+
+
+def _by_item(values: dict[str, float], items: list[str]) -> np.ndarray:
+    return np.array([values[item] for item in items], dtype=float)
+
+
+def test_reliability_uses_same_scales_and_respondents_as_r(rel_ref, rel_ours):
+    schema, prepared, ours = rel_ours
+    assert list(rel_ref["scales"]) == list(schema.scales) == list(ours)
+    ids = prepared.meta["id"].astype(int)
+    for name, ref_scale in rel_ref["scales"].items():
+        assert ours[name].items == ref_scale["items"]
+        assert ours[name].n_used == ref_scale["n_used"]
+        complete = prepared.scored_items[schema.scales[name]].notna().all(axis=1)
+        assert ids[complete].tolist() == ref_scale["id"]
+
+
+@pytest.mark.parametrize(
+    "scale", ["Agreeableness", "Conscientiousness", "Extraversion", "Neuroticism", "Openness"]
+)
+def test_alpha_matches_psych(rel_ref, rel_ours, scale):
+    ours, ref_scale = rel_ours[2][scale], rel_ref["scales"][scale]
+    assert ours.alpha == pytest.approx(ref_scale["raw_alpha"], abs=1e-3)
+    assert ours.alpha_ci[0] == pytest.approx(ref_scale["feldt_lower"], abs=1e-3)
+    assert ours.alpha_ci[1] == pytest.approx(ref_scale["feldt_upper"], abs=1e-3)
+
+
+@pytest.mark.parametrize(
+    "scale", ["Agreeableness", "Conscientiousness", "Extraversion", "Neuroticism", "Openness"]
+)
+def test_item_stats_match_psych(rel_ref, rel_ours, scale):
+    ours, ref_scale = rel_ours[2][scale], rel_ref["scales"][scale]
+    items = ref_scale["items"]
+    np.testing.assert_allclose(
+        ours.item_stats.loc[items, "corrected_item_total"].to_numpy(),
+        _by_item(ref_scale["corrected_item_total"], items),
+        rtol=0,
+        atol=1e-3,
+    )
+    np.testing.assert_allclose(
+        ours.item_stats.loc[items, "alpha_if_deleted"].to_numpy(),
+        _by_item(ref_scale["alpha_if_deleted"], items),
+        rtol=0,
+        atol=1e-3,
+    )
+
+
+@pytest.mark.parametrize(
+    "scale", ["Agreeableness", "Conscientiousness", "Extraversion", "Neuroticism", "Openness"]
+)
+def test_omega_total_matches_psych_fa(rel_ref, rel_ours, scale):
+    ours, ref_scale = rel_ours[2][scale], rel_ref["scales"][scale]
+    items = ref_scale["items"]
+    np.testing.assert_allclose(
+        ours.loadings.loc[items].to_numpy(),
+        _by_item(ref_scale["fa_loadings"], items),
+        rtol=0,
+        atol=1e-3,
+    )
+    assert ours.omega_total == pytest.approx(ref_scale["omega_total"], abs=1e-3)

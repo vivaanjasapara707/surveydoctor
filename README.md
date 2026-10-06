@@ -4,7 +4,7 @@ SurveyDoctor checks the quality of rating-scale survey data (careless responding
 
 **Status:** under construction. See `BLUEPRINT.md` for the full plan. No evaluation results are reported yet; they will be copied here from generated files in `backend/results/` once they exist.
 
-**Reference validation against R:** run for the careless-response indices only (longstring, IRV, Mahalanobis, even-odd, psychometric synonyms). Reliability and factor-structure comparisons are not built yet. Results and documented differences: `docs/validation.md`.
+**Reference validation against R:** run for the careless-response indices (longstring, IRV, Mahalanobis, even-odd, psychometric synonyms) and reliability (alpha with CI, alpha if deleted, corrected item-total correlation, omega total). Factor-structure comparisons are not built yet. Results and documented differences: `docs/validation.md`.
 
 ## Run the backend tests locally
 
@@ -26,7 +26,8 @@ Requires R with the packages `careless`, `psych`, `GPArotation` and `jsonlite`. 
 ```bash
 cd backend
 Rscript validation/reference_careless.R
+Rscript validation/reference_reliability.R
 pytest tests/test_reference_r.py
 ```
 
-On Windows, if `Rscript` is not on PATH, use its full path, e.g. `"C:\Program Files\R\R-4.6.1in\Rscript.exe"`.
+On Windows, if `Rscript` is not on PATH, use its full path, e.g. `"C:\Program Files\R\R-4.6.1\bin\Rscript.exe"`.

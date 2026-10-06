@@ -64,3 +64,35 @@ Each entry records a choice the blueprint left open (or a forced deviation) and 
 ### Observed on the bfi sample (from running `compute_indices`)
 - Only one item pair correlates above 0.60 (N1–N2, r = 0.707), so psychometric synonyms are NaN for everyone, with a warning, under the default rule. This follows the spec; the report will need to explain it.
 - 364 respondents have at least one missing answer, so they have no Mahalanobis distance.
+
+## Stage 3 — 6 October 2026
+
+### R setup
+- R 4.6.1 is installed at `C:\Program Files\R\R-4.6.1` and is not on PATH, so scripts are run with the full path to `Rscript.exe`. The packages (careless 1.2.2, psych 2.6.9, GPArotation 2026.8.2, jsonlite 2.0.0) were installed into R's per-user library (`R_LIBS_USER`, under `%LOCALAPPDATA%\R\win-library\4.6`), because the system library in Program Files needs administrator rights. Rscript finds that library automatically.
+
+### Flag rules (`flagging.py`)
+- **`DEFAULT_RULES`** maps each rule to `{"enabled": bool, <threshold>: number}`. The threshold keys are `share_of_items` (longstring), `p_below` (Mahalanobis), `r_below` (even-odd, psychsyn, person-total) and `seconds_below` (seconds per item). `merge_rules` lays user settings over the defaults and rejects unknown names or out-of-range values with a plain-English message.
+- **`apply_flags(indices, rules=None, *, n_items, warnings=None)`.** The blueprint's `apply_flags(indices, rules)` cannot compute the longstring threshold (ceil(0.5 × number of items)) from the index table alone, so `n_items` is a required keyword argument.
+- **Boundaries.** Longstring fires at or above its threshold (the blueprint writes "≥"); every other rule fires strictly below its threshold (the blueprint writes "<"). Example: p = 0.001 exactly is not flagged.
+- **Missing index values never fire a rule.** A respondent with no Mahalanobis distance (a missing answer) cannot be flagged by that rule. Missing evidence is treated as no evidence, not as suspicious.
+- **Rules that cannot be applied are left out**, not reported as flagging nobody. If a rule's index is missing for every respondent (e.g. psychsyn on bfi), the rule has no column in the flag table and a warning is added. A missing duration column drops the speed rule silently; `text.py` will state the limitation (§7.10).
+- **Reasons** are fixed templates: "Longstring 25 (threshold 13)", "Mahalanobis D² 63.2, p < 0.001 (threshold p < 0.001)", "Even-odd r = 0.27 (threshold < 0.30)", "Person-total r = -0.06 (threshold < 0.00)", "1.5 seconds per item (threshold < 2)", joined with "; ".
+
+### Composite score
+- **Indices used:** longstring, Mahalanobis D², raw even-odd r, psychsyn, person-total and seconds per item (`COMPOSITE_INDICES`), whichever are present and computed for at least one respondent. Left out: IRV (ambiguous direction, as §7.1 says), Mahalanobis p, and the Spearman–Brown even-odd value. The last two carry the same ranking as D² and raw r, so including them would count those indices twice.
+- **Percentile rank** = pandas `rank(method="average", pct=True)` on values oriented so that higher means more careless: the rank divided by the number of respondents with a value. Ties share the average rank. Values lie in (0, 1].
+- A respondent's composite is the mean of the ranks they have. Indices missing for them are skipped. No computable index → missing.
+
+### Flag variants
+- **`composite_top10`** selects the k = ceil(10% × respondents with a composite) highest scores. Everyone tied with the k-th highest is included, so slightly more than 10% can be selected; ties are never broken arbitrarily. Respondents without a composite are never selected.
+
+### R reference comparison
+- The reference calls are chosen to match SurveyDoctor's definitions: `mahad` on complete cases, `psychsyn(resample_na = FALSE)`, and `evenodd` with its Spearman–Brown correction and sign flip undone in the test. The package defaults and how they differ are documented with numbers in `docs/validation.md`.
+
+### Observed on the bfi sample (from running `apply_flags` with default rules)
+- 686 of 2,800 respondents (24.5%) trigger at least one rule; 72 trigger two or more; `composite_top10` selects 280.
+- Per rule: even-odd 490, person-total 184, Mahalanobis 84, longstring 4. Psychsyn is not applied (one synonym pair at 0.60).
+- Even-odd r < 0.30 accounts for most flags. With only 5 scales, each respondent's even-odd r rests on 5 points, so it is noisy. The threshold is unchanged (it is the blueprint default, marked [VERIFY]). The owner may want to review it once the simulation study (Stage 7) shows how this rule performs.
+
+### Follow-up: review the even-odd flag threshold after Stage 7
+- The even-odd threshold (raw r < 0.30) will be reviewed after the Stage 7 simulation study. With bfi's 5 scales, each respondent's even-odd correlation rests on only 5 points (one odd-half and one even-half score per scale), so it is noisy. On bfi this rule flags 490 of 2,800 respondents, more than any other rule. Until the review, the blueprint default stays. Owner decision, 6 October 2026.

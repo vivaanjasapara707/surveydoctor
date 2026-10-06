@@ -379,8 +379,14 @@ class TestComputeIndices:
         prepared = prepared_from(raw, schema)
         result = compute_indices(prepared, schema)
         assert list(result.columns) == [
-            "longstring", "irv", "mahalanobis", "mahalanobis_p",
-            "even_odd", "even_odd_sb", "psychsyn", "person_total",
+            "longstring",
+            "irv",
+            "mahalanobis",
+            "mahalanobis_p",
+            "even_odd",
+            "even_odd_sb",
+            "psychsyn",
+            "person_total",
         ]
         assert list(result.index) == list(raw.index)
         pd.testing.assert_series_equal(result["longstring"], longstring(raw))

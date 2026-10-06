@@ -21,10 +21,17 @@ from surveydoctor.careless import even_odd, irv, longstring, mahalanobis, psychs
 from surveydoctor.io import PreparedData, load_csv, prepare_data
 from surveydoctor.reliability import reliability
 from surveydoctor.schema import SurveySchema
+from surveydoctor.structure import (
+    factor_matching,
+    match_factor_correlations,
+    match_factors,
+    structure,
+)
 from tests.conftest import BFI_CSV, BFI_SCHEMA, FIXTURES
 
 CARELESS_FIXTURE = FIXTURES / "reference_careless.json"
 RELIABILITY_FIXTURE = FIXTURES / "reference_reliability.json"
+STRUCTURE_FIXTURE = FIXTURES / "reference_structure.json"
 
 
 def _load_fixture(path: Path) -> dict[str, Any]:
@@ -243,3 +250,115 @@ def test_omega_total_matches_psych_fa(rel_ref, rel_ours, scale):
         atol=1e-3,
     )
     assert ours.omega_total == pytest.approx(ref_scale["omega_total"], abs=1e-3)
+
+
+# ---------------------------------------------------------------------------- structure
+#
+# Tolerances (BLUEPRINT §8.2): KMO 1e-3, Bartlett chi-square 1e-2, EFA loadings 0.02 after
+# matching factor order and sign. Per-item KMO uses the KMO tolerance. Communalities and
+# factor correlations come from the same fitted solution as the loadings, so they use the
+# loadings' tolerance. The correlation-matrix eigenvalues are plain linear algebra, so they
+# are compared at 1e-6 (not in §8.2; see docs/decisions.md).
+
+
+@pytest.fixture(scope="module")
+def struct_ref() -> dict[str, Any]:
+    return _load_fixture(STRUCTURE_FIXTURE)
+
+
+@pytest.fixture(scope="module")
+def struct_ours(struct_ref):
+    schema = SurveySchema.load(BFI_SCHEMA)
+    prepared = prepare_data(load_csv(BFI_CSV), schema)
+    result = structure(prepared, schema, n_factors=struct_ref["efa"]["n_factors"])
+    return schema, prepared, result
+
+
+def _ref_matrix(columns: dict[str, dict[str, float]], index: list[str]) -> pd.DataFrame:
+    """JSON {column: {row: value}} -> DataFrame with rows in ``index`` order."""
+    return pd.DataFrame(
+        {c: [values[i] for i in index] for c, values in columns.items()}, index=index
+    )
+
+
+@pytest.fixture(scope="module")
+def ref_loadings(struct_ref) -> pd.DataFrame:
+    return _ref_matrix(struct_ref["efa"]["loadings"], struct_ref["items"])[
+        struct_ref["efa"]["factors"]
+    ]
+
+
+def test_structure_uses_same_items_and_respondents_as_r(struct_ref, struct_ours):
+    schema, prepared, ours = struct_ours
+    assert ours.items == schema.items == struct_ref["items"]
+    assert sorted(schema.reverse_items) == sorted(struct_ref["reverse_items"])
+    assert ours.n_used == struct_ref["n_used"]
+    complete = prepared.scored_items[schema.items].notna().all(axis=1)
+    assert prepared.meta["id"].astype(int)[complete].tolist() == struct_ref["id"]
+
+
+def test_kmo_matches_psych(struct_ref, struct_ours):
+    ours = struct_ours[2].kmo
+    assert ours.overall == pytest.approx(struct_ref["kmo_overall"], abs=1e-3)
+    items = struct_ref["items"]
+    np.testing.assert_allclose(
+        ours.per_item.loc[items].to_numpy(),
+        _by_item(struct_ref["kmo_per_item"], items),
+        rtol=0,
+        atol=1e-3,
+    )
+
+
+def test_bartlett_matches_psych(struct_ref, struct_ours):
+    ours, theirs = struct_ours[2].bartlett, struct_ref["bartlett"]
+    assert ours.chi_square == pytest.approx(theirs["chi_square"], abs=1e-2)
+    assert ours.df == theirs["df"]
+    assert ours.p_value == pytest.approx(theirs["p_value"], abs=1e-12)
+
+
+def test_eigenvalues_match_r(struct_ref, struct_ours):
+    np.testing.assert_allclose(
+        struct_ours[2].parallel.scree["observed"].to_numpy(),
+        np.array(struct_ref["eigenvalues"], dtype=float),
+        rtol=0,
+        atol=1e-6,
+    )
+
+
+def test_efa_loadings_match_psych_fa(struct_ours, ref_loadings):
+    matched = match_factors(struct_ours[2].efa.loadings, ref_loadings)
+    np.testing.assert_allclose(matched.to_numpy(), ref_loadings.to_numpy(), rtol=0, atol=0.02)
+
+
+def test_efa_communalities_match_psych_fa(struct_ref, struct_ours):
+    items = struct_ref["items"]
+    np.testing.assert_allclose(
+        struct_ours[2].efa.communalities.loc[items].to_numpy(),
+        _by_item(struct_ref["efa"]["communality"], items),
+        rtol=0,
+        atol=0.02,
+    )
+
+
+def test_efa_factor_correlations_match_psych_fa(struct_ref, struct_ours, ref_loadings):
+    efa_result = struct_ours[2].efa
+    matching = factor_matching(efa_result.loadings, ref_loadings)
+    ours = match_factor_correlations(efa_result.factor_correlations, matching)
+    factors = struct_ref["efa"]["factors"]
+    theirs = _ref_matrix(struct_ref["efa"]["phi"], factors)[factors]
+    np.testing.assert_allclose(ours.to_numpy(), theirs.to_numpy(), rtol=0, atol=0.02)
+
+
+def test_parallel_analysis_suggests_same_number_as_psych(struct_ref):
+    # psych::fa.parallel on the correlation matrix (simulated standard-normal data, 100
+    # iterations, 95th percentile) uses SurveyDoctor's definition with R's random numbers,
+    # so only the suggested number of components is compared, exactly. Our own run uses the
+    # default (parallel-analysis-chosen) settings, not the fixture's fixed 5 factors.
+    schema = SurveySchema.load(BFI_SCHEMA)
+    ours = structure(prepare_data(load_csv(BFI_CSV), schema), schema)
+    theirs = struct_ref["parallel"]
+    assert (ours.parallel.n_iterations, ours.parallel.percentile) == (
+        theirs["n_iterations"],
+        100 * theirs["quant"],
+    )
+    assert ours.parallel.n_suggested == theirs["ncomp"]

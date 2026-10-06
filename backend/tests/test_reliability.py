@@ -191,6 +191,7 @@ class TestOmega:
     def test_identical_items_make_the_model_fail_with_a_warning(self):
         # Two identical columns (e.g. a question exported twice) make the correlation
         # matrix singular; factor_analyzer raises LinAlgError and omega is left missing.
+        # The warning explains the cause in plain English, not the library's error text.
         rng = np.random.default_rng(0)
         factor = rng.standard_normal(500)
         data = pd.DataFrame(
@@ -204,8 +205,10 @@ class TestOmega:
         warnings: list[str] = []
         assert math.isnan(omega_total(data, "Twin", warnings))
         assert warnings == [
-            "Omega was not computed for scale 'Twin': the factor model failed (Singular matrix)."
+            "Two or more questions in scale 'Twin' have identical or nearly identical answers, "
+            "so omega could not be calculated."
         ]
+        assert "Singular" not in warnings[0]
 
 
 # ---------------------------------------------------------------------------- items

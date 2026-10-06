@@ -222,8 +222,21 @@ def one_factor_loadings(
             py_warnings.simplefilter("ignore")
             model = FactorAnalyzer(n_factors=1, rotation=None, method="minres")
             model.fit(data.to_numpy(dtype=float))
-    except (np.linalg.LinAlgError, ValueError) as error:
-        _warn(warnings, f"Omega was not computed for {label}: the factor model failed ({error}).")
+    except np.linalg.LinAlgError:
+        # Constant items were ruled out above, so a singular correlation matrix here means
+        # some questions are exact (or near-exact) copies of each other.
+        _warn(
+            warnings,
+            f"Two or more questions in {label} have identical or nearly identical answers, "
+            "so omega could not be calculated.",
+        )
+        return nan_loadings
+    except ValueError:
+        _warn(
+            warnings,
+            f"Omega was not computed for {label}: the one-factor model could not be fitted "
+            "to its answers.",
+        )
         return nan_loadings
     lam = model.loadings_[:, 0]
     if lam.sum() < 0:

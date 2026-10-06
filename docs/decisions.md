@@ -42,3 +42,25 @@ Each entry records a choice the blueprint left open (or a forced deviation) and 
 
 ### Sample data
 - The Rdatasets row-name column of bfi is renamed to `id`, and `id` is declared as `id_column` in `bfi_schema.json`. All values are saved exactly as downloaded.
+
+## Stage 2 — 6 October 2026
+
+### Environment
+- `backend/.venv` was missing at the start of this session. It was recreated as the README describes (`uv venv --seed --python 3.11 .venv`, then the pinned `requirements.txt` and `requirements-dev.txt`). No new dependencies.
+
+### Careless-response indices (`careless.py`)
+- **Warnings.** Each index function takes an optional `warnings: list[str]` and appends a plain-English reason for anything it could not compute (a whole index, or a count of respondents). `compute_indices(prepared, schema, warnings=None)` keeps the blueprint's return type (`pd.DataFrame`), and the pipeline will pass its `Results.warnings` list.
+- **Two-column indices.** `mahalanobis` returns `mahalanobis` (D²) and `mahalanobis_p`. `even_odd` returns `even_odd` (raw r) and `even_odd_sb` (Spearman–Brown). All other indices return one Series. `INDEX_DIRECTIONS` records the careless direction of every column, for flagging and the composite in Stage 3.
+- **Minimum data for per-respondent correlations.** Even-odd, psychometric synonyms and person-total use one shared helper (`rowwise_pearson`). It returns NaN when a respondent has fewer than 3 usable points (scales, pairs or items) or no variance on either side, because a correlation from 2 points is always ±1. "Usable" means both values are present.
+- **Even-odd halves** follow questionnaire order (the order of `schema.items`), not the order a scale's items are listed in. Half means use the answered items of each half. A scale counts for a respondent only if both halves have at least one answer.
+- **Spearman–Brown is missing (NaN) whenever the raw even-odd r is negative.** The correction 2r/(1+r) estimates full-length reliability from a half-length correlation, which only makes sense for r ≥ 0. For negative r the formula falls below −1 (on bfi it reached about −94, at r = −0.979) and is undefined at r = −1, so the number would look like a correlation but not behave like one. The raw r is always kept, and flag rules use the raw r (§7.2), so no respondent loses evidence. On bfi, 230 respondents have a negative raw r and therefore no corrected value. Owner decision, 6 October 2026.
+- **Mahalanobis** needs more complete respondents than items; otherwise the whole index is NaN with a warning. Negative D² from rounding is clipped to 0. Degrees of freedom stay equal to the number of items even when Σ is singular (pseudo-inverse), as specified.
+- **Psychometric synonyms.** Pairs are taken from the upper triangle in questionnaire order (earlier item first), with correlation strictly greater than the critical value. The ≥ 3 rule applies to the pairs found in the data and to each respondent's fully answered pairs.
+- **The psychsyn critical value is a parameter** (`critval` in `psychsyn`, `psychsyn_critval` in `compute_indices`), default 0.60 as in §7.1.
+- **Stage 3 compares psychsyn against R (`careless::psychsyn`) at both critval 0.60 and 0.50.** bfi has only one pair above 0.60, so at the default both implementations return missing values for everyone and the comparison would check nothing. At 0.50, running `synonym_pairs` on bfi finds 5 pairs (A3–A5 0.504, N1–N2 0.707, N1–N3 0.556, N2–N3 0.549, N3–N4 0.520), and psychsyn is computed for 2,628 of 2,800 respondents, so there is a real numeric comparison. Owner decision, 6 October 2026.
+- **Person-total.** A respondent's leave-one-out mean for an item they skipped is the ordinary item mean (their answer is not in it).
+- **No duration column.** `seconds_per_item` is left out of the table. The "response-time screening not performed" limitation will be written by `text.py` (§7.10).
+
+### Observed on the bfi sample (from running `compute_indices`)
+- Only one item pair correlates above 0.60 (N1–N2, r = 0.707), so psychometric synonyms are NaN for everyone, with a warning, under the default rule. This follows the spec; the report will need to explain it.
+- 364 respondents have at least one missing answer, so they have no Mahalanobis distance.

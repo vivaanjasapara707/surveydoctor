@@ -166,3 +166,33 @@ Each entry records a choice the blueprint left open (or a forced deviation) and 
 
 ### Observed on the bfi sample size (from running `sample_sensitivity(2436, 3)`)
 - With 2,436 respondents (the complete cases used in Stage 5): two groups of 1,218 detect d = 0.1136, a correlation of r = 0.0567, and a 3-group ANOVA f = 0.0629, all "below small".
+
+## Stage 7 — 26 October 2026
+
+### Simulation study (`evaluation/simulate.py`, `evaluation/run_simulation.py`)
+- **Base data.** bfi respondents who answered all 25 items (2,436), with raw (not reverse-scored) answers, because a careless respondent types raw answers. Contaminated data goes through the app's own `prepare_data` → `compute_indices` → `apply_flags` / `composite_score`, so reverse scoring and every index are exactly as in the app.
+- **Number replaced:** rate × n rounded half up (122, 244 and 487 respondents at 5%, 10% and 20%).
+- **Seeds.** Each run uses `numpy.random.default_rng(seed)`, seeds 0–19. The rows are chosen first, then the careless answers are generated from the same generator. For a given seed and rate, every pattern replaces the same respondents, so patterns are compared on the same rows.
+- **Pattern details not fixed by the blueprint:** `patterned` cycles through min…max in questionnaire order, starting at a random answer; `partial` keeps the first floor(k/2) items (12 of 25) and randomises the other 13; `midpoint` on bfi's 6-point scale is 3 or 4 (random per respondent, constant across items).
+- **Measures.** ROC-AUC and PR-AUC for the composite and each index in `COMPOSITE_INDICES` that was computed in that run. PR-AUC is scikit-learn's `average_precision_score`. IRV is not evaluated (no single careless direction). Recall and precision are reported for the default `flagged` rule, as specified.
+- **Added beyond §7.7: recall and precision of each rule on its own.** This answers the Stage 3 follow-up on the even-odd threshold. It reuses the per-rule columns `apply_flags` already returns.
+- **Indices that cannot be computed for a respondent** (e.g. person-total for a straightliner, whose answers have no variance) are ranked as least suspicious for that index, because in the app that index cannot flag them. The share of careless respondents affected is reported in the CSV (`missing_careless`) and in the summary. The alternative, dropping those rows, would remove exactly the careless respondents and make the score look better than it is.
+- **An index computed in only some runs** is evaluated only in those runs, and the summary says where. On bfi this applies to psychometric synonyms: only straightliners at 10% and 20% push 3 or more item pairs above r = 0.60 (40 of 300 runs).
+- **Outputs.** `results/simulation_results.csv` holds one row per run and measure. `results/simulation_summary.md` is built from those rows only, as mean ± SD (ddof = 1). `--reps` can reduce repetitions (BLUEPRINT §9 slip rule), and the summary states the number used. The full run (300 simulations) took about 3 minutes on the owner's laptop. A second run gave identical numbers.
+
+### Findings from the simulation that need an owner decision
+All numbers are from `results/simulation_summary.md`.
+- **The composite score is weak against straightlining, midpoint and patterned responding.**
+  - **Straightlining:** ROC-AUC 0.717 / 0.632 / 0.571 at 5% / 10% / 20%. Longstring alone reaches 0.999.
+  - **Midpoint:** 0.58.
+  - **Patterned:** falls to 0.512 at 20%.
+  - **Random:** strong (ROC-AUC about 0.91).
+  - **Why:** the composite averages percentile ranks, and each pattern is caught by one or two indices but rated *less* suspicious than average by others. Mahalanobis rates midpoint answers as typical (ROC-AUC ≤ 0.005), and straightliners' person-total cannot be computed. The average dilutes the index that works.
+  - **Not changed:** BLUEPRINT §7.2 defines the composite as the mean of percentile ranks. One possible alternative is the maximum rank across indices. The composite also drives the `composite_top10` robustness variant (Stage 9).
+- **Mahalanobis misses straightliners and midpoint responders, and is masked at high contamination.** Straightliners on 3, 4 or 5 have a smaller D² than a typical attentive respondent, even with the uncontaminated covariance (D² 9.1, 4.4 and 16.7 against a median of 22.4, checked in this session). As contamination grows, careless rows also inflate the covariance. The Mahalanobis rule's recall for random responders falls from 0.639 at 5% to 0.197 at 20%. This is known behaviour of the index. It is reported, not changed.
+- **Even-odd threshold (Stage 3 follow-up).** At 5% contamination, the even-odd rule catches 69% of random and 50% of patterned responders, but only 18% and 14% of the respondents it flags are careless, about the same precision as the combined flag rule (0.17). With 5 scales, its r rests on 5 points and fires on many attentive respondents. It never catches straightliners or midpoint responders, which longstring covers. Whether to lower the 0.30 threshold, keep it, or require 2 rules is the owner's decision. The simulation only shows the trade-off at the current threshold.
+- **The default flag rule (any rule fires)** has high recall (0.92 for random, 1.00 for straightline and midpoint, 0.58 for partial at 5%), but low precision at low contamination (0.12–0.18 at 5%). Most flags then fall on base respondents. Some of those may be genuinely careless (see the limitation in the summary), but the even-odd rule alone fired on 490 of 2,800 clean bfi respondents in Stage 3.
+
+### Owner decisions on the Stage 7 findings (26 October 2026)
+- **Composite score: kept as specified** (mean of percentile ranks, BLUEPRINT §7.2). Its weakness against straightlining, midpoint and patterned responding is documented rather than fixed. The report (Stage 10) and README (Stage 15) must state it, using the numbers in `results/simulation_summary.md`, and say that longstring is the index that catches straightlining.
+- **Even-odd threshold: decision postponed.** The 0.30 default stays, and the Stage 3 follow-up remains open. The simulation evidence above is the input for that later decision.

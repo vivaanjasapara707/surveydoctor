@@ -152,3 +152,17 @@ Each entry records a choice the blueprint left open (or a forced deviation) and 
 - Overall KMO 0.849. Bartlett χ² = 18,146.07 (df = 300, p < 0.001).
 - Parallel analysis suggests **5** factors: the 5th eigenvalue is 1.548 against a threshold of 1.116, and the 6th is 1.074 against 1.100. Kaiser's rule would say 6.
 - With 5 factors, all 25 items have their primary loading on their own scale's factor. Each of the five scales has its own factor with a 100% match, and no item is weak. Three items cross-load (second |loading| ≥ 0.30): E3 (also on the Openness factor), N4 (also on the Extraversion factor, negatively) and O4 (also on the Extraversion factor, negatively).
+
+## Stage 6 — 26 October 2026
+
+### Sensitivity analysis (`power.py`)
+- **Functions as specified in BLUEPRINT §7.5:** `min_d_two_groups(n1, n2)`, `min_r_correlation(n)` and `min_f_anova(n_total, k_groups)`, each with `alpha=0.05` and `power=0.80` as configurable defaults. Each returns a `SensitivityResult` with the effect measure, the minimum effect, a benchmark label, the inputs and the benchmark caveat.
+- **Benchmark labels.** The minimum effect is placed between Cohen's benchmarks: "below small", "small to medium", "medium to large" or "large or above". Benchmarks: d 0.2/0.5/0.8, r 0.1/0.3/0.5, f 0.10/0.25/0.40. A value exactly at a benchmark counts as reaching it. Ranges are used rather than one word, because a minimum effect of 0.45 is neither "small" nor "medium". Every result carries the caveat that the benchmarks are rough.
+- **ANOVA solver fallback.** statsmodels 0.15.0's `FTestAnovaPower().solve_power` (marked "experimental" in its source) only searches f in (1e-8, 1). When the answer is above 1 (for example N = 12 with 3 groups), it raises `ValueError`. SurveyDoctor then solves the same equation, `FTestAnovaPower().power(f, ...) = power`, with `scipy.optimize.brentq` over (1e-8, 100). The statistics still come from statsmodels; only the search range is wider. A test confirms that statsmodels fails on this case and that the fallback reaches 80% power.
+- **Input checks raise `ValueError`** in plain English: each group needs at least 2 respondents (t-test); a correlation needs at least 4 (so that n − 3 > 0); an ANOVA needs at least 2 groups and more respondents than groups; alpha and power must lie in (0, 1) with power > alpha.
+- **`sample_sensitivity(n_total, k_groups=3)`** returns the three results for one sample, for the report (BLUEPRINT §7.9, section 6) and later the pipeline. The two groups are split as evenly as possible (n // 2 and the rest), which gives the most sensitive case; unequal groups detect less. The blueprint does not set a number of ANOVA groups for the report, so the default is 3, and the caller can change it. Recorded here as a simplest-option choice.
+- **No post-hoc power.** No function takes an observed effect.
+- **G*Power cases** were chosen by Claude Code (inputs only) and are listed in `docs/gpower_cases.md`. Two t-tests (equal and unequal groups), one correlation, and two ANOVAs, one of them small enough to exercise the fallback. The owner ran them in G*Power 3.1.9.7 on 26 October 2026, and the values are in `tests/fixtures/gpower_reference.json`. All 5 match within 0.01 (see `docs/validation.md`).
+
+### Observed on the bfi sample size (from running `sample_sensitivity(2436, 3)`)
+- With 2,436 respondents (the complete cases used in Stage 5): two groups of 1,218 detect d = 0.1136, a correlation of r = 0.0567, and a 3-group ANOVA f = 0.0629, all "below small".

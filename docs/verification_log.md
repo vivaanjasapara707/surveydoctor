@@ -16,7 +16,7 @@ Every item marked **[VERIFY]** in BLUEPRINT.md is listed here. The owner checks 
 | 10 | 7.2 | Mahalanobis p < 0.001 convention citation | Methods literature | Not yet verified | | |
 | 11 | 7.2 | Even-odd r < 0.30 threshold, Johnson (2005) | Johnson (2005) | Not yet verified | | |
 | 12 | 7.2 | Seconds per item < 2, Huang et al. (2012) | Huang et al. (2012) | Not yet verified | | |
-| 13 | 7.5 | statsmodels `FTestAnovaPower` `nobs` is total N | statsmodels docs | Not yet verified | | |
+| 13 | 7.5 | statsmodels `FTestAnovaPower` `nobs` is total N | statsmodels docs | Evidence found, owner to confirm | **Total N.** In statsmodels 0.15.0, `ftest_anova_power` documents `nobs` as "Total sample size, sum over all groups" and computes `df_denom = nobs - k_groups` and noncentrality `effect_size**2 * nobs`, which only fit a total N. See note 13. | Claude Code (package source), 2026-10-26 |
 | 14 | 8.2 | `careless::mahad` returns D or D² | `careless` docs | Confirmed | **D².** careless 1.2.2 `mahad` returns `psych::outlier(...)`, which computes D². On bfi complete cases it matches `stats::mahalanobis` (squared distances) to 2.8e-14. Note: by default it uses a pairwise covariance and partial D² for rows with missing answers (see `docs/validation.md`). | Claude Code (Rscript, package source), 2026-10-06; Vivaan, 2026-10-06 |
 | 15 | 8.2 | `careless::evenodd` applies Spearman–Brown or not | `careless` docs | Confirmed | **Yes.** careless 1.2.2 `evenodd` applies 2r/(1+r), clamps the result at −1, then negates it (higher = more careless; the sign change came in version 1.2.0, per the function's own warning). Matches SurveyDoctor's `even_odd_sb` to 1e-4 where raw r ≥ 0. | Claude Code (Rscript, package source), 2026-10-06; Vivaan, 2026-10-06 |
 
@@ -44,3 +44,17 @@ $openness
 ```
 
 The items with a leading "-" are A1, C4, C5, E1, E2, O2, O5. Compared in R with `bfi_schema.json`, `identical(unname(sort(...)), sort(reverse_items))` gave TRUE. A first comparison without `unname` gave FALSE only because `unlist()` names the elements (e.g. `agree1`).
+
+**Note 13 — statsmodels `nobs` in `FTestAnovaPower` (26 October 2026).** Read with `inspect.getsource(statsmodels.stats.power.ftest_anova_power)` in the project venv (statsmodels 0.15.0):
+
+```
+    nobs : int or float
+        Total sample size, sum over all groups.
+    ...
+    df_num = k_groups - 1
+    df_denom = nobs - k_groups
+    crit = stats.f.isf(alpha, df_num, df_denom)
+    pow_ = ncf_sf(crit, df_num, df_denom, effect_size**2 * nobs)
+```
+
+Denominator degrees of freedom N − k and noncentrality λ = f²·N are the textbook one-way ANOVA values for a total sample size N (G*Power uses the same λ). A consistency check also passes: `min_f_anova(100, 2)` equals half of `min_d_two_groups(50, 50)` to 1e-4, as it must if 100 is the total of two groups of 50 (`test_f_two_groups_is_half_of_d`). The owner should confirm against the statsmodels documentation page for `FTestAnovaPower` and record the outcome.

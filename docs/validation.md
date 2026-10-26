@@ -181,3 +181,27 @@ Observed eigenvalues 5 and 6 are 1.5482 and 1.0736. The decision at position 6 (
 ### Test-helper bug found during the comparison
 
 The first run of the factor-correlation test failed: 12 of 25 entries differed by up to 0.13. All the values were present but in the wrong rows. `factor_matching` returned factor pairs in SurveyDoctor's order rather than the reference's order. The helper now returns pairs in reference order, a unit test pins that behaviour, and the comparison passes. No tolerance was changed.
+
+## Stage 6: sensitivity analysis — 26 October 2026
+
+**Result: all 5 cases match G*Power 3.1.9.7 within the 0.01 tolerance (BLUEPRINT §8.3).** The owner ran each case in G*Power ("Sensitivity" analysis, α = 0.05, power = 0.80) and shared screenshots, from which the values were entered in `backend/tests/fixtures/gpower_reference.json`. The SurveyDoctor column comes from running `power.py`. `test_matches_gpower` passes. Case definitions: `docs/gpower_cases.md`.
+
+| Case | Inputs (α = 0.05, power = 0.80) | SurveyDoctor | G*Power 3.1.9.7 | Difference |
+|---|---|---|---|---|
+| `t_equal_50_50` | t-test, two-tailed, n1 = 50, n2 = 50 | d = 0.5658803 | d = 0.5658822 | 0.0000019 |
+| `t_unequal_30_90` | t-test, two-tailed, n1 = 30, n2 = 90 | d = 0.5954864 | d = 0.5954866 | 0.0000002 |
+| `r_100` | correlation (exact, bivariate normal), two-tailed, ρ H0 = 0, N = 100 | r = 0.2770259 | ρ H1 = 0.2756799 | 0.0013460 |
+| `anova_150_k3` | one-way ANOVA, N = 150, k = 3 | f = 0.2560438 | f = 0.2560438 | < 0.0000001 |
+| `anova_12_k3` | one-way ANOVA, N = 12, k = 3 | f = 1.0686343 | f = 1.0686343 | < 0.0000001 |
+
+### Why the correlation differs slightly
+
+SurveyDoctor uses the Fisher z approximation specified in BLUEPRINT §7.5. G*Power's "Bivariate normal model" test is exact. The approximation gives a slightly larger minimum r (0.2770 against 0.2757 at N = 100), so it is marginally conservative. The gap shrinks as N grows. It is within the tolerance and no change was made.
+
+### The small-sample ANOVA case
+
+`anova_12_k3` needs f > 1, outside the range statsmodels' own solver searches (see `docs/decisions.md`, Stage 6). SurveyDoctor's fallback solves the same statsmodels power equation over a wider range, and its result agrees with G*Power to 7 decimals. G*Power's output for this case also confirms the setup: numerator df 2, denominator df 9 (= 12 − 3).
+
+### Two input slips caught while running G*Power
+
+Two screenshots were rejected before any values were entered. The first correlation run had Tail(s) = One (it gave 0.2458). The first ANOVA run had "ANCOVA: Fixed effects, main effects and interactions" selected, with power 0.95. Only the corrected runs were recorded.

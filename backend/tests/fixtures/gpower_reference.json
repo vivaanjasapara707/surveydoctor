@@ -1,0 +1,57 @@
+{
+  "source": "G*Power sensitivity analyses, entered by hand by the owner (BLUEPRINT 8.3). Instructions: docs/gpower_cases.md",
+  "gpower_version": "3.1.9.7",
+  "computed_by": "Vivaan (values read from G*Power screenshots, entered by Claude Code)",
+  "date": "2026-10-26",
+  "cases": [
+    {
+      "id": "t_equal_50_50",
+      "test": "two_groups",
+      "gpower_test": "t tests - Means: Difference between two independent means (two groups)",
+      "alpha": 0.05,
+      "power": 0.8,
+      "n1": 50,
+      "n2": 50,
+      "gpower_effect": 0.5658822
+    },
+    {
+      "id": "t_unequal_30_90",
+      "test": "two_groups",
+      "gpower_test": "t tests - Means: Difference between two independent means (two groups)",
+      "alpha": 0.05,
+      "power": 0.8,
+      "n1": 30,
+      "n2": 90,
+      "gpower_effect": 0.5954866
+    },
+    {
+      "id": "r_100",
+      "test": "correlation",
+      "gpower_test": "Exact - Correlation: Bivariate normal model",
+      "alpha": 0.05,
+      "power": 0.8,
+      "n": 100,
+      "gpower_effect": 0.2756799
+    },
+    {
+      "id": "anova_150_k3",
+      "test": "anova",
+      "gpower_test": "F tests - ANOVA: Fixed effects, omnibus, one-way",
+      "alpha": 0.05,
+      "power": 0.8,
+      "n": 150,
+      "k_groups": 3,
+      "gpower_effect": 0.2560438
+    },
+    {
+      "id": "anova_12_k3",
+      "test": "anova",
+      "gpower_test": "F tests - ANOVA: Fixed effects, omnibus, one-way",
+      "alpha": 0.05,
+      "power": 0.8,
+      "n": 12,
+      "k_groups": 3,
+      "gpower_effect": 1.0686343
+    }
+  ]
+}

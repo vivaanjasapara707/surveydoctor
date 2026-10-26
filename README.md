@@ -6,6 +6,8 @@ SurveyDoctor checks the quality of rating-scale survey data (careless responding
 
 **Reference validation against R:** run for the careless-response indices (longstring, IRV, Mahalanobis, even-odd, psychometric synonyms), reliability (alpha with CI, alpha if deleted, corrected item-total correlation, omega total) and factor structure (KMO, Bartlett's test, correlation eigenvalues, 5-factor EFA loadings, communalities and factor correlations). Results and documented differences: `docs/validation.md`.
 
+**Reference validation against G*Power:** the sample-sensitivity calculations (smallest detectable d, r and f) match G*Power 3.1.9.7 within 0.01 on 5 cases. See `docs/validation.md`.
+
 ## Run the backend tests locally
 
 Requires [uv](https://docs.astral.sh/uv/) (or any Python 3.11 installation).

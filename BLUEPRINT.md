@@ -1,6 +1,8 @@
 # SurveyDoctor v1 — Build Blueprint
 
-Version 1.1 · 6 October 2026 · Owner: Vivaan Jasapara
+Version 1.2 · 27 October 2026 · Owner: Vivaan Jasapara
+
+Changes in 1.2: fsQCA added as Stages 10A and 10B (§7.14).
 
 This is the single source of truth for building SurveyDoctor v1. Claude Code implements it stage by stage. If something in the code disagrees with this file, either fix the code or update this file deliberately — never let them drift silently.
 
@@ -19,7 +21,8 @@ The user uploads a CSV, tells the app which columns are questions and which ques
 3. **Factor structure** — whether questions group the way the researcher intended (EFA).
 4. **Sample sensitivity** — the smallest effect the sample can reliably detect.
 5. **Robustness check** — whether one declared conclusion (a group difference or a correlation) survives removing flagged respondents.
-6. **A downloadable HTML report** in which every sentence is generated from computed numbers.
+6. **fsQCA with a careless-response check (optional)**: which combinations of scale scores go with an outcome, and whether that answer changes after removing flagged respondents.
+7. **A downloadable HTML report** in which every sentence is generated from computed numbers.
 
 **Primary user:** students running survey-based projects, and the supervisors who review them.
 
@@ -34,14 +37,15 @@ The user uploads a CSV, tells the app which columns are questions and which ques
 | Structure | KMO, Bartlett's test, parallel analysis, EFA (minres, oblimin), loading flags, scale-alignment check |
 | Sample size | Sensitivity analysis for two-group t-test, correlation, one-way ANOVA |
 | Robustness | One declared analysis, rerun under 3 flagging variants |
+| Configurational analysis | fsQCA (optional): direct calibration, necessity analysis, truth table, complex and parsimonious solutions, rerun under 3 flagging variants and with shifted calibration anchors (§7.14) |
 | Evaluation | Simulation study (5 careless patterns × 3 contamination rates); real-data proxy evaluation if the DASS dataset is available |
-| Validation | Automated comparison against R (`psych`, `careless`) and G*Power reference values |
+| Validation | Automated comparison against R (`psych`, `careless`, `QCA`) and G*Power reference values |
 | Output | React website backed by a FastAPI API; HTML report; flagged-respondents CSV; schema JSON |
 | Delivery | Tests, README, deployment (Render for the API, Vercel for the website) |
 
 ### 1.2 Out of scope (v2 or later)
 
-Polychoric correlations · CFA · probabilistic (mixture-model) carelessness scoring · questionnaire audit before fielding · measurement invariance · public benchmark dataset · faculty batch mode · PDF reports · automatic test recommendation · LLM-written text · accounts, payments, database.
+Polychoric correlations · CFA · probabilistic (mixture-model) carelessness scoring · questionnaire audit before fielding · measurement invariance · public benchmark dataset · faculty batch mode · PDF reports · automatic test recommendation · LLM-written text · accounts, payments, database · intermediate fsQCA solutions (they need directional expectations from the researcher) · crisp-set and multi-value QCA.
 
 Do not build any of these in v1, even if they seem quick.
 
@@ -79,7 +83,7 @@ Do not build any of these in v1, even if they seem quick.
 | python-multipart | CSV file uploads in FastAPI |
 | pytest + httpx | Tests, including API tests via FastAPI's TestClient |
 | ruff | Linting |
-| R + `psych`, `careless`, `GPArotation`, `jsonlite` | Reference values only (local, never deployed) |
+| R + `psych`, `careless`, `GPArotation`, `QCA`, `jsonlite` | Reference values only (local, never deployed). `QCA` is the reference for fsQCA (§7.14) |
 | G*Power | Reference values for sensitivity analysis (entered manually) |
 
 ### 3.2 Frontend (website)
@@ -136,6 +140,7 @@ surveydoctor/
 │   │   ├── structure.py            # KMO, Bartlett, parallel analysis, EFA
 │   │   ├── power.py                # Sensitivity analysis
 │   │   ├── robustness.py           # Declared analysis under flag variants
+│   │   ├── fsqca.py                # fsQCA: calibration, necessity, truth table, minimisation
 │   │   ├── pipeline.py             # Runs all modules, returns one Results object
 │   │   ├── report.py               # Builds HTML report from Results
 │   │   ├── charts.py               # matplotlib figures → base64 (report only)
@@ -152,7 +157,8 @@ surveydoctor/
 │   ├── validation/
 │   │   ├── reference_careless.R
 │   │   ├── reference_reliability.R
-│   │   └── reference_structure.R
+│   │   ├── reference_structure.R
+│   │   └── reference_fsqca.R
 │   ├── scripts/download_data.py
 │   ├── data/
 │   │   ├── sample/bfi.csv          # Committed sample dataset
@@ -168,6 +174,7 @@ surveydoctor/
 │       ├── test_structure.py
 │       ├── test_power.py
 │       ├── test_robustness.py
+│       ├── test_fsqca.py
 │       ├── test_report.py
 │       ├── test_reference_r.py     # Skips cleanly if fixtures are missing
 │       ├── test_pipeline_e2e.py
@@ -391,8 +398,9 @@ Self-contained HTML (inline CSS, base64 images, no external requests). Sections:
 5. Factor structure — KMO, Bartlett, scree plot with parallel-analysis line, loadings table with weak/cross-loading highlights, scale alignment.
 6. Sample sensitivity — the three sensitivity results.
 7. Robustness — table and verdict (if declared).
-8. Limitations — auto-generated (§7.10).
-9. Methods and references — short descriptions of each method; reference list marked "verify before citing".
+8. fsQCA (if requested) — anchors used, necessity table, truth table, solutions with fit measures, robustness and calibration-sensitivity verdicts (§7.14).
+9. Limitations — auto-generated (§7.10).
+10. Methods and references — short descriptions of each method; reference list marked "verify before citing".
 
 Footer: SurveyDoctor version, timestamp, and "No data was stored."
 
@@ -418,9 +426,9 @@ The API is a thin layer: it validates requests, calls `surveydoctor.pipeline`, a
 | `GET /api/health` | — | `{status, version}` (used for the wake-up check) |
 | `GET /api/sample` | — | Sample CSV text + bfi schema JSON |
 | `POST /api/inspect` | CSV file | Row/column counts; per column: short code, original header, distinct values, suggested-item flag, looks-personal flag; 10-row preview with personal columns removed; proposed label map; unrecognised labels |
-| `POST /api/analyze` | CSV + schema JSON (+ optional rules, n_factors) | Full results JSON: overview, data issues, flag counts per rule, flagged respondents (top 200, with reasons), composite scores for the histogram, reliability, structure (eigenvalues, parallel threshold, loadings, alignment), sensitivity, warnings |
+| `POST /api/analyze` | CSV + schema JSON (+ optional rules, n_factors, fsQCA spec) | Full results JSON: overview, data issues, flag counts per rule, flagged respondents (top 200, with reasons), composite scores for the histogram, reliability, structure (eigenvalues, parallel threshold, loadings, alignment), sensitivity, fsQCA (if requested, §7.14), warnings |
 | `POST /api/robustness` | CSV + schema + analysis spec | Variant table + verdict |
-| `POST /api/report` | CSV + schema (+ optional analysis spec) | HTML report file download |
+| `POST /api/report` | CSV + schema (+ optional analysis spec, fsQCA spec) | HTML report file download |
 | `POST /api/export/flags` | CSV + schema | Respondent-level indices, flags and reasons as CSV (personal columns excluded) |
 
 - Request/response shapes are Pydantic models in `api/models.py`. FastAPI publishes them at `/openapi.json` and interactive docs at `/docs`.
@@ -459,6 +467,48 @@ Rules:
 - The HTML report uses the same palette and typefaces, prints cleanly to A4, and reads well on mobile.
 - Accessibility floor: sufficient colour contrast, never use colour alone to signal a flag (always text too), visible keyboard focus.
 - Copy is plain and active: buttons say what they do ("Run checks", "Download report"); errors say what went wrong and how to fix it.
+### 7.14 `fsqca.py` — fsQCA (Stages 10A and 10B)
+
+fsQCA (fuzzy-set Qualitative Comparative Analysis) finds combinations of conditions (scale scores) that lead to an outcome (another scale score). SurveyDoctor adds a data-quality check: does the solution change after removing flagged careless respondents, or after shifting the calibration anchors slightly?
+
+**Inputs and cases**
+
+- The analysis is optional. It runs only when the user picks one outcome scale and 2–7 condition scales; the outcome cannot also be a condition. With k conditions the truth table has 2^k rows. Beyond 7 conditions most rows would have no cases, and the robustness reruns get slow on the free server.
+- Cases are respondents. Scale scores are computed as in §7.6 (`io.scale_scores`: mean of scored items, at least 80% of the scale's items answered). Respondents without a score on every scale involved are left out of the fsQCA, and the count is reported.
+- §3 lists no Python library for fsQCA, so `fsqca.py` implements calibration, the parameters of fit, the truth table and Boolean minimisation (Quine–McCluskey with a prime-implicant chart) with NumPy and pandas. This is a deliberate exception to the rule against reimplementing algorithms. R's `QCA` package is the reference for every quantity (§8.2).
+
+**Stage 10A — calibration and necessity**
+
+- **Direct calibration (Ragin's logistic method).** Each scale score is turned into fuzzy membership (0–1) from three anchors: full membership, crossover and full non-membership. The log-odds of membership are 0 at the crossover and are scaled linearly on each side, so that the outer anchors map to the agreed membership levels. Membership = exp(log-odds) / (1 + exp(log-odds)). Match the convention of `QCA::calibrate` (its default degree of membership at the outer anchors, versus Ragin's original ±3 log-odds) **[VERIFY]**.
+- **Anchors.** The defaults are the 95th, 50th and 5th percentiles of the scale score in the analysed sample. Alternatively, the user can set anchors in scale points (e.g. 5, 3 and 1 on a 1–5 scale). Anchors must be strictly ordered; otherwise a plain-English `ValueError` is raised. The report always shows the anchors used, in scale points and, for percentile anchors, as percentiles.
+- **Cases at exactly 0.5.** Likert scale scores often tie at the crossover, so many cases can sit at exactly 0.5 membership, which belongs to no truth-table row. They are handled with the convention used by R's `QCA` package **[VERIFY what `QCA` does]**. The number of affected cases is reported in warnings, and the convention is documented in `docs/decisions.md`.
+- **Necessity analysis** for each condition X and its negation ~X = 1 − X, against the outcome Y:
+  - consistency = Σ min(X, Y) / Σ Y
+  - coverage = Σ min(X, Y) / Σ X
+  - relevance of necessity (RoN) = Σ (1 − X) / Σ (1 − min(X, Y))
+  - A condition passes the necessity threshold when consistency ≥ 0.9 (default, configurable) **[VERIFY with supervisor and a methods text]**. The templated text says that passing is consistent with necessity, not proof of it, and that a low RoN suggests a trivial necessary condition.
+- **R reference tests** against `QCA::calibrate` (memberships) and `QCA::pof` (necessity consistency, coverage, RoN).
+
+**Stage 10B — truth table, minimisation, robustness**
+
+- **Truth table.** Each case belongs to the row where its membership is above 0.5 for each condition or its negation. A case's membership in a row is the minimum, over conditions, of X or 1 − X. Per row the table shows: number of cases, raw consistency = Σ min(row membership, Y) / Σ row membership, and PRI = (Σ min(R, Y) − Σ min(R, Y, 1 − Y)) / (Σ R − Σ min(R, Y, 1 − Y)), where R is row membership.
+  - The outcome is 1 when a row has at least the frequency threshold of cases (default 1), raw consistency ≥ 0.8 and PRI ≥ 0.7. All three thresholds are configurable **[VERIFY defaults]**.
+  - Rows below the frequency threshold are logical remainders. The other rows have outcome 0.
+- **Boolean minimisation** produces the complex solution (remainders excluded) and the parsimonious solution (remainders used as "don't care"). When several equally minimal models exist, all are reported, as `QCA` does (M1, M2, …). Fit measures:
+  - each solution: consistency and coverage;
+  - each path: consistency, raw coverage and unique coverage.
+- **Robustness.** The analysis is rerun under the three flag variants (§7.2), with the anchor values from the full sample held fixed in scale points, so that only the set of respondents changes. Each path of each solution is marked kept, missing or new.
+  - Verdict: "same" (identical paths in every variant), "changed" (a path added or removed in any variant, naming the variant), or "no solution" (no truth-table row passes in a variant).
+  - Always add: "This shows sensitivity to exclusion choices. It does not prove which respondents should be excluded."
+- **Calibration sensitivity.** The analysis is rerun with the anchors shifted slightly and compared in the same way, with the same verdict wording. Defaults **[VERIFY with supervisor]**:
+  - percentile anchors: crossover at the 45th and the 55th percentile, outer anchors at the 90th and 10th;
+  - scale-point anchors: each anchor moved by ±0.5 scale points.
+- **R reference tests** against `QCA::truthTable` (rows, case counts, consistency, PRI, outcome) and `QCA::minimize` (complex and parsimonious solutions with their fit measures).
+- **Output.** fsQCA results are part of `Results` (§6.3), with their own section in the HTML report (§7.9) and in the `/api/analyze` results (§7.11). The API is built in Stage 11 and includes these fields from the start. The website does not show fsQCA results unless a later stage adds them.
+- **Limitations** (templated, always shown with fsQCA results): the solutions describe set relations in this sample, not causes; they depend on the calibration anchors; and Likert scale scores give coarse memberships with many ties.
+
+**Out of scope for now:** intermediate solutions (they need directional expectations from the researcher), and crisp-set or multi-value QCA.
+
 ---
 
 ## 8. Testing and validation
@@ -495,8 +545,14 @@ Examples the suite must include:
 | KMO | `psych::KMO` overall | 1e-3 |
 | Bartlett | `psych::cortest.bartlett` | chi-square 1e-2 |
 | EFA loadings | `psych::fa(nfactors=5, rotate="oblimin", fm="minres")` after matching factor order and sign | 0.02 |
+| fsQCA membership | `QCA::calibrate(type = "fuzzy", method = "direct")` with the same anchors | 1e-6 |
+| fsQCA necessity | `QCA::pof(..., relation = "necessity")` consistency, coverage, RoN | 1e-6 |
+| fsQCA truth table | `QCA::truthTable` with the same thresholds: row membership of cases and outcome exact; consistency and PRI | 1e-6 |
+| fsQCA solutions | `QCA::minimize` complex and parsimonious solutions: the set of models and paths exact; consistency and coverage | 1e-6 |
 
 Factor matching: align factors with `scipy.optimize.linear_sum_assignment` on absolute loading correlations, then fix signs.
+
+fsQCA reference case (`validation/reference_fsqca.R` → `tests/fixtures/reference_fsqca.json`): bfi, conditions Agreeableness, Conscientiousness, Extraversion and Openness, outcome Neuroticism, default anchors and thresholds. This is a technical check of the calculations, not a substantive finding.
 
 ### 8.3 G*Power reference
 
@@ -510,9 +566,9 @@ The owner computes 5 sensitivity cases in G*Power and saves them to `tests/fixtu
 
 ---
 
-## 9. Build plan (16 stages)
+## 9. Build plan (18 stages)
 
-Claude Code does the implementation. The owner runs, checks, decides and understands. Pace: at about 2 hours a day (two stages), roughly 8–10 days; at 1 hour a day, about 16 days. Start a fresh Claude Code session for each stage.
+Claude Code does the implementation. The owner runs, checks, decides and understands. Pace: at about 2 hours a day (two stages), roughly 9–11 days; at 1 hour a day, about 18 days. Stages 10A and 10B (fsQCA) come after Stage 10 and before Stage 11. Start a fresh Claude Code session for each stage.
 
 Standard prompt (replace N):
 > Implement Stage N from BLUEPRINT.md, following CLAUDE.md. Run the tests and show me the real output. Then explain what you built in plain English in under 15 lines, and list anything you could not verify.
@@ -534,6 +590,8 @@ Common commands:
 | 8 | `run_proxy_eval.py` | Download DASS, check codebook, log [VERIFY] items; run script | Proxy results generated, or skip documented | Limits of the fake-word proxy |
 | 9 | `robustness.py`, `pipeline.py` + tests | `pytest`; run the gender comparison on bfi | Variant table and verdict produced | What robustness does and doesn't prove |
 | 10 | Design plan in `docs/design.md` (frontend-design skill) → **owner approves** → `report.py`, `charts.py`, `text.py`, report template + tests | Approve or revise the design plan; open the generated bfi report in a browser | Every section renders with real numbers in the approved style | Why templated text instead of an LLM |
+| 10A | `fsqca.py` part 1: scale-score preparation, direct calibration (percentile and scale-point anchors, 0.5 convention), necessity analysis; `validation/reference_fsqca.R` (`calibrate`, `pof`); reference and unit tests | Install the R package `QCA`; run the R script and `pytest`; check the fsQCA [VERIFY] items with the supervisor and a methods text | Memberships and necessity values match `QCA` within tolerance, or mismatches documented; 0.5 convention in `decisions.md` | Calibration anchors; necessity vs sufficiency |
+| 10B | `fsqca.py` part 2: truth table, minimisation (complex, parsimonious), robustness under flag variants, calibration sensitivity; R reference (`truthTable`, `minimize`); fsQCA in `Results` and the report + tests | Run the R script and `pytest`; open the bfi report's fsQCA section | Truth table and solutions match `QCA`; robustness and sensitivity verdicts render with real numbers | Consistency vs coverage; why remainders change the parsimonious solution |
 | 11 | FastAPI `api/` + `tests/test_api.py` | Start the API; try every endpoint at `/docs` with the sample file | All API tests pass; `/docs` works | How the website talks to the Python code |
 | 12 | Frontend scaffold, Tailwind tokens, generated API types, Landing, Upload and Answer-labels screens | `npm run dev`; upload the sample and the Google Forms fixture | Screens match the design plan; labels map correctly | What the frontend does vs the backend |
 | 13 | Scales screen, Results screen, charts, component tests | Full flow on the sample data | Results match the API output; charts render | How charts are drawn from API data |
@@ -553,6 +611,7 @@ Common commands:
 - [ ] Website and API deployed; full flow works on the sample dataset and the messy Google Forms-style CSV.
 - [ ] `docs/qa_checklist.md` completed on the live site, including phone width.
 - [ ] HTML report renders all sections with templated text only.
+- [ ] fsQCA runs on the sample data with the anchors shown, and its robustness and calibration-sensitivity verdicts are produced.
 - [ ] README includes: problem, demo link, screenshots, how it works, validation results (copied from generated files), limitations, how to run locally, roadmap (v2 list).
 - [ ] `docs/decisions.md`, `docs/validation.md`, `docs/verification_log.md` filled in.
 - [ ] Owner can answer every question in §11 without notes.
@@ -571,6 +630,7 @@ Common commands:
 8. Why PR-AUC rather than accuracy?
 9. What does the robustness check prove, and what doesn't it prove?
 10. Why should anyone trust your tool over asking an LLM to analyse the CSV?
+11. What does an fsQCA solution claim, how do the calibration anchors affect it, and why is it not a causal result?
 
 ---
 
@@ -592,6 +652,7 @@ Never claim user adoption, accuracy on real users, or validation that was not ru
 | R or an R package won't install | Reference tests skip; README states reference validation was not completed for those quantities |
 | `careless` package definitions differ from §7.1 | Match R where the published definition supports it; otherwise document the difference |
 | DASS dataset unavailable or different from expected | Skip proxy evaluation; document |
+| Our minimisation finds a different but equally minimal solution than `QCA` | Compare the full set of minimal models (M1, M2, …), not only the first; document any remaining difference in `validation.md` |
 | Render free tier is slow to wake or low on memory | Wake-up state in the UI; reduce parallel-analysis iterations for large uploads; enforce the upload cap |
 | Frontend and backend data shapes drift apart | Regenerate `schema.ts` from `/openapi.json` after every API change; API tests pin the response shapes |
 | CORS errors after deployment | `ALLOWED_ORIGINS` must exactly match the Vercel URL; Stage 15 documents the check |

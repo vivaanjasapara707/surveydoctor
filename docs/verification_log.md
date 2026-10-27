@@ -19,6 +19,11 @@ Every item marked **[VERIFY]** in BLUEPRINT.md is listed here. The owner checks 
 | 13 | 7.5 | statsmodels `FTestAnovaPower` `nobs` is total N | statsmodels docs | Evidence found, owner to confirm | **Total N.** In statsmodels 0.15.0, `ftest_anova_power` documents `nobs` as "Total sample size, sum over all groups" and computes `df_denom = nobs - k_groups` and noncentrality `effect_size**2 * nobs`, which only fit a total N. See note 13. | Claude Code (package source), 2026-10-26 |
 | 14 | 8.2 | `careless::mahad` returns D or D² | `careless` docs | Confirmed | **D².** careless 1.2.2 `mahad` returns `psych::outlier(...)`, which computes D². On bfi complete cases it matches `stats::mahalanobis` (squared distances) to 2.8e-14. Note: by default it uses a pairwise covariance and partial D² for rows with missing answers (see `docs/validation.md`). | Claude Code (Rscript, package source), 2026-10-06; Vivaan, 2026-10-06 |
 | 15 | 8.2 | `careless::evenodd` applies Spearman–Brown or not | `careless` docs | Confirmed | **Yes.** careless 1.2.2 `evenodd` applies 2r/(1+r), clamps the result at −1, then negates it (higher = more careless; the sign change came in version 1.2.0, per the function's own warning). Matches SurveyDoctor's `even_odd_sb` to 1e-4 where raw r ≥ 0. | Claude Code (Rscript, package source), 2026-10-06; Vivaan, 2026-10-06 |
+| 16 | 7.14 | fsQCA necessity threshold: consistency ≥ 0.9 | Supervisor; methods text (e.g. Schneider & Wagemann 2012) | Not yet verified | | |
+| 17 | 7.14 | fsQCA truth-table defaults: frequency 1, raw consistency 0.8, PRI 0.7 | Supervisor; methods text | Not yet verified | | |
+| 18 | 7.14 | How R's `QCA` package treats cases at exactly 0.5 membership | `QCA` documentation (`truthTable`, `calibrate`) | Not yet verified | | |
+| 19 | 7.14 | `QCA::calibrate` direct method: membership at the outer anchors (its default vs Ragin's ±3 log-odds) | `QCA` documentation | Not yet verified | | |
+| 20 | 7.14 | fsQCA calibration-sensitivity shifts: crossover 45th/55th percentile, outer anchors 90th/10th; scale-point anchors ±0.5 | Supervisor | Not yet verified | | |
 
 ## Notes
 

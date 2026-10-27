@@ -112,6 +112,15 @@ def _format_p(p: float) -> str:
     return "p < 0.001" if p < 0.001 else f"p = {p:.3f}"
 
 
+def _format_r(r: float) -> str:
+    """Two decimals, or three when two would round a non-zero value to ±0.00 (so a flag at
+    r < 0 never reads as "0.00")."""
+    text = f"{r:.2f}"
+    if r != 0 and text in ("0.00", "-0.00"):
+        text = f"{r:.3f}"
+    return text
+
+
 def _reason(rule: str, row: pd.Series, threshold: float) -> str:
     """One readable reason, e.g. 'Longstring 25 (threshold 13)'."""
     if rule == "longstring":
@@ -122,11 +131,13 @@ def _reason(rule: str, row: pd.Series, threshold: float) -> str:
         p_text = _format_p(row["mahalanobis_p"])
         return f"Mahalanobis {d2_text}{p_text} (threshold p < {threshold:g})"
     if rule == "even_odd":
-        return f"Even-odd r = {row['even_odd']:.2f} (threshold < {threshold:.2f})"
+        return f"Even-odd r = {_format_r(row['even_odd'])} (threshold < {threshold:.2f})"
     if rule == "psychsyn":
-        return f"Psychometric synonyms r = {row['psychsyn']:.2f} (threshold < {threshold:.2f})"
+        return (
+            f"Psychometric synonyms r = {_format_r(row['psychsyn'])} (threshold < {threshold:.2f})"
+        )
     if rule == "person_total":
-        return f"Person-total r = {row['person_total']:.2f} (threshold < {threshold:.2f})"
+        return f"Person-total r = {_format_r(row['person_total'])} (threshold < {threshold:.2f})"
     return f"{row['seconds_per_item']:.1f} seconds per item (threshold < {threshold:g})"
 
 

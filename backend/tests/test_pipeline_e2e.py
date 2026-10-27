@@ -1,8 +1,5 @@
-"""End-to-end test of the pipeline on the bfi sample (BLUEPRINT §8.4).
-
-Stage 9 checks that every section of Results is populated. The HTML report part of §8.4
-is added in Stage 10, when the report exists.
-"""
+"""End-to-end test of the pipeline on the bfi sample (BLUEPRINT §8.4): every section of
+Results is populated and the HTML report renders."""
 
 from __future__ import annotations
 
@@ -11,6 +8,7 @@ import pytest
 
 from surveydoctor.io import load_csv
 from surveydoctor.pipeline import Results, run_pipeline
+from surveydoctor.report import build_report
 from surveydoctor.robustness import GroupComparison
 from surveydoctor.schema import SurveySchema
 from tests.conftest import BFI_SCHEMA
@@ -64,3 +62,11 @@ def test_bad_analysis_fails_before_slow_steps() -> None:
     df = pd.DataFrame({"id": [1, 2], **{item: [1, 2] for item in schema.items}})
     with pytest.raises(ValueError, match="not available for grouping"):
         run_pipeline(df, schema, analysis=GroupComparison("Openness", "gender", 1, 2))
+
+
+def test_html_report_renders(results: Results) -> None:
+    html = build_report(results, "bfi.csv")
+    assert html.lstrip().startswith("<!doctype html>")
+    assert html.rstrip().endswith("</html>")
+    assert "Review before drawing conclusions" in html
+    assert "7 Robustness" in html and "Stable:" in html

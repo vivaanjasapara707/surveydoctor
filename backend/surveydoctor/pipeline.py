@@ -14,7 +14,7 @@ from typing import Any
 import pandas as pd
 
 from surveydoctor.careless import compute_indices
-from surveydoctor.flagging import apply_flags, composite_score, flag_variants
+from surveydoctor.flagging import apply_flags, composite_score, flag_variants, merge_rules
 from surveydoctor.io import DataIssue, PreparedData, prepare_data
 from surveydoctor.power import SensitivityResult, sample_sensitivity
 from surveydoctor.reliability import ScaleReliability, reliability
@@ -52,6 +52,7 @@ class Results:
         overview: Headline counts.
         issues: Counted data problems (invalid answers, removed rows, excluded columns).
         indices: Careless-response indices, one row per respondent.
+        rules: The flag rules used: the defaults with any user settings applied.
         flags: Flag rules, ``n_rules_triggered``, ``flagged`` and ``reasons`` per respondent.
         composite: Composite carelessness score (a relative ranking, not a probability).
         variants: The three exclusion masks used by the robustness check.
@@ -67,6 +68,7 @@ class Results:
     overview: Overview
     issues: list[DataIssue]
     indices: pd.DataFrame
+    rules: dict[str, dict[str, Any]]
     flags: pd.DataFrame
     composite: pd.Series
     variants: dict[str, pd.Series]
@@ -105,9 +107,10 @@ def run_pipeline(
     prepared = prepare_data(df, schema)
     if analysis is not None:
         check_analysis(analysis, prepared, schema)
+    rules_used = merge_rules(rules)
 
     indices = compute_indices(prepared, schema, warnings=warnings)
-    flags = apply_flags(indices, rules, n_items=len(schema.items), warnings=warnings)
+    flags = apply_flags(indices, rules_used, n_items=len(schema.items), warnings=warnings)
     composite = composite_score(indices)
     variants = flag_variants(flags, composite)
 
@@ -138,6 +141,7 @@ def run_pipeline(
         overview=overview,
         issues=list(prepared.issues),
         indices=indices,
+        rules=rules_used,
         flags=flags,
         composite=composite,
         variants=variants,

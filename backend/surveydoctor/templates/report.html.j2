@@ -1,0 +1,287 @@
+{% macro icon(status, size=16) -%}
+<svg class="ico" width="{{ size }}" height="{{ size }}" viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+{%- if status == "clear" %}<path d="M3 8.5l3.2 3L13 4.5"/>
+{%- elif status == "review" %}<path d="M8 1.8L15 14H1L8 1.8z" stroke-width="1.6"/><path d="M8 6.2v3.6M8 11.9v.1"/>
+{%- elif status == "problem" %}<path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/>
+{%- else %}<path d="M4 8h8"/>{% endif -%}
+</svg>
+{%- endmacro %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SurveyDoctor report · {{ source_name }}</title>
+<style>
+{{ font_faces | safe }}
+:root {
+{% for name, value in tokens.items() %}
+  --{{ name }}: {{ value }};
+{% endfor %}
+  --sans: "IBM Plex Sans", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.5 var(--sans); }
+main { max-width: 720px; margin: 0 auto; padding: 32px 16px 48px; }
+h1, h2, h3 { font-weight: 600; line-height: 1.25; margin: 0; }
+h1 { font-size: 31px; }
+h2 { font-size: 25px; margin: 48px 0 12px; padding-top: 16px; border-top: 1px solid var(--rule); }
+h3 { font-size: 20px; margin: 24px 0 8px; }
+p { margin: 8px 0; }
+.small { font-size: 12px; color: var(--slate); }
+.secondary { color: var(--graphite); }
+code, .code { font-family: var(--mono); font-size: 0.9em; }
+header.top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  font-size: 14px; color: var(--slate); margin-bottom: 16px; }
+
+/* Verdict band */
+.verdict { border: 1px solid var(--rule); border-left: 6px solid var(--status); background: var(--status-tint);
+  padding: 16px 24px; margin: 0 0 24px; }
+.verdict .headline { display: flex; align-items: baseline; gap: 12px; color: var(--status); }
+.verdict .icon { font-size: 28px; line-height: 1; }
+.verdict p { color: var(--ink); }
+.chips { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--status); background: var(--paper); color: var(--ink); padding: 4px 12px;
+  border-radius: 4px; font-size: 14px; }
+.chip b { color: var(--status); font-weight: 600; }
+.chip .why { display: block; color: var(--graphite); font-size: 12px; }
+.s-clear { --status: var(--clear); --status-tint: var(--clear-tint); }
+.s-review { --status: var(--review); --status-tint: var(--review-tint); }
+.s-problem { --status: var(--problem); --status-tint: var(--problem-tint); }
+.s-not_checked { --status: var(--slate); --status-tint: var(--mist); }
+
+/* Key figures */
+dl.figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin: 16px 0; }
+dl.figures div { border-top: 1px solid var(--rule); padding-top: 8px; }
+dt { font-size: 12px; color: var(--graphite); }
+dd { margin: 2px 0 0; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) { dl.figures { grid-template-columns: 1fr; } }
+
+/* Tables */
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-weight: 600; color: var(--graphite); background: var(--mist);
+  padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: bottom; }
+td { padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+tr { break-inside: avoid; }
+thead { display: table-header-group; }
+.t-review { background: var(--review-tint); }
+.mark { font-size: 12px; color: var(--review); font-weight: 600; margin-left: 4px; }
+td strong { font-weight: 600; }
+table.wide { min-width: 560px; }
+table.compact { font-size: 13px; }
+table.compact th, table.compact td { padding: 5px 6px; }
+th .sub { font-weight: 400; font-size: 11px; color: var(--slate); }
+.ico { display: inline-block; vertical-align: -0.15em; }
+.verdict .icon .ico { vertical-align: -0.1em; }
+
+/* Notes */
+.note { border-left: 3px solid var(--status, var(--rule)); padding: 4px 0 4px 12px; margin: 12px 0; }
+.note b { color: var(--status, var(--ink)); }
+figure { margin: 16px 0; }
+figure img { width: 100%; height: auto; display: block; }
+figcaption { font-size: 14px; color: var(--graphite); margin-top: 6px; }
+ol.refs li, ul.plain li { margin: 6px 0; }
+footer { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 12px; color: var(--slate); }
+
+@page { size: A4; margin: 18mm; }
+@media print {
+  body { font-size: 10.5pt; line-height: 1.45; }
+  main { max-width: none; padding: 0; }
+  h1 { font-size: 20pt; } h2 { font-size: 15pt; } h3 { font-size: 12pt; }
+  table, .chip, figcaption { font-size: 9pt; }
+  table.compact { font-size: 8pt; }
+  .small, dt, .chip .why, .mark { font-size: 8pt; }
+  .table-wrap { overflow: visible; }
+  table.wide { min-width: 0; }
+  h2, h3 { break-after: avoid; }
+  figure, .verdict { break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<main>
+<header class="top">
+  <span><b>SurveyDoctor report</b> · <span class="code">{{ source_name }}</span></span>
+  <span>{{ generated }}</span>
+</header>
+
+<section class="verdict s-{{ verdict.status }}" aria-labelledby="verdict-title">
+  <div class="headline">
+    <span class="icon">{{ icon(verdict.status, 26) }}</span>
+    <h1 id="verdict-title">{{ verdict.headline }}</h1>
+  </div>
+  <p>{{ verdict.sentence }}</p>
+  <ul class="chips">
+  {% for check in verdict.checks %}
+    <li class="chip s-{{ check.status }}"><b>{{ icon(check.status, 13) }}</b>
+      {{ check.label }}: <b>{{ status_words[check.status] }}</b><span class="why">{{ check.reason }}</span></li>
+  {% endfor %}
+  </ul>
+</section>
+
+<h2 id="summary" style="border-top:0;margin-top:0;padding-top:0">1 Summary</h2>
+<p>{{ summary.sentence }}</p>
+<dl class="figures">
+{% for label, value in summary.figures %}
+  <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+{% endfor %}
+</dl>
+
+<h2 id="data">2 Data checks</h2>
+{% if issues %}
+<p>Every problem in the data was counted. Nothing was removed silently.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Issue</th><th class="num">Count</th></tr></thead>
+  <tbody>
+  {% for issue in issues %}
+    <tr><td>{{ issue.what }}{% if issue.detail %}<br><span class="small code">{{ issue.detail }}</span>{% endif %}</td><td class="num">{{ issue.count }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% else %}
+<p>No invalid or missing answers were found.</p>
+{% endif %}
+
+<h2 id="careless">3 Careless responding</h2>
+<p>{{ careless.sentence }}</p>
+<h3>Rules used</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Rule</th><th>Flags a respondent when</th><th>Status</th><th class="num">Flagged</th></tr></thead>
+  <tbody>
+  {% for rule in careless.rules %}
+    <tr><td>{{ rule.label }}</td><td>{{ rule.description }}</td><td>{{ rule.status }}</td><td class="num">{{ rule.count }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<div class="note s-review"><b>Note.</b> {{ careless.heuristics_note }}</div>
+<figure>
+  <img src="{{ careless.histogram.data_uri }}" alt="{{ careless.histogram.alt }}">
+  <figcaption>Composite score of every respondent. {{ careless.composite_note }}</figcaption>
+</figure>
+<h3>Flagged respondents</h3>
+{% if careless.rows %}
+<p class="secondary">Showing {{ careless.n_shown }} of {{ careless.n_flagged }} flagged respondents, most rules first. The flags CSV has the full list.</p>
+<div class="table-wrap"><table class="wide">
+  <thead><tr><th>Respondent</th><th class="num">Rules</th><th class="num">Composite</th><th>Reasons</th></tr></thead>
+  <tbody>
+  {% for row in careless.rows %}
+    <tr><td class="code">{{ row.respondent }}</td><td class="num">{{ row.n_rules }}</td><td class="num">{{ row.composite }}</td><td>{{ row.reasons }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% else %}
+<p>No respondent was flagged by any rule.</p>
+{% endif %}
+
+<h2 id="reliability">4 Reliability</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Scale</th><th class="num">Items</th><th class="num">N</th><th class="num">Alpha</th><th class="num">95% CI</th><th class="num">Omega</th></tr></thead>
+  <tbody>
+  {% for s in reliability.scales %}
+    <tr><td>{{ s.scale }}</td><td class="num">{{ s.n_items }}</td><td class="num">{{ s.n_used }}</td>
+      <td class="num {% if s.alpha.tint %}t-{{ s.alpha.tint }}{% endif %}">{{ s.alpha.text }}{% if s.alpha.note %}<span class="mark">{{ s.alpha.note }}</span>{% endif %}</td>
+      <td class="num">{{ s.ci }}</td><td class="num">{{ s.omega }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<ul class="plain">
+{% for s in reliability.scales %}
+  <li>{{ s.sentence }}{% for w in s.warnings %} <span class="mark">reverse?</span> {{ w }}{% endfor %}</li>
+{% endfor %}
+</ul>
+
+<h2 id="structure">5 Factor structure</h2>
+<p>{{ structure.sentence }}</p>
+{% if not structure.skipped %}
+<dl class="figures">
+  <div><dt>KMO (sampling adequacy)</dt><dd>{{ structure.kmo }}</dd></div>
+  <div><dt>Bartlett's test</dt><dd>{{ structure.bartlett }}</dd></div>
+  <div><dt>Complete respondents used</dt><dd>{{ structure.n_used }}</dd></div>
+</dl>
+{% if structure.scree %}
+<figure>
+  <img src="{{ structure.scree.data_uri }}" alt="{{ structure.scree.alt }}">
+  <figcaption>Scree plot with the parallel-analysis threshold. Factors whose observed eigenvalue is above the dashed line stand out from random data.</figcaption>
+</figure>
+{% endif %}
+{% if structure.loadings %}
+<h3>Loadings</h3>
+<p class="secondary">{{ structure.thresholds }}</p>
+<div class="table-wrap"><table class="compact">
+  <thead><tr><th>Item</th>{% for f, scale in structure.factors %}<th class="num">{{ f }}{% if scale %}<br><span class="sub">{{ scale }}</span>{% endif %}</th>{% endfor %}<th class="num">h²</th></tr></thead>
+  <tbody>
+  {% for row in structure.loadings %}
+    <tr><td class="code">{{ row.item }}</td>
+    {% for c in row.cells %}<td class="num {% if c.tint %}t-{{ c.tint }}{% endif %}">{% if c.strong %}<strong>{{ c.text }}</strong>{% else %}{{ c.text }}{% endif %}{% if c.note %}<span class="mark">{{ c.note }}</span>{% endif %}</td>{% endfor %}
+    <td class="num">{{ row.communality }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<h3>Do the scales get their own factors?</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Scale</th><th>Factor</th><th class="num">Items on it</th><th>Shares the factor with</th></tr></thead>
+  <tbody>
+  {% for a in structure.alignment %}
+    <tr class="{% if a.tint %}t-{{ a.tint }}{% endif %}"><td>{{ a.scale }}</td><td>{{ a.factor }}</td><td class="num">{{ a.matching }}</td><td>{{ a.shared }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endif %}
+{% endif %}
+
+<h2 id="sensitivity">6 Sample sensitivity</h2>
+{% if sensitivity.sentences %}
+<ul class="plain">
+{% for sentence in sensitivity.sentences %}<li>{{ sentence }}</li>{% endfor %}
+</ul>
+<p class="secondary">{{ sensitivity.caveat }} This is a sensitivity analysis based on the sample size only, not post-hoc power.</p>
+{% else %}
+<p>Not computed: the sample is too small.</p>
+{% endif %}
+
+<h2 id="robustness">7 Robustness</h2>
+{% if robustness %}
+<p>Declared analysis: {{ robustness.description }}.</p>
+<div class="table-wrap"><table class="compact">
+  <thead><tr><th>Respondents</th><th class="num">Excluded</th><th class="num">N</th><th class="num">{{ robustness.estimate_label }}</th><th class="num">95% CI</th><th class="num">p</th><th>Significant<br><span class="sub">at 0.05</span></th><th class="num">{{ robustness.effect_label }}</th></tr></thead>
+  <tbody>
+  {% for row in robustness.rows %}
+    <tr class="{% if row.tint %}t-{{ row.tint }}{% endif %}"><td>{{ row.label }}{% if row.tint %}<span class="mark">changed</span>{% endif %}{% if row.note %}<br><span class="small">{{ row.note }}</span>{% endif %}</td>
+      <td class="num">{{ row.n_excluded }}</td><td class="num">{{ row.n }}</td><td class="num">{{ row.estimate }}</td><td class="num">{{ row.ci }}</td><td class="num">{{ row.p }}</td><td>{{ row.significant }}</td><td class="num">{{ row.effect }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<div class="note s-{{ robustness.status.status }}"><b>{{ icon(robustness.status.status, 14) }} {{ status_words[robustness.status.status] }}.</b> {{ robustness.sentence }}</div>
+{% else %}
+<p>No analysis was declared, so the robustness check was not run.</p>
+{% endif %}
+
+<h2 id="limitations">8 Limitations</h2>
+<ul class="plain">
+{% for item in limitations %}<li>{{ item }}</li>{% endfor %}
+</ul>
+{% if warnings %}
+<h3>Notes from the analysis</h3>
+<ul class="plain secondary">
+{% for w in warnings %}<li>{{ w }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<h2 id="methods">9 Methods and references</h2>
+{% for name, description in methods %}
+<p><b>{{ name }}.</b> {{ description }}</p>
+{% endfor %}
+<h3>References <span class="small">(verify before citing)</span></h3>
+<ol class="refs small">
+{% for ref in references %}<li>{{ ref }}</li>{% endfor %}
+</ol>
+
+<footer>SurveyDoctor {{ version }} · generated {{ generated }} · No data was stored.</footer>
+</main>
+</body>
+</html>

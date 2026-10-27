@@ -19,3 +19,6 @@ frontend/.vite/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Generated reports (scripts/report_bfi.py)
+backend/reports/

@@ -280,3 +280,43 @@ These checks were run to rule out a bug before reporting the near-chance result.
   - Neuroticism −0.315 (−0.266);
   - Openness +0.100 (+0.124).
 - Excluded per variant: any_rule 686, two_rules 72, composite_top10 280.
+
+## Stage 10 — 27 October 2026
+
+### Design plan and approval
+- **`docs/design.md`** was written first and approved by the owner before any styling code. Decisions: IBM Plex, the verdict rules in design.md §5, the palette, and no dark mode in v1. The frontend-design skill was not installed (CLAUDE.md says "if installed"), so the plan was written directly from the BLUEPRINT §7.13 brief.
+- **Contrast and colour-blind checks were computed, not estimated.** All text colours pass WCAG AA (lowest: Slate on Mist, 4.54). The chart colours (Signal `#1F5F99`, Copper `#C2581F`) pass the palette validator: colour-blind separation ΔE 19.6 and normal-vision ΔE 28.1.
+
+### Fonts (owner-approved dependency)
+- **Source:** IBM Plex from IBM's npm packages `@ibm/plex-sans@1.1.0` and `@ibm/plex-mono@1.1.0` (via cdn.jsdelivr.net), SIL Open Font Licence 1.1. The licence is saved next to the files in `surveydoctor/templates/fonts/LICENSE.txt`; the Sans and Mono licence files were identical.
+- **Embedded in the report** (base64 WOFF2, no external requests): Plex Sans Regular and SemiBold, and Plex Mono Regular, 176 KB in total. The "complete" files were used rather than the Latin-only subsets, because the report uses α, ω, χ², ≥ and similar symbols.
+- **Charts:** matplotlib cannot read WOFF2, and converting WOFF2 needs the `brotli` package (not installed). So `IBMPlexSans-Regular.ttf` was produced once from IBM's WOFF (v1) file with fontTools, which matplotlib already installs. Only that TTF is used, for chart text. Chart titles are HTML text, so no bold TTF is needed.
+
+### Report modules
+- **`text.py`** holds every sentence template and the approved verdict logic. Each template takes computed values only. `overall_verdict` returns the worst check status. Checks that did not run are "not checked", are named in the sentence, and never make the headline claim more than what ran.
+- **Reliability "Review"** also triggers when alpha cannot be computed for a scale, or when an item looks reverse-worded (design.md §5: "no reverse-item warnings").
+- **`charts.py`:** composite histogram and scree plot as 2× PNG (200 dpi, 6.8 × 3.0 in), each with alt text built from the plotted numbers. The design tokens live in `charts.TOKENS` and are reused for the report's CSS variables, so there is one source of colours.
+- **`report.py` + `templates/report.html.j2`:** the report computes no statistics. Jinja2 autoescaping is on, because column names, group values, IDs and the file name come from the user's CSV; a test checks that `<script>` in an ID is escaped. Status icons are inline SVG, because Plex has no ✓, ⚠ or ✕ and fallback fonts drew them inconsistently. "fsQCA" will become section 8 in Stage 10B; until then Limitations is 8 and Methods 9.
+- **The report shows the flag rules actually used.** `Results` gained a `rules` field (defaults merged with any user settings, validated before the slow steps).
+- **Data checks** group the per-column issues (blank answers, invalid answers) into one row each, with the columns and counts listed, instead of 24 near-identical rows on bfi.
+- **The flagged-respondents table** shows the top 50 by number of rules, then by composite score, with reasons. The full list belongs in the flags CSV (Stage 11).
+- **Formatting:** `text.fmt` never prints "-0.00". In flag reasons, `flagging._format_r` shows three decimals when two would round a non-zero r to ±0.00, so "r = -0.003 (threshold < 0.00)" does not read as "0.00 < 0.00".
+- **Limitations** include the owner's Stage 7 decision (the composite is weak against straightlining and midpoint responding, and longstring catches those) and the Stage 8 follow-up (shuffled question order and longstring).
+- **References** are labelled "verify before citing" (§7.9). They were written from memory.
+
+### Checked by rendering (this session)
+- The bfi report was rendered with headless Microsoft Edge and inspected at 800 px, and inside a 375 px frame. Headless Edge will not lay out narrower than 496 px, so a frame gives a true phone viewport.
+- **Fixed after inspection:**
+  - the loadings and robustness tables overflowed (the last column was cut off), now shorter headers and compact tables;
+  - the ✓ icon looked like √, now inline SVG;
+  - "-0.00" values.
+- **Printed to PDF with Edge:** A4 pages (595 × 842 pt), 10 pages for bfi.
+- **`scripts/report_bfi.py`** writes `backend/reports/bfi_report.html` (gitignored) for the owner's check.
+
+### Observed on bfi
+- The verdict is "Review before drawing conclusions":
+  - careless responding is Review (72 respondents flagged by two or more rules);
+  - reliability is Review (Openness alpha 0.60);
+  - factor structure is Clear (KMO 0.85, every scale has its own factor);
+  - robustness is Clear (the gender difference in Neuroticism is stable).
+- The report is 382 KB and renders in about 0.5 s.

@@ -196,3 +196,42 @@ All numbers are from `results/simulation_summary.md`.
 ### Owner decisions on the Stage 7 findings (26 October 2026)
 - **Composite score: kept as specified** (mean of percentile ranks, BLUEPRINT §7.2). Its weakness against straightlining, midpoint and patterned responding is documented rather than fixed. The report (Stage 10) and README (Stage 15) must state it, using the numbers in `results/simulation_summary.md`, and say that longstring is the index that catches straightlining.
 - **Even-odd threshold: decision postponed.** The 0.30 default stays, and the Stage 3 follow-up remains open. The simulation evidence above is the input for that later decision.
+
+## Stage 8 — 27 October 2026
+
+### Data
+- **Downloaded by Claude Code at the owner's request.** BLUEPRINT §5.2 says the owner downloads DASS by hand. Source: `DASS_data_21.02.19.zip` (7,129,804 bytes) from https://openpsychometrics.org/_rawdata/, unzipped into `backend/data/raw/dass/` (gitignored, never committed). Windows' TLS revocation check could not reach its server, so `curl --ssl-no-revoke` was used; the certificate itself was still verified.
+- **Contents (from the file, this session).** 39,775 rows, tab-separated. All 42 answers are 1–4, with no missing values. Every respondent's positions Q1I–Q42I are a permutation of 1–42. The per-item times sum to a median of 202 s.
+- **Items were shown in a different random order to each respondent** (codebook: "Each item was presented one at a time in a random order for each new participant"; positions in Q#I). The blueprint did not anticipate this.
+
+### Proxy evaluation (`evaluation/run_proxy_eval.py`)
+- **Schema built in code** (`dass_schema()`): items Q1A–Q42A in item-number order, scale 1–4, no reverse items, and the §5.2 scales. The scale mapping matches the official DASS scoring template; see `verification_log.md`, note 8. A row-number `id` column is added.
+- **Longstring in presentation order.** Because the items were shuffled, a run of identical answers in item-number order is not what the respondent typed in a row. Longstring is therefore computed with the app's own `careless.longstring` on each respondent's answers rearranged by Q#I. The composite and flags are then computed from that longstring (`simulate.evaluate_indices`, split out of `evaluate` for this purpose; the simulation results are byte-for-byte unchanged).
+  - In practice it makes almost no difference here: ROC-AUC 0.508 in presentation order vs 0.506 in item order, both medians 5.
+  - The other indices do not depend on the order in which items were shown.
+- **Response time:** duration = sum of Q1E–Q42E / 1000 (seconds), as §7.8 specifies. A respondent with any missing item time gets no duration (none here). `seconds_per_item` and its rule (< 2 s) therefore apply.
+- **Metrics:** the same functions as the simulation, so ROC-AUC, PR-AUC, recall and precision are computed identically. Indices that cannot be computed for a respondent are ranked as least suspicious. Each rule is also reported on its own.
+- **Not added:** confidence intervals (N = 39,775 makes them very narrow) and alternative proxy definitions (see the exploratory check below).
+
+### Results (from `results/proxy_eval_summary.md`)
+- Proxy base rate: 5,192 of 39,775 (13.1%) claimed at least one fake word.
+- **Agreement is close to chance.** ROC-AUC: composite 0.537, longstring 0.508, Mahalanobis 0.499, even-odd 0.481, psychometric synonyms 0.467, person-total 0.541, seconds per item 0.589. Composite PR-AUC is 0.150, against a chance level of 0.131.
+- **Default flag rule:** recall 0.479, precision 0.135 (chance 0.131), with 46.3% of all respondents flagged. The even-odd and psychometric-synonym rules each flag over 22% of respondents.
+
+### Exploratory check (run in this session, not part of the script's output)
+These checks were run to rule out a bug before reporting the near-chance result. The code was a one-off `python -c` run, using the same functions.
+- The presentation-order rearrangement matches a by-hand rearrangement of respondent 1.
+- **The proxy looks like overclaiming rather than inattention.**
+  - Proxy-positive respondents also tick more *real* words (mean 8.87 vs 6.64 of 13).
+  - Native English speakers claim fake words about twice as often (19.0% vs 9.7%; `engnat` 1 vs 2).
+  - Proxy-positive respondents are only slightly faster (median 4.29 vs 4.90 s per item).
+- **Stricter proxies agree a little more, but remain weak.** Composite ROC-AUC:
+  - ≥ 2 fake words: 0.569 (n = 1,148);
+  - all 3 fake words: 0.570 (n = 326);
+  - ticked all 16 words: 0.636 (n = 116).
+  - Seconds per item is the best single index for every definition (0.589–0.675).
+- **Reading.** On this dataset, SurveyDoctor's indices and the fake-word proxy measure largely different things. This does not show that the indices fail. The simulation (Stage 7) shows they detect the patterns they target. It does show that overclaiming on a vocabulary check is not a good stand-in for the response patterns these indices detect. The README must report these numbers as they are (BLUEPRINT §5.2: "agreement with a validity proxy", not "accuracy").
+
+### Follow-ups for the owner
+- **Randomised item order in user surveys.** The app's longstring assumes every respondent saw the items in schema order, as the schema docstring says. If a user's survey shuffled the items, longstring is computed on the wrong sequence. Consider a limitation sentence in the report (Stage 10) or a schema option. Not changed now.
+- **Licence of the DASS data** is not stated on the raw-data page or in the codebook (see `verification_log.md`, item 6).

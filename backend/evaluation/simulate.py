@@ -194,8 +194,18 @@ def evaluate(data: pd.DataFrame, labels: pd.Series, schema: SurveySchema) -> lis
     prepared = prepare_data(data, schema)
     labels = labels.loc[prepared.raw_items.index]
     indices = compute_indices(prepared, schema)
+    return evaluate_indices(indices, labels, n_items=len(schema.items))
+
+
+def evaluate_indices(indices: pd.DataFrame, labels: pd.Series, n_items: int) -> list[dict]:
+    """Score already computed indices against labels (the second half of :func:`evaluate`).
+
+    The composite score and the default flags are computed here from ``indices``, so a
+    caller that replaces an index (e.g. longstring in presentation order) gets a composite
+    and flags that use the replacement.
+    """
     scores = indices.assign(composite=composite_score(indices))
-    flags = apply_flags(indices, n_items=len(schema.items))
+    flags = apply_flags(indices, n_items=n_items)
 
     records: list[dict] = []
     for measure in SCORE_MEASURES:

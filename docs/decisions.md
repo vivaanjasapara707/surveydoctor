@@ -235,3 +235,48 @@ These checks were run to rule out a bug before reporting the near-chance result.
 ### Follow-ups for the owner
 - **Randomised item order in user surveys.** The app's longstring assumes every respondent saw the items in schema order, as the schema docstring says. If a user's survey shuffled the items, longstring is computed on the wrong sequence. Consider a limitation sentence in the report (Stage 10) or a schema option. Not changed now.
 - **Licence of the DASS data** is not stated on the raw-data page or in the codebook (see `verification_log.md`, item 6).
+
+## Stage 9 — 27 October 2026
+
+### Robustness (`robustness.py`)
+- **Declared analysis** as frozen dataclasses: `GroupComparison(scale, group_column, group_a, group_b)` and `Correlation(scale_x, scale_y)`. The group estimate is mean(A) − mean(B), so its sign depends on which group the user names first.
+- **Statistics from SciPy**, checked against hand formulas in this session:
+  - Welch: `ttest_ind(equal_var=False)` and its `confidence_interval(0.95)`, which matches the Welch–Satterthwaite formula exactly;
+  - `mannwhitneyu(alternative="two-sided")`;
+  - `pearsonr` and its `confidence_interval(0.95)`, which is the Fisher-z interval;
+  - `spearmanr`.
+  - Cohen's d (pooled SD) is a one-line formula, as in §7.6.
+- **Scale scores** use `io.scale_scores` (mean of scored items, at least 80% answered), computed once on all respondents and then subset per variant. Respondents without the needed score(s) are left out of every variant, and the count goes to warnings.
+- **Group values** match as numbers when both sides are numeric (so `1`, `1.0` and `"1"` match bfi's gender codes), otherwise as trimmed text. Matching is case-sensitive.
+- **Bad input raises `ValueError`** before any computation, in plain English. This covers an unknown scale, the same scale twice, a group column that does not exist or was excluded as personal, two identical group values, and a group value nobody has.
+- **A variant that cannot be computed** (fewer than 2 per group, fewer than 4 for a correlation, or all scores identical) gets NaN values and a note. It is left out of the verdict and named in warnings. If the all-respondents result cannot be computed, the verdict is `None`.
+- **Variant order** is "all" followed by the order of `flag_variants` (any_rule, two_rules, composite_top10).
+
+### Verdict: deviation from the literal §7.6 wording (owner to confirm)
+- §7.6 says "Direction changes → unstable". Read literally, a non-significant estimate whose sign flips by chance (or that becomes exactly 0) would get the strongest warning. A unit test on constructed data showed exactly this. Once the flagged respondents were removed, the difference was exactly 0. The literal rule said "unstable", although the result had only lost significance.
+- **Implemented rule:**
+  - "unstable" when the all-respondents result and a variant are **both significant and in opposite directions**;
+  - "sensitive" when significance changes in any variant;
+  - otherwise "stable".
+  - A sign change between non-significant estimates does not count. Tests pin each case.
+- If the owner prefers the literal rule, change the `flipped` condition in `robustness.verdict` and its tests.
+
+### Pipeline (`pipeline.py`)
+- **`run_pipeline(df, schema, *, rules, n_factors, analysis, pa_iterations)`** takes the loaded CSV (`io.load_csv`) and returns `Results`. Order: prepare data, then indices, flags, composite and variants, then reliability, structure, sensitivity and robustness. Every module appends to one `warnings` list, in that order.
+- **`Results` fields:** `schema`, `prepared`, `overview`, `issues`, `indices`, `flags`, `composite`, `variants`, `reliability`, `structure`, `sensitivity`, `robustness` (None if no analysis was declared) and `warnings`. `Overview` holds the headline counts (respondents, items, scales, flagged by ≥ 1 and ≥ 2 rules). fsQCA fields will be added in Stage 10B.
+- **The declared analysis is checked right after data preparation**, so a typo fails fast, before the slow steps.
+- **Sample sensitivity uses the number of analysed respondents** (everyone with at least one valid answer: 2,800 on bfi), with the two groups split evenly and 3 ANOVA groups (`power.sample_sensitivity` defaults). With fewer than 4 respondents it is skipped, with a warning.
+- **The convenience-sample warning and other templated limitations** belong to `text.py` (Stage 10), not to the pipeline.
+
+### Owner check script
+- **`scripts/robustness_bfi.py`** (not in the §4 tree) runs the pipeline with the gender comparison (1 vs 2) on each bfi scale, or one with `--scale`, and prints the variant table and verdict. It uses 20 parallel-analysis iterations, which affect only the structure section.
+
+### Observed on bfi (from running `scripts/robustness_bfi.py` and the pipeline in this session)
+- The pipeline on bfi takes about 0.3 s with 100 parallel-analysis iterations.
+- **Gender 1 (male) minus 2 (female)** is significant in every variant for all five scales, so all five are "stable". All-respondents differences (d):
+  - Agreeableness −0.395 (d −0.450);
+  - Conscientiousness −0.189 (−0.199);
+  - Extraversion −0.238 (−0.225);
+  - Neuroticism −0.315 (−0.266);
+  - Openness +0.100 (+0.124).
+- Excluded per variant: any_rule 686, two_rules 72, composite_top10 280.

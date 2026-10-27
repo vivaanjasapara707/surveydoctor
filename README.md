@@ -4,7 +4,7 @@ SurveyDoctor checks the quality of rating-scale survey data (careless responding
 
 **Status:** under construction. See `BLUEPRINT.md` for the full plan. No evaluation results are reported yet; they will be copied here from generated files in `backend/results/` once they exist.
 
-**Reference validation against R:** run for the careless-response indices (longstring, IRV, Mahalanobis, even-odd, psychometric synonyms), reliability (alpha with CI, alpha if deleted, corrected item-total correlation, omega total) and factor structure (KMO, Bartlett's test, correlation eigenvalues, 5-factor EFA loadings, communalities and factor correlations). Results and documented differences: `docs/validation.md`.
+**Reference validation against R:** run for the careless-response indices (longstring, IRV, Mahalanobis, even-odd, psychometric synonyms), reliability (alpha with CI, alpha if deleted, corrected item-total correlation, omega total) factor structure (KMO, Bartlett's test, correlation eigenvalues, 5-factor EFA loadings, communalities and factor correlations) and fsQCA calibration and necessity (QCA package). Results and documented differences: `docs/validation.md`.
 
 **Reference validation against G*Power:** the sample-sensitivity calculations (smallest detectable d, r and f) match G*Power 3.1.9.7 within 0.01 on 5 cases. See `docs/validation.md`.
 
@@ -23,13 +23,14 @@ pytest
 
 ## Regenerate the R reference values (optional)
 
-Requires R with the packages `careless`, `psych`, `GPArotation` and `jsonlite`. Without R, the reference tests skip.
+Requires R with the packages `careless`, `psych`, `GPArotation`, `QCA` and `jsonlite`. Without R, the reference tests skip.
 
 ```bash
 cd backend
 Rscript validation/reference_careless.R
 Rscript validation/reference_reliability.R
 Rscript validation/reference_structure.R
+Rscript validation/reference_fsqca.R
 pytest tests/test_reference_r.py
 ```
 

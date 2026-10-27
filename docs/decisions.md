@@ -320,3 +320,53 @@ These checks were run to rule out a bug before reporting the near-chance result.
   - factor structure is Clear (KMO 0.85, every scale has its own factor);
   - robustness is Clear (the gender difference in Neuroticism is stable).
 - The report is 382 KB and renders in about 0.5 s.
+
+## Stage 10A — 27 October 2026
+
+### fsQCA part 1 (`fsqca.py`): calibration and necessity
+- **No Python library** is listed for fsQCA (BLUEPRINT §7.14), so calibration and necessity are implemented in `fsqca.py` with NumPy and pandas, and checked against R's `QCA` 3.25 (installed for the owner on 27 October 2026 from CRAN).
+- **Calibration matches `QCA::calibrate(type = "fuzzy", method = "direct", logistic = TRUE)`.** Read from the package source in this session:
+  - membership = 1 / (1 + exp(−(x − c) · ln(idm/(1 − idm)) / d)), with d = full − c above the crossover and d = c − non below it;
+  - `idm = 0.95`, so the outer anchors map to exactly 0.95 and 0.05, not Ragin's ±3 log-odds (0.953 and 0.047);
+  - scores beyond the outer anchors are not clamped.
+- **Anchors** are (full membership, crossover, full non-membership), with membership rising with the score; decreasing calibration is not offered.
+  - Defaults: the 95th, 50th and 5th percentiles of the analysed respondents' scores, using numpy's linear percentile, which is the same as R's `quantile(type = 7)`.
+  - Scale-point anchors can be set per scale. Scales without them use the percentile defaults.
+  - **Bad user anchors raise `ValueError`:** out of order, off the answer scale, the wrong count, or for a scale not in the analysis.
+  - **Tied percentile anchors** (many respondents with the same score) are a data problem, not user error. The analysis is then skipped with a plain-English reason suggesting scale-point anchors, following `structure.py`'s convention.
+- **Cases at exactly 0.5 follow R's `QCA` convention**, read from `QCA::truthTable`'s source and confirmed with a small experiment in this session:
+  - such cases count fully in the consistency, coverage and PRI sums;
+  - they belong to no truth-table row and are left out of every row's case count and case list;
+  - `QCA` warns about them ("Fuzzy causal conditions should not have values of 0.5 in the data").
+  - SurveyDoctor counts respondents at exactly 0.5 in at least one condition (`n_at_crossover`) and warns in plain English. Their effect on the truth table is implemented in Stage 10B. In the experiment (6 cases, one with A = 0.5), the rows held 5 cases. Row ~A·B's consistency was 0.75, which only comes out if the 0.5 case is included (0.667 without it).
+- **Necessity**, for each condition and its negation 1 − X:
+  - consistency = Σmin(X,Y)/ΣY;
+  - coverage = Σmin(X,Y)/ΣX;
+  - relevance of necessity = Σ(1 − X)/Σ(1 − min(X,Y)), the formula `QCA::pof` reports as RoN, matched to 1e-14.
+  - A zero denominator gives NaN. "Passes" means consistency ≥ the threshold (default 0.90, [VERIFY] item 16), inclusive.
+- **Scale scores and respondents:** `io.scale_scores` (mean of scored items, at least 80% answered), with listwise deletion over the scales in the analysis. The count left out goes to warnings.
+- **Not yet in `Results`, the pipeline or the report.** BLUEPRINT §7.14 puts that in Stage 10B, together with the truth table.
+
+### Bug found and fixed before commit
+- The first version of `calibrate` used d = non − c below the crossover. That is negative, so the sign flipped and every score below the crossover got membership above 0.5.
+- It was caught by a sanity check in this session: every negated condition had coverage and relevance of exactly 1.0000. Checking by hand showed all memberships were at least 0.5.
+- The fix uses d = c − non. `test_calibrate_symmetric_anchors_by_hand` and the R reference test both pin the correct values.
+
+### Observed on bfi (conditions A, C, E, O; outcome N; default anchors; this session)
+- 2,782 of 2,800 respondents used; 18 left out.
+- **Anchors (95th / 50th / 5th percentiles):**
+
+| Scale | Full | Crossover | Non |
+|---|---|---|---|
+| Agreeableness | 6.0 | 4.8 | 3.0 |
+| Conscientiousness | 5.7425 | 4.4 | 2.6 |
+| Extraversion | 5.8 | 4.2 | 2.2 |
+| Openness | 5.8 | 4.6 | 3.2 |
+| Neuroticism | 5.2 | 3.0 | 1.25 |
+
+- **No condition or negation passes the 0.90 necessity threshold.** Consistency ranges from 0.594 (Conscientiousness) to 0.702 (~Conscientiousness).
+
+### Finding for the owner: many respondents sit exactly at the crossover
+- **792 of 2,782 bfi respondents (28%)** have a membership of exactly 0.5 in at least one condition. Scale scores are means of 5 items (steps of 0.2), and the median crossover is itself a common score.
+- Under the `QCA` convention, these respondents would belong to no truth-table row in Stage 10B, so about a quarter of the sample would be missing from the case counts.
+- **Common practice is to move the crossover slightly off the observed values** (for example, +0.001), or to choose scale-point anchors between possible scores. This is a methodological choice for the owner and the supervisor before Stage 10B. Nothing is changed automatically; the report will state the count.

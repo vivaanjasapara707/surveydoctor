@@ -18,6 +18,7 @@ import pandas as pd
 import pytest
 
 from surveydoctor.careless import even_odd, irv, longstring, mahalanobis, psychsyn, synonym_pairs
+from surveydoctor.fsqca import FsqcaSpec, fsqca
 from surveydoctor.io import PreparedData, load_csv, prepare_data
 from surveydoctor.reliability import reliability
 from surveydoctor.schema import SurveySchema
@@ -32,6 +33,7 @@ from tests.conftest import BFI_CSV, BFI_SCHEMA, FIXTURES
 CARELESS_FIXTURE = FIXTURES / "reference_careless.json"
 RELIABILITY_FIXTURE = FIXTURES / "reference_reliability.json"
 STRUCTURE_FIXTURE = FIXTURES / "reference_structure.json"
+FSQCA_FIXTURE = FIXTURES / "reference_fsqca.json"
 
 
 def _load_fixture(path: Path) -> dict[str, Any]:
@@ -362,3 +364,57 @@ def test_parallel_analysis_suggests_same_number_as_psych(struct_ref):
         100 * theirs["quant"],
     )
     assert ours.parallel.n_suggested == theirs["ncomp"]
+
+
+# --- fsQCA part 1: QCA::calibrate and QCA::pof (Stage 10A) --------------------------------
+
+FSQCA_TOL = 1e-6  # BLUEPRINT §8.2
+
+
+@pytest.fixture(scope="module")
+def fsqca_ref() -> dict[str, Any]:
+    return _load_fixture(FSQCA_FIXTURE)
+
+
+@pytest.fixture(scope="module")
+def fsqca_ours(fsqca_ref):
+    schema = SurveySchema.load(BFI_SCHEMA)
+    spec = FsqcaSpec(outcome=fsqca_ref["outcome"], conditions=tuple(fsqca_ref["conditions"]))
+    return fsqca(prepare_data(load_csv(BFI_CSV), schema), schema, spec)
+
+
+def test_fsqca_same_respondents(fsqca_ours, fsqca_ref):
+    assert (fsqca_ours.n_used, fsqca_ours.n_excluded) == (
+        fsqca_ref["n_used"],
+        fsqca_ref["n_excluded"],
+    )
+    assert fsqca_ours.scores.index.tolist() == fsqca_ref["row_ids"]
+
+
+def test_fsqca_percentile_anchors_match_r_quantile(fsqca_ours, fsqca_ref):
+    for scale, ref in fsqca_ref["anchors"].items():
+        ours = fsqca_ours.anchors[scale]
+        assert (ours.full, ours.crossover, ours.non) == pytest.approx(
+            (ref["full"], ref["crossover"], ref["non"]), abs=1e-9
+        ), scale
+
+
+def test_fsqca_memberships_match_calibrate(fsqca_ours, fsqca_ref):
+    for scale, ref in fsqca_ref["memberships"].items():
+        np.testing.assert_allclose(
+            fsqca_ours.memberships[scale].to_numpy(), np.array(ref), rtol=0, atol=FSQCA_TOL,
+            err_msg=scale,
+        )  # fmt: skip
+    assert fsqca_ours.n_at_crossover == fsqca_ref["n_at_crossover"]
+
+
+def test_fsqca_necessity_matches_pof(fsqca_ours, fsqca_ref):
+    ours = {r.condition: r for r in fsqca_ours.necessity}
+    assert set(ours) == {r["condition"] for r in fsqca_ref["necessity"]}
+    for ref in fsqca_ref["necessity"]:
+        row = ours[ref["condition"]]
+        for measure in ("consistency", "coverage", "relevance"):
+            assert getattr(row, measure) == pytest.approx(ref[measure], abs=FSQCA_TOL), (
+                ref["condition"],
+                measure,
+            )

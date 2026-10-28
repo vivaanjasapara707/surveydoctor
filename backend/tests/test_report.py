@@ -11,6 +11,7 @@ import pandas as pd
 import pytest
 
 from surveydoctor.charts import TOKENS, composite_histogram, scree_plot
+from surveydoctor.fsqca import FsqcaSpec
 from surveydoctor.io import load_csv
 from surveydoctor.pipeline import run_pipeline
 from surveydoctor.report import _issue_rows, build_report, rule_description
@@ -21,18 +22,30 @@ from tests.conftest import BFI_CSV, BFI_SCHEMA
 
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 WHEN = datetime(2026, 10, 27, 9, 30, tzinfo=UTC)
+FSQCA_CONDITIONS = ("Agreeableness", "Conscientiousness", "Extraversion", "Openness")
 
 
-@pytest.fixture(scope="module")
-def bfi_html() -> str:
+def _bfi_report(fsqca_spec: FsqcaSpec) -> str:
     if not BFI_CSV.exists():
         pytest.skip("data/sample/bfi.csv not found. Run: python scripts/download_data.py")
     schema = SurveySchema.load(BFI_SCHEMA)
     results = run_pipeline(
         load_csv(BFI_CSV), schema, analysis=GroupComparison("Neuroticism", "gender", 1, 2),
-        pa_iterations=20,
+        fsqca_spec=fsqca_spec, pa_iterations=20,
     )  # fmt: skip
     return build_report(results, "bfi.csv", WHEN)
+
+
+@pytest.fixture(scope="module")
+def bfi_html() -> str:
+    """The bfi report with the fsQCA reference case at the default thresholds."""
+    return _bfi_report(FsqcaSpec("Neuroticism", FSQCA_CONDITIONS))
+
+
+@pytest.fixture(scope="module")
+def bfi_html_pri() -> str:
+    """The same fsQCA with PRI 0.55, where the truth table has outcome-1 rows."""
+    return _bfi_report(FsqcaSpec("Neuroticism", FSQCA_CONDITIONS, pri_threshold=0.55))
 
 
 # --- Charts -------------------------------------------------------------------------------
@@ -106,8 +119,8 @@ def test_issue_rows_group_per_column_issues() -> None:
 
 def test_report_has_every_section(bfi_html: str) -> None:
     for heading in ["1 Summary", "2 Data checks", "3 Careless responding", "4 Reliability",
-                    "5 Factor structure", "6 Sample sensitivity", "7 Robustness",
-                    "8 Limitations", "9 Methods and references"]:  # fmt: skip
+                    "5 Factor structure", "6 Sample sensitivity", "7 Robustness", "8 fsQCA",
+                    "9 Limitations", "10 Methods and references"]:  # fmt: skip
         assert f">{heading}</h2>" in bfi_html
 
 
@@ -157,7 +170,40 @@ def test_report_escapes_user_text() -> None:
     assert "<evil>" not in html and "&lt;evil&gt;" in html
     assert "<script>x</script>" not in html
     assert "A &lt;b&gt;" in html
+    assert "No fsQCA was requested." in html
 
 
 def test_pearson_note_appears_once(bfi_html: str) -> None:
     assert bfi_html.count("Pearson correlations, which treat ordinal answers") == 1
+
+
+# --- fsQCA section ------------------------------------------------------------------------
+
+
+def test_fsqca_section_without_solution(bfi_html: str) -> None:
+    assert (
+        "The fsQCA of Neuroticism with the conditions Agreeableness, Conscientiousness, "
+        "Extraversion and Openness, on 2,782 respondents"
+    ) in bfi_html
+    assert "6.00 / 4.80 / 3.00" in bfi_html  # Agreeableness anchors (Stage 10A)
+    assert "0 of 16 observed rows have outcome 1" in bfi_html
+    assert "792 respondents have a membership of exactly 0.5" in bfi_html
+    assert "so there is no solution" in bfi_html
+    assert bfi_html.count("No solution on all respondents") == 2  # robustness, calibration
+    assert bfi_html.count("This shows sensitivity to exclusion choices.") == 2  # + section 7
+    assert "This shows sensitivity to the calibration anchors." in bfi_html
+    assert "fsQCA solutions describe set relations in this sample, not causes." in bfi_html
+    assert "Ragin, C. C. (2008)" in bfi_html
+
+
+def test_fsqca_section_with_solution(bfi_html_pri: str) -> None:
+    # Values as in the R reference case bfi_pri_0.55 (QCA::minimize): M1 0.766 / 0.624.
+    assert "~Agreeableness*~Conscientiousness + ~Conscientiousness*~Extraversion" in bfi_html_pri
+    assert "<b>0.766</b>" in bfi_html_pri and "<b>0.624</b>" in bfi_html_pri
+    assert "6 of 16 observed rows have outcome 1" in bfi_html_pri
+    assert (
+        "No solution: no truth-table row reaches the thresholds with excluding respondents "
+        "flagged by any rule. Paths also change with excluding the top 10% composite scores."
+    ) in bfi_html_pri
+    assert "Changed: solution paths are added or removed with crossover lower" in bfi_html_pri
+    assert "~Agreeableness*~Conscientiousness*~Extraversion" in bfi_html_pri  # a new path

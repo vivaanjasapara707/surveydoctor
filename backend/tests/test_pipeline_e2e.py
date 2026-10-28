@@ -6,6 +6,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
+from surveydoctor.fsqca import FsqcaSpec
 from surveydoctor.io import load_csv
 from surveydoctor.pipeline import Results, run_pipeline
 from surveydoctor.report import build_report
@@ -14,6 +15,7 @@ from surveydoctor.schema import SurveySchema
 from tests.conftest import BFI_SCHEMA
 
 GENDER = GroupComparison(scale="Neuroticism", group_column="gender", group_a=1, group_b=2)
+FSQCA = FsqcaSpec("Neuroticism", ("Agreeableness", "Conscientiousness", "Extraversion", "Openness"))
 
 
 @pytest.fixture(scope="module")
@@ -23,7 +25,7 @@ def results(request) -> Results:
     if not BFI_CSV.exists():
         pytest.skip("data/sample/bfi.csv not found. Run: python scripts/download_data.py")
     schema = SurveySchema.load(BFI_SCHEMA)
-    return run_pipeline(load_csv(BFI_CSV), schema, analysis=GENDER)
+    return run_pipeline(load_csv(BFI_CSV), schema, analysis=GENDER, fsqca_spec=FSQCA)
 
 
 def test_every_section_is_populated(results: Results) -> None:
@@ -36,6 +38,7 @@ def test_every_section_is_populated(results: Results) -> None:
     assert results.structure.efa is not None and results.structure.n_factors == 5
     assert [s.test for s in results.sensitivity] == ["two_groups", "correlation", "anova"]
     assert results.robustness is not None
+    assert results.fsqca is not None and results.fsqca.main is not None
     assert results.warnings
 
 
@@ -62,6 +65,25 @@ def test_bad_analysis_fails_before_slow_steps() -> None:
     df = pd.DataFrame({"id": [1, 2], **{item: [1, 2] for item in schema.items}})
     with pytest.raises(ValueError, match="not available for grouping"):
         run_pipeline(df, schema, analysis=GroupComparison("Openness", "gender", 1, 2))
+
+
+def test_fsqca_in_results(results: Results) -> None:
+    f = results.fsqca
+    assert (f.n_used, f.n_excluded) == (2782, 18)
+    assert len(f.main.truth_table) == 16 and f.main.n_at_crossover == 792
+    # The flag variants come from the pipeline; 6 of the 686 flagged have no fsQCA scores.
+    assert [c.run.label for c in f.robustness.comparisons] == [
+        "any_rule", "two_rules", "composite_top10",
+    ]  # fmt: skip
+    assert f.robustness.comparisons[0].run.n_excluded == 680
+    assert len(f.calibration.comparisons) == 3
+
+
+def test_bad_fsqca_spec_fails_before_slow_steps() -> None:
+    schema = SurveySchema.load(BFI_SCHEMA)
+    df = pd.DataFrame({"id": [1, 2], **{item: [1, 2] for item in schema.items}})
+    with pytest.raises(ValueError, match="cannot also be a condition"):
+        run_pipeline(df, schema, fsqca_spec=FsqcaSpec("Openness", ("Openness", "Neuroticism")))
 
 
 def test_html_report_renders(results: Results) -> None:

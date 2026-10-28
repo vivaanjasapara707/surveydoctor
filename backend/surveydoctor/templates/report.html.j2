@@ -261,7 +261,92 @@ footer { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--rule);
 <p>No analysis was declared, so the robustness check was not run.</p>
 {% endif %}
 
-<h2 id="limitations">8 Limitations</h2>
+<h2 id="fsqca">8 fsQCA</h2>
+{% if fsqca %}
+<p>{{ fsqca.sentence }}</p>
+{% if not fsqca.skipped %}
+<h3>Calibration anchors</h3>
+<p class="secondary">Full membership / crossover / full non-membership, in scale points. The last three columns are the shifted anchors of the calibration check below.</p>
+<div class="table-wrap"><table class="compact wide">
+  <thead><tr><th>Scale</th><th>Role</th><th class="num">Anchors</th><th>Set from</th>{% for label in fsqca.shift_labels %}<th class="num"><span class="sub">{{ label }}</span></th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for a in fsqca.anchors %}
+    <tr><td>{{ a.scale }}</td><td>{{ a.role }}</td><td class="num">{{ a.anchors }}</td><td>{{ a.source }}</td>{% for s in a.shifted %}<td class="num">{{ s }}</td>{% endfor %}</tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+
+<h3>Necessity</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Condition</th><th class="num">Consistency</th><th class="num">Coverage</th><th class="num">Relevance (RoN)</th></tr></thead>
+  <tbody>
+  {% for r in fsqca.necessity %}
+    <tr><td class="code">{{ r.condition }}</td><td class="num">{{ r.consistency.text }}{% if r.consistency.note %}<span class="mark">{{ r.consistency.note }}</span>{% endif %}</td><td class="num">{{ r.coverage }}</td><td class="num">{{ r.relevance }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<p>{{ fsqca.necessity_sentence }}</p>
+
+<h3>Truth table</h3>
+<p class="secondary">{{ fsqca.truth_table_sentence }}</p>
+<div class="table-wrap"><table class="compact wide">
+  <thead><tr><th class="num">Row</th>{% for c in fsqca.conditions %}<th class="num">{{ c }}</th>{% endfor %}<th class="num">Cases</th><th class="num">Consistency</th><th class="num">PRI</th><th class="num">Outcome</th></tr></thead>
+  <tbody>
+  {% for row in fsqca.truth_table %}
+    <tr><td class="num">{{ row.row }}</td>{% for v in row.config %}<td class="num">{{ v }}</td>{% endfor %}<td class="num">{{ row.n }}</td><td class="num">{{ row.consistency }}</td><td class="num">{{ row.pri }}</td><td class="num">{% if row.outcome == "1" %}<strong>1</strong>{% else %}{{ row.outcome }}{% endif %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+
+<h3>Solutions</h3>
+<p>{{ fsqca.solution_sentence }}</p>
+{% if fsqca.solutions %}<p class="secondary">Notation: {{ fsqca.notation }}</p>{% endif %}
+{% for solution in fsqca.solutions %}
+<p><b>{{ solution.label }}</b></p>
+<div class="table-wrap"><table class="compact wide">
+  <thead><tr><th>Path</th><th class="num">Consistency</th><th class="num">Raw coverage</th><th class="num">Unique coverage</th></tr></thead>
+  <tbody>
+  {% for m in solution.models %}
+    {% for p in m.paths %}
+    <tr><td class="code">{{ p.expression }}</td><td class="num">{{ p.consistency }}</td><td class="num">{{ p.raw_coverage }}</td><td class="num">{{ p.unique_coverage }}</td></tr>
+    {% endfor %}
+    <tr><td><b>{{ m.name }}</b> <span class="code">{{ m.expression }}</span></td><td class="num"><b>{{ m.consistency }}</b></td><td class="num"><b>{{ m.coverage }}</b></td><td></td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endfor %}
+
+{% for check_name, check in [("Robustness to flagged respondents", fsqca.robustness), ("Calibration sensitivity", fsqca.calibration)] %}
+{% if check %}
+<h3>{{ check_name }}</h3>
+<div class="table-wrap"><table class="compact wide">
+  <thead><tr><th>Run</th><th class="num">Excluded</th><th class="num">N</th><th class="num">At 0.5</th><th class="num">Rows with outcome 1</th><th>Complex</th><th>Parsimonious</th></tr></thead>
+  <tbody>
+  {% for row in check.rows %}
+    <tr class="{% if row.tint %}t-{{ row.tint }}{% endif %}"><td>{{ row.label }}{% if row.mark %}<span class="mark">{{ row.mark }}</span>{% endif %}{% if row.note %}<br><span class="small">{{ row.note }}</span>{% endif %}</td>
+      <td class="num">{{ row.n_excluded }}</td><td class="num">{{ row.n }}</td><td class="num">{{ row.n_at_crossover }}</td><td class="num">{{ row.n_positive }}</td><td>{{ row.complex }}</td><td>{{ row.parsimonious }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% if check.paths %}
+<div class="table-wrap"><table class="compact wide">
+  <thead><tr><th>Path</th>{% for label in check.run_labels %}<th><span class="sub">{{ label }}</span></th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for p in check.paths %}
+    <tr><td><span class="sub">{{ p.kind }}</span><br><span class="code">{{ p.expression }}</span></td>{% for cell in p.cells %}<td class="{% if cell in ('missing', 'new') %}t-review{% endif %}">{{ cell }}</td>{% endfor %}</tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endif %}
+<div class="note s-{{ check.status }}"><b>{{ icon(check.status, 14) }} {{ status_words[check.status] }}.</b> {{ check.sentence }}</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% else %}
+<p>No fsQCA was requested.</p>
+{% endif %}
+
+<h2 id="limitations">9 Limitations</h2>
 <ul class="plain">
 {% for item in limitations %}<li>{{ item }}</li>{% endfor %}
 </ul>
@@ -272,7 +357,7 @@ footer { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--rule);
 </ul>
 {% endif %}
 
-<h2 id="methods">9 Methods and references</h2>
+<h2 id="methods">10 Methods and references</h2>
 {% for name, description in methods %}
 <p><b>{{ name }}.</b> {{ description }}</p>
 {% endfor %}

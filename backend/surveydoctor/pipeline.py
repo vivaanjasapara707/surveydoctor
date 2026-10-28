@@ -3,7 +3,8 @@
 The report and the API read only from :class:`Results`; neither computes statistics.
 Order: prepare the data, compute the careless-response indices, flags, composite score and
 flag variants, then reliability, factor structure, sample sensitivity and, if declared, the
-robustness check. Each module adds its plain-English notes to ``Results.warnings``.
+robustness check and the fsQCA. Each module adds its plain-English notes to
+``Results.warnings``.
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import pandas as pd
 
 from surveydoctor.careless import compute_indices
 from surveydoctor.flagging import apply_flags, composite_score, flag_variants, merge_rules
+from surveydoctor.fsqca import FsqcaResults, FsqcaSpec, check_spec, fsqca
 from surveydoctor.io import DataIssue, PreparedData, prepare_data
 from surveydoctor.power import SensitivityResult, sample_sensitivity
 from surveydoctor.reliability import ScaleReliability, reliability
@@ -60,6 +62,7 @@ class Results:
         structure: Factor-structure results.
         sensitivity: The three sensitivity results for the analysed sample size.
         robustness: The robustness check, or None if no analysis was declared.
+        fsqca: The fsQCA, or None if none was requested.
         warnings: Plain-English notes from every module.
     """
 
@@ -76,6 +79,7 @@ class Results:
     structure: StructureResults
     sensitivity: list[SensitivityResult]
     robustness: RobustnessResult | None
+    fsqca: FsqcaResults | None
     warnings: list[str]
 
 
@@ -86,6 +90,7 @@ def run_pipeline(
     rules: dict[str, dict[str, Any]] | None = None,
     n_factors: int | None = None,
     analysis: AnalysisSpec | None = None,
+    fsqca_spec: FsqcaSpec | None = None,
     pa_iterations: int = PA_ITERATIONS,
 ) -> Results:
     """Run every check on a loaded survey (output of :func:`surveydoctor.io.load_csv`).
@@ -96,17 +101,20 @@ def run_pipeline(
         rules: Flag-rule overrides (see :data:`surveydoctor.flagging.DEFAULT_RULES`).
         n_factors: Number of EFA factors; None lets parallel analysis decide.
         analysis: The one analysis to check for robustness, or None.
+        fsqca_spec: The fsQCA to run (outcome, conditions, anchors, thresholds), or None.
         pa_iterations: Random datasets used by parallel analysis.
 
     Raises:
         surveydoctor.io.DataError: If the CSV does not fit the schema.
-        ValueError: If ``analysis``, ``rules`` or ``n_factors`` are invalid. The analysis is
-            checked before any slow step runs.
+        ValueError: If ``analysis``, ``fsqca_spec``, ``rules`` or ``n_factors`` are invalid.
+            The analysis and the fsQCA spec are checked before any slow step runs.
     """
     warnings: list[str] = []
     prepared = prepare_data(df, schema)
     if analysis is not None:
         check_analysis(analysis, prepared, schema)
+    if fsqca_spec is not None:
+        check_spec(fsqca_spec, schema)
     rules_used = merge_rules(rules)
 
     indices = compute_indices(prepared, schema, warnings=warnings)
@@ -125,6 +133,11 @@ def run_pipeline(
     robustness_result = (
         robustness(analysis, prepared, schema, variants, warnings=warnings)
         if analysis is not None
+        else None
+    )
+    fsqca_result = (
+        fsqca(prepared, schema, fsqca_spec, warnings=warnings, exclusions=variants)
+        if fsqca_spec is not None
         else None
     )
 
@@ -149,5 +162,6 @@ def run_pipeline(
         structure=structure_results,
         sensitivity=sensitivity,
         robustness=robustness_result,
+        fsqca=fsqca_result,
         warnings=warnings,
     )

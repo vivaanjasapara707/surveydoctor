@@ -21,6 +21,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from surveydoctor import __version__, text
 from surveydoctor.charts import FONT_DIR, TOKENS, composite_histogram, scree_plot
 from surveydoctor.flagging import longstring_threshold
+from surveydoctor.fsqca import Anchors, FsqcaCheck, FsqcaRun, Solution
 from surveydoctor.pipeline import Results
 from surveydoctor.structure import CROSS_LOADING, PEARSON_NOTE, WEAK_LOADING
 
@@ -81,6 +82,24 @@ METHODS = [
         "t-test with Cohen's d (Mann-Whitney U as a companion), or Pearson's r with a Fisher-z "
         "interval (Spearman's ρ as a companion).",
     ),
+]
+
+FSQCA_METHOD = (
+    "fsQCA",
+    "Scale scores are calibrated into fuzzy-set membership by the direct (logistic) method, "
+    "with membership 0.95, 0.5 and 0.05 at the three anchors. Necessity: consistency, "
+    "coverage and relevance of each condition and its negation. Sufficiency: a truth table "
+    "with raw consistency and PRI per row, then Boolean minimisation (Quine-McCluskey with "
+    "a prime-implicant chart) into the complex solution (observed rows only) and the "
+    "parsimonious solution (logical remainders allowed), following R's QCA package. The "
+    "analysis is rerun without each set of flagged respondents and with shifted anchors.",
+)
+FSQCA_REFERENCES = [
+    "Dușa, A. (2019). QCA with R: A comprehensive resource. Springer.",
+    "Ragin, C. C. (2008). Redesigning social inquiry: Fuzzy sets and beyond. University of "
+    "Chicago Press.",
+    "Schneider, C. Q., & Wagemann, C. (2012). Set-theoretic methods for the social sciences: "
+    "A guide to qualitative comparative analysis. Cambridge University Press.",
 ]
 
 REFERENCES = [
@@ -327,6 +346,152 @@ def _robustness_section(results: Results) -> dict[str, Any] | None:
     }
 
 
+def _anchor_text(a: Anchors) -> str:
+    return f"{text.fmt(a.full)} / {text.fmt(a.crossover)} / {text.fmt(a.non)}"
+
+
+def _model_rows(solution: Solution) -> list[dict[str, Any]]:
+    return [
+        {
+            "name": m.name,
+            "expression": m.expression,
+            "consistency": text.fmt(m.consistency, 3),
+            "coverage": text.fmt(m.coverage, 3),
+            "paths": [
+                {
+                    "expression": p.expression,
+                    "consistency": text.fmt(p.consistency, 3),
+                    "raw_coverage": text.fmt(p.raw_coverage, 3),
+                    "unique_coverage": text.fmt(p.unique_coverage, 3),
+                }
+                for p in m.paths
+            ],
+        }
+        for m in solution.models
+    ]
+
+
+def _check_rows(check: FsqcaCheck, main: FsqcaRun) -> dict[str, Any]:
+    """The reruns table and the path-by-rerun table of one fsQCA check."""
+
+    def row(run: FsqcaRun, cells: dict[str, str], mark: str) -> dict[str, Any]:
+        return {
+            "label": text.run_label(check.kind, run.label),
+            "n_excluded": text.fmt_count(run.n_excluded),
+            "n": text.fmt_count(run.n),
+            "n_at_crossover": text.fmt_count(run.n_at_crossover),
+            "n_positive": "–" if run.skipped_reason is not None else str(run.n_positive_rows),
+            **cells,
+            "note": run.skipped_reason or "",
+            "mark": mark,
+            "tint": "review" if mark else "",
+        }
+
+    main_cell = "main run" if main.has_solution else "no solution"
+    rows = [row(main, {"complex": main_cell, "parsimonious": main_cell}, "")]
+    for c in check.comparisons:
+        cells = {
+            kind: text.path_status_summary(c.run, c.paths.get(kind, {}))
+            for kind in ("complex", "parsimonious")
+        }
+        mark = (
+            ""
+            if c.run.skipped_reason is not None
+            else (
+                "changed"
+                if c.changed and c.run.has_solution
+                else "no solution"
+                if not c.run.has_solution and main.has_solution
+                else ""
+            )
+        )
+        rows.append(row(c.run, cells, mark))
+
+    paths = []
+    for kind in ("complex", "parsimonious"):
+        in_main = getattr(main, kind).path_expressions() if main.has_solution else []
+        expressions = list(in_main)
+        for c in check.comparisons:
+            expressions += [p for p in c.paths.get(kind, {}) if p not in expressions]
+        for expression in expressions:
+            cells = ["in solution" if expression in in_main else "–"] + [
+                "not run" if c.run.skipped_reason is not None
+                else c.paths.get(kind, {}).get(expression, "–")
+                for c in check.comparisons
+            ]  # fmt: skip
+            paths.append({"kind": kind, "expression": expression, "cells": cells})
+    return {
+        "rows": rows,
+        "run_labels": [
+            text.run_label(check.kind, r.label) for r in [main] + [c.run for c in check.comparisons]
+        ],  # fmt: skip
+        "paths": paths,
+        "sentence": text.fsqca_check_sentence(check),
+        "status": text.fsqca_check_status(check),
+    }
+
+
+def _fsqca_section(results: Results) -> dict[str, Any] | None:
+    f = results.fsqca
+    if f is None:
+        return None
+    section: dict[str, Any] = {"sentence": text.fsqca_sentence(f), "skipped": f.skipped_reason}
+    if f.skipped_reason is not None:
+        return section
+    conditions = list(f.spec.conditions)
+    shifts = {c.run.label: c.run for c in f.calibration.comparisons}
+    section["anchors"] = [
+        {
+            "scale": scale,
+            "role": "outcome" if scale == f.spec.outcome else "condition",
+            "anchors": _anchor_text(a),
+            "source": (
+                "percentiles " + " / ".join(f"{p:g}" for p in a.percentiles)
+                if a.source == "percentiles" and a.percentiles is not None
+                else "scale points"
+            ),
+            "shifted": [_anchor_text(shifts[s].anchors[scale]) for s in shifts],
+        }
+        for scale, a in f.anchors.items()
+    ]
+    section["shift_labels"] = [text.CALIBRATION_LABELS[s].split(" (")[0] for s in shifts]
+    section["necessity"] = [
+        {
+            "condition": r.condition,
+            "consistency": Cell(text.fmt(r.consistency, 3), "passes" if r.passes else ""),
+            "coverage": text.fmt(r.coverage, 3),
+            "relevance": text.fmt(r.relevance, 3),
+        }
+        for r in f.necessity
+    ]
+    section["necessity_sentence"] = text.necessity_sentence(f)
+    table = f.main.truth_table
+    observed = table[table["outcome"] != "?"]
+    section["conditions"] = conditions
+    section["truth_table"] = [
+        {
+            "row": int(row_number),
+            "config": [str(int(row[c])) for c in conditions],
+            "n": text.fmt_count(int(row["n"])),
+            "consistency": text.fmt(row["consistency"], 3),
+            "pri": text.fmt(row["pri"], 3),
+            "outcome": row["outcome"],
+        }
+        for row_number, row in observed.iterrows()
+    ]
+    section["truth_table_sentence"] = text.truth_table_sentence(f)
+    section["solution_sentence"] = text.solution_sentence(f)
+    section["solutions"] = [
+        {"label": text.SOLUTION_LABELS[s.kind], "models": _model_rows(s)}
+        for s in (f.main.complex, f.main.parsimonious)
+        if s.has_solution
+    ]
+    section["notation"] = text.FSQCA_NOTATION
+    section["robustness"] = _check_rows(f.robustness, f.main) if f.robustness is not None else None
+    section["calibration"] = _check_rows(f.calibration, f.main)
+    return section
+
+
 def report_context(
     results: Results, source_name: str | None = None, generated_at: datetime | None = None
 ) -> dict[str, Any]:
@@ -335,6 +500,7 @@ def report_context(
     verdict = text.overall_verdict(results)
     structure = results.structure
     headline_alpha = [f"{r.scale} {text.fmt(r.alpha)}" for r in results.reliability.values()]
+    with_fsqca = results.fsqca is not None
     return {
         "tokens": TOKENS,
         "font_faces": _font_faces(),
@@ -375,11 +541,12 @@ def report_context(
             "caveat": results.sensitivity[0].caveat if results.sensitivity else "",
         },
         "robustness": _robustness_section(results),
+        "fsqca": _fsqca_section(results),
         "limitations": text.limitations(results),
         # The Pearson note is already a limitation (text.PEARSON_LIMITATION); don't repeat it.
         "warnings": [w for w in results.warnings if w != PEARSON_NOTE],
-        "methods": METHODS,
-        "references": REFERENCES,
+        "methods": METHODS + [FSQCA_METHOD] * with_fsqca,
+        "references": sorted(REFERENCES + FSQCA_REFERENCES * with_fsqca),
     }
 
 

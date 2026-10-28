@@ -21,6 +21,7 @@ import math
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
+from surveydoctor.fsqca import FsqcaCheck, FsqcaResults, FsqcaRun, FsqcaSpec
 from surveydoctor.power import SensitivityResult
 from surveydoctor.reliability import ScaleReliability
 from surveydoctor.robustness import GroupComparison, RobustnessResult
@@ -85,6 +86,27 @@ PEARSON_LIMITATION = (
 NO_DURATION = (
     "The data has no completion-time column, so response-time screening was not performed."
 )
+FSQCA_LIMITATIONS = [
+    "fsQCA solutions describe set relations in this sample, not causes.",
+    "fsQCA results depend on the calibration anchors, which are a modelling choice.",
+    "Likert scale scores take few distinct values, so fuzzy memberships are coarse and many "
+    "respondents tie, some exactly at the crossover.",
+]
+FSQCA_NOTATION = (
+    "“~” means the condition is absent (low membership), “*” means and, and “+” separates "
+    "alternative paths (or)."
+)
+NECESSITY_CAVEAT = (
+    "Passing the threshold is consistent with necessity, not proof of it. A low relevance of "
+    "necessity (RoN) suggests a trivial necessary condition: one that almost everyone has."
+)
+CALIBRATION_LABELS: dict[str, str] = {
+    "all": "Anchors as used",
+    "crossover_lower": "Crossover lower (45th percentile, or 0.5 points lower)",
+    "crossover_higher": "Crossover higher (55th percentile, or 0.5 points higher)",
+    "outer_closer": "Outer anchors closer (90th and 10th percentiles, or 0.5 points inward)",
+}
+SOLUTION_LABELS = {"complex": "Complex solution", "parsimonious": "Parsimonious solution"}
 
 
 @dataclass
@@ -362,6 +384,143 @@ def robustness_sentence(robustness: RobustnessResult) -> str:
     return f"{text} {robustness.caveat}"
 
 
+# --- fsQCA --------------------------------------------------------------------------------
+
+
+def fsqca_sentence(f: FsqcaResults) -> str:
+    """What was analysed and on how many respondents."""
+    what = f"fsQCA of {f.spec.outcome} with the conditions {join_names(list(f.spec.conditions))}"
+    if f.skipped_reason is not None:
+        return f"The {what} was not run: {f.skipped_reason}"
+    left_out = f" ({fmt_count(f.n_excluded)} without a score on every scale left out)"
+    return f"The {what}, on {fmt_count(f.n_used)} respondents{left_out if f.n_excluded else ''}."
+
+
+def necessity_sentence(f: FsqcaResults) -> str:
+    """Which conditions pass the necessity threshold, with the fixed caveat."""
+    threshold = fmt(f.spec.necessity_threshold)
+    passing = [r.condition for r in f.necessity if r.passes]
+    if passing:
+        verb = "reaches" if len(passing) == 1 else "reach"
+        return (
+            f"{join_names(passing)} {verb} the necessity threshold (consistency of {threshold} "
+            f"or more). {NECESSITY_CAVEAT}"
+        )
+    best = max(
+        (r for r in f.necessity if not math.isnan(r.consistency)),
+        key=lambda r: r.consistency,
+        default=None,
+    )
+    highest = (
+        f" The highest consistency is {fmt(best.consistency)} ({best.condition})."
+        if best is not None
+        else ""
+    )
+    return f"No condition or negation reaches the necessity threshold of {threshold}.{highest}"
+
+
+def thresholds_text(spec: FsqcaSpec) -> str:
+    """The truth-table thresholds in words."""
+    cases = f"{spec.frequency_threshold} case{'s' if spec.frequency_threshold != 1 else ''}"
+    return (
+        f"at least {cases}, raw consistency of {fmt(spec.consistency_threshold)} or more and "
+        f"PRI of {fmt(spec.pri_threshold)} or more"
+    )
+
+
+def truth_table_sentence(f: FsqcaResults) -> str:
+    """How many rows were observed and passed, with the remainders and the 0.5 cases."""
+    run = f.main
+    table = run.truth_table
+    observed = int((table["outcome"] != "?").sum())
+    remainders = len(table) - observed
+    text = (
+        f"A row has outcome 1 when it has {thresholds_text(f.spec)}. {run.n_positive_rows} of "
+        f"{observed} observed rows have outcome 1. {remainders} of {len(table)} possible rows "
+        f"have too few cases (logical remainders) and are not shown."
+    )
+    if run.n_at_crossover:
+        text += (
+            f" {fmt_count(run.n_at_crossover)} respondents have a membership of exactly 0.5 in "
+            "a condition and belong to no row; they still count in consistency and PRI."
+        )
+    return text
+
+
+def solution_sentence(f: FsqcaResults) -> str:
+    """Whether there is a solution, and how many models each solution has."""
+    run = f.main
+    if not run.has_solution:
+        return (
+            f"No truth-table row reached the thresholds ({thresholds_text(f.spec)}), so there "
+            "is no solution: these conditions do not show a consistent sufficient combination "
+            f"for {f.spec.outcome} in this sample."
+        )
+    parts = []
+    for solution in (run.complex, run.parsimonious):
+        n = len(solution.models)
+        models = "one model" if n == 1 else f"{n} equally short models"
+        parts.append(f"the {solution.kind} solution has {models}")
+    return (
+        f"{parts[0][0].upper()}{parts[0][1:]} and {parts[1]}. The parsimonious solution may "
+        "use logical remainders (combinations nobody in the sample had), so it rests on "
+        "assumptions about them."
+    )
+
+
+def run_label(kind: str, label: str) -> str:
+    """Display name of a rerun (or of the main run, "all")."""
+    return (VARIANT_LABELS if kind == "robustness" else CALIBRATION_LABELS).get(label, label)
+
+
+def fsqca_check_status(check: FsqcaCheck) -> Status:
+    """same -> clear, changed -> review, no solution -> review; not_checked when the main run
+    has no solution (there are no paths to compare)."""
+    if check.verdict is None or (check.verdict == "no solution" and "all" in check.named):
+        return "not_checked"
+    return "clear" if check.verdict == "same" else "review"
+
+
+def fsqca_check_sentence(check: FsqcaCheck) -> str:
+    """The verdict in words, naming the reruns behind it, plus the fixed caveat."""
+    reruns = "every exclusion variant" if check.kind == "robustness" else "every anchor shift"
+    names = join_names([run_label(check.kind, n).lower() for n in check.named if n != "all"])
+    if check.verdict == "same":
+        text = f"Same: the solution paths are identical in {reruns}."
+    elif check.verdict == "changed":
+        text = f"Changed: solution paths are added or removed with {names}."
+    elif "all" in check.named:
+        text = "No solution on all respondents, so there are no solution paths to compare."
+        others = [c.run.label for c in check.comparisons if c.run.has_solution]
+        if others:
+            found = join_names([run_label(check.kind, n).lower() for n in others])
+            text += f" A solution appears with {found}."
+    else:
+        text = f"No solution: no truth-table row reaches the thresholds with {names}."
+        changed = [
+            c.run.label for c in check.comparisons
+            if c.changed and c.run.label not in check.named
+        ]  # fmt: skip
+        if changed:
+            more = join_names([run_label(check.kind, n).lower() for n in changed])
+            text += f" Paths also change with {more}."
+    return f"{text} {check.caveat}"
+
+
+def path_status_summary(run: FsqcaRun, statuses: dict[str, str]) -> str:
+    """One cell of the reruns table: "no solution", "same" or the counts of changes."""
+    if run.skipped_reason is not None:
+        return "not run"
+    if not run.has_solution:
+        return "no solution"
+    new = sum(s == "new" for s in statuses.values())
+    missing = sum(s == "missing" for s in statuses.values())
+    if not new and not missing:
+        return "same"
+    parts = [f"{new} new"] * bool(new) + [f"{missing} missing"] * bool(missing)
+    return ", ".join(parts)
+
+
 # --- Limitations --------------------------------------------------------------------------
 
 
@@ -383,4 +542,6 @@ def limitations(results: Results) -> list[str]:
     if s.skipped_reason is None:
         items.append(PEARSON_LIMITATION)
     items += [FLAGS_ARE_HEURISTICS, COMPOSITE_NOTE, ITEM_ORDER_NOTE]
+    if results.fsqca is not None and results.fsqca.skipped_reason is None:
+        items += FSQCA_LIMITATIONS
     return items

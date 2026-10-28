@@ -1,4 +1,5 @@
-# Reference values for fsQCA part 1: calibration and necessity (BLUEPRINT.md §7.14, §8.2).
+# Reference values for fsQCA (BLUEPRINT.md §7.14, §8.2): calibration and necessity (part 1),
+# truth table and minimisation (part 2, see the second half of this script).
 #
 # Reference case: bfi, conditions Agreeableness, Conscientiousness, Extraversion and
 # Openness, outcome Neuroticism, default percentile anchors (95th, 50th, 5th). Scale scores
@@ -7,7 +8,9 @@
 # scale are left out, as in surveydoctor.fsqca.fsqca. Then:
 #   * anchors: quantile(type = 7), the same as numpy's default percentile;
 #   * memberships: QCA::calibrate(type = "fuzzy", method = "direct", thresholds = c(e, c, i));
-#   * necessity: QCA::pof(relation = "necessity") for each condition and its negation.
+#   * necessity: QCA::pof(relation = "necessity") for each condition and its negation;
+#   * truth table: QCA::truthTable with frequency 1, consistency 0.8, PRI 0.7;
+#   * solutions: QCA::minimize (complex and parsimonious) on extra cases with outcome-1 rows.
 # Writes tests/fixtures/reference_fsqca.json, which tests/test_reference_r.py compares with
 # surveydoctor.fsqca. This is a technical check of the calculations, not a finding.
 #
@@ -92,8 +95,128 @@ for (cond in conditions) {
   }
 }
 
+# --- Part 2: truth table and minimisation (Stage 10B) ------------------------------------
+#
+# Truth table on the bfi memberships with the default thresholds (frequency 1, raw
+# consistency 0.8, PRI 0.7). QCA numbers rows 1..2^k with the first condition as the most
+# significant bit, the same as surveydoctor.fsqca. A case with any condition at exactly 0.5
+# is in no row (row 0 below).
+incl_cut <- 0.8
+pri_cut <- 0.7
+n_cut <- 1
+
+tt_rows <- function(tt) {
+  t <- tt$tt
+  lapply(seq_len(nrow(t)), function(i) list(
+    row = as.integer(rownames(t)[i]),
+    config = as.integer(unlist(t[i, tt$options$conditions])),
+    n = as.integer(t$n[i]),
+    consistency = as.numeric(t$incl[i]),
+    pri = as.numeric(t$PRI[i]),
+    outcome = as.character(t$OUT[i])
+  ))
+}
+
+case_rows <- function(tt, n_cases) {
+  rows <- integer(n_cases)
+  t <- tt$tt
+  for (i in seq_len(nrow(t))) {
+    if (nzchar(t$cases[i])) {
+      rows[as.integer(strsplit(t$cases[i], ",")[[1]])] <- as.integer(rownames(t)[i])
+    }
+  }
+  rows
+}
+
+# Models of a minimize() result: each model's paths with consistency (inclS), raw coverage
+# (covS) and unique coverage within that model (covU), and the model's own fit.
+models_of <- function(s) {
+  lapply(seq_along(s$solution), function(m) {
+    ic <- if (length(s$solution) == 1) s$IC else s$IC$individual[[m]]
+    fit <- ic$incl.cov
+    list(
+      paths = lapply(s$solution[[m]], function(p) list(
+        expression = p,
+        consistency = fit[p, "inclS"],
+        raw_coverage = fit[p, "covS"],
+        unique_coverage = fit[p, "covU"]
+      )),
+      consistency = ic$sol.incl.cov[1, "inclS"],
+      coverage = ic$sol.incl.cov[1, "covS"]
+    )
+  })
+}
+
+# NULL when minimize() stops because no truth-table row has outcome 1.
+solve <- function(tt, include) {
+  tryCatch(models_of(minimize(tt, include = include)), error = function(e) NULL)
+}
+
+reference_case <- function(name, source, data, conditions, outcome, incl, pri, n, store_data) {
+  rownames(data) <- NULL  # cases are numbered 1..n, as in case_rows()
+  tt <- suppressWarnings(truthTable(data, outcome = outcome, conditions = conditions,
+                                    incl.cut = incl, pri.cut = pri, n.cut = n))
+  list(
+    name = name,
+    source = source,
+    conditions = conditions,
+    outcome = outcome,
+    thresholds = list(frequency = n, consistency = incl, pri = pri),
+    data = if (store_data) lapply(data[, c(conditions, outcome)], unname) else NULL,
+    truth_table = tt_rows(tt),
+    case_rows = case_rows(tt, nrow(data)),
+    complex = solve(tt, ""),
+    parsimonious = solve(tt, "?")
+  )
+}
+
+bfi_tt <- suppressWarnings(truthTable(calibrated, outcome = outcome, conditions = conditions,
+                                      incl.cut = incl_cut, pri.cut = pri_cut, n.cut = n_cut))
+bfi_truth_table <- list(
+  thresholds = list(frequency = n_cut, consistency = incl_cut, pri = pri_cut),
+  rows = tt_rows(bfi_tt),
+  case_rows = case_rows(bfi_tt, nrow(calibrated)),
+  complex = solve(bfi_tt, ""),
+  parsimonious = solve(bfi_tt, "?")
+)
+
+# Minimisation needs truth tables with outcome-1 rows, which the bfi reference case does not
+# have at the default thresholds. These extra cases check the minimisation itself:
+#   * bfi with PRI 0.55 (two paths; every row observed, so complex = parsimonious);
+#   * Ragin's Lipset data (LF) and Cebotari & Vink's data (CVF) shipped with QCA, which have
+#     logical remainders; CVF gives several equally short parsimonious models (M1, M2, ...);
+#   * random fuzzy data sets with few cases and many remainders (fixed seeds).
+data(LF, package = "QCA")
+data(CVF, package = "QCA")
+lf_conditions <- c("DEV", "URB", "LIT", "IND", "STB")
+cvf_conditions <- c("DEMOC", "ETHFRACT", "GEOCON", "POLDIS", "NATPRIDE")
+cases <- list(
+  reference_case("bfi_pri_0.55", "bfi memberships above, PRI 0.55", calibrated, conditions,
+                 outcome, 0.8, 0.55, 1, FALSE),
+  reference_case("LF_SURV", "QCA::LF", LF, lf_conditions, "SURV", 0.8, 0, 1, TRUE),
+  reference_case("CVF_PROTEST_0.85", "QCA::CVF", CVF, cvf_conditions, "PROTEST", 0.85, 0, 1,
+                 TRUE),
+  reference_case("CVF_PROTEST_0.80", "QCA::CVF", CVF, cvf_conditions, "PROTEST", 0.8, 0, 1,
+                 TRUE)
+)
+for (seed in 1:8) {
+  set.seed(seed)
+  k <- 4 + seed %% 3
+  n_cases <- 12 + 3 * seed
+  letters_k <- LETTERS[seq_len(k)]
+  random <- as.data.frame(matrix(round(runif(n_cases * k), 2), ncol = k,
+                                 dimnames = list(NULL, letters_k)))
+  y <- pmax(pmin(random$A, random$B), pmin(1 - random$C, random[[letters_k[k]]]))
+  random$Y <- round(pmin(1, pmax(0, y + rnorm(n_cases, sd = 0.1))), 2)
+  cases[[length(cases) + 1]] <- reference_case(
+    paste0("random_", seed), paste("runif, set.seed", seed), random, letters_k, "Y",
+    0.8, 0.5, 1, TRUE
+  )
+}
+
 fixture <- list(
-  source = "QCA::calibrate and QCA::pof on bfi; generated by validation/reference_fsqca.R",
+  source = paste("QCA::calibrate, QCA::pof, QCA::truthTable and QCA::minimize on bfi and",
+                 "QCA's example data; generated by validation/reference_fsqca.R"),
   r_version = R.version.string,
   qca_version = as.character(packageVersion("QCA")),
   conditions = conditions,
@@ -105,9 +228,12 @@ fixture <- list(
   anchors = anchors,
   memberships = lapply(calibrated, function(v) round(v, 12)),
   n_at_crossover = sum(apply(calibrated[, conditions], 1, function(r) any(r == 0.5))),
-  necessity = necessity
+  necessity = necessity,
+  truth_table = bfi_truth_table,
+  minimisation_cases = cases
 )
-write(toJSON(fixture, auto_unbox = TRUE, digits = NA, pretty = FALSE), out_path)
+write(toJSON(fixture, auto_unbox = TRUE, digits = NA, pretty = FALSE, null = "null", na = "null"),
+      out_path)
 
 cat("n =", nrow(scores), " excluded =", sum(!complete), "\n")
 for (s in scales) {
@@ -117,5 +243,18 @@ for (s in scales) {
 for (r in necessity) {
   cat(sprintf("%-20s consistency %.4f  coverage %.4f  RoN %.4f\n",
               r$condition, r$consistency, r$coverage, r$relevance))
+}
+cat(sprintf("bfi truth table: %d rows observed, %d with outcome 1, %d cases in rows\n",
+            length(bfi_truth_table$rows),
+            sum(sapply(bfi_truth_table$rows, function(r) r$outcome == "1")),
+            sum(bfi_truth_table$case_rows > 0)))
+for (case in cases) {
+  for (kind in c("complex", "parsimonious")) {
+    models <- case[[kind]]
+    text <- if (is.null(models)) "no solution" else paste(
+      sapply(models, function(m) paste(sapply(m$paths, `[[`, "expression"), collapse = " + ")),
+      collapse = "  |  ")
+    cat(sprintf("%-18s %-12s %s\n", case$name, kind, text))
+  }
 }
 cat("Wrote", out_path, "\n")

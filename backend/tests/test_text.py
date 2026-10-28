@@ -9,8 +9,10 @@ from types import SimpleNamespace as NS
 import pytest
 
 from surveydoctor import text
+from surveydoctor.fsqca import compare_runs
 from surveydoctor.power import min_d_two_groups, min_f_anova, min_r_correlation
 from surveydoctor.robustness import Correlation, GroupComparison
+from tests.test_fsqca import make_run
 
 # --- Formatting ---------------------------------------------------------------------------
 
@@ -171,7 +173,7 @@ def test_robustness_sentences() -> None:
 
 def test_limitations_always_start_with_sampling_warning() -> None:
     structure = NS(skipped_reason=None, n_used=150, items=list(range(10)), kmo=NS(overall=0.55))
-    res = NS(schema=NS(duration_column=None), structure=structure)
+    res = NS(schema=NS(duration_column=None), structure=structure, fsqca=None)
     items = text.limitations(res)
     assert items[0] == text.CONVENIENCE_SAMPLE
     assert text.NO_DURATION in items
@@ -180,7 +182,52 @@ def test_limitations_always_start_with_sampling_warning() -> None:
     )
     assert text.PEARSON_LIMITATION in items
     assert text.COMPOSITE_NOTE in items and text.ITEM_ORDER_NOTE in items
-    with_time = NS(schema=NS(duration_column="secs"),
+    assert not set(text.FSQCA_LIMITATIONS) & set(items)
+    with_time = NS(schema=NS(duration_column="secs"), fsqca=None,
                    structure=NS(skipped_reason="x", n_used=0, items=[], kmo=None))  # fmt: skip
     assert text.NO_DURATION not in text.limitations(with_time)
     assert text.PEARSON_LIMITATION not in text.limitations(with_time)
+    with_fsqca = NS(schema=NS(duration_column=None), structure=structure,
+                    fsqca=NS(skipped_reason=None))  # fmt: skip
+    assert text.limitations(with_fsqca)[-3:] == text.FSQCA_LIMITATIONS
+    skipped_fsqca = NS(schema=NS(duration_column=None), structure=structure,
+                       fsqca=NS(skipped_reason="tied anchors"))  # fmt: skip
+    assert not set(text.FSQCA_LIMITATIONS) & set(text.limitations(skipped_fsqca))
+
+
+# --- fsQCA --------------------------------------------------------------------------------
+
+
+def test_fsqca_check_sentences() -> None:
+    main = make_run("all", "A*B")
+    same = compare_runs("robustness", main, [make_run("any_rule", "A*B")])
+    assert text.fsqca_check_sentence(same).startswith(
+        "Same: the solution paths are identical in every exclusion variant. This shows "
+        "sensitivity to exclusion choices."
+    )
+    assert text.fsqca_check_status(same) == "clear"
+    changed = compare_runs("calibration", main, [make_run("crossover_lower", "A")])
+    assert text.fsqca_check_sentence(changed).startswith(
+        "Changed: solution paths are added or removed with crossover lower (45th percentile"
+    )
+    assert text.fsqca_check_status(changed) == "review"
+    gone = compare_runs("robustness", main, [make_run("two_rules")])
+    assert text.fsqca_check_sentence(gone).startswith(
+        "No solution: no truth-table row reaches the thresholds with excluding respondents "
+        "flagged by two or more rules."
+    )
+    assert text.fsqca_check_status(gone) == "review"
+    none = compare_runs("robustness", make_run("all"), [make_run("any_rule", "A")])
+    assert text.fsqca_check_sentence(none).startswith(
+        "No solution on all respondents, so there are no solution paths to compare. A solution "
+        "appears with excluding respondents flagged by any rule."
+    )
+    assert text.fsqca_check_status(none) == "not_checked"
+
+
+def test_path_status_summary() -> None:
+    assert text.path_status_summary(make_run("x", "A"), {"A": "kept"}) == "same"
+    changes = {"A": "kept", "B": "new", "C": "missing"}
+    assert text.path_status_summary(make_run("x", "A"), changes) == "1 new, 1 missing"
+    assert text.path_status_summary(make_run("x"), {"A": "missing"}) == "no solution"
+    assert text.path_status_summary(make_run("x", skipped="too few"), {}) == "not run"

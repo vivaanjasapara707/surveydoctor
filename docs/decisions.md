@@ -370,3 +370,45 @@ These checks were run to rule out a bug before reporting the near-chance result.
 - **792 of 2,782 bfi respondents (28%)** have a membership of exactly 0.5 in at least one condition. Scale scores are means of 5 items (steps of 0.2), and the median crossover is itself a common score.
 - Under the `QCA` convention, these respondents would belong to no truth-table row in Stage 10B, so about a quarter of the sample would be missing from the case counts.
 - **Common practice is to move the crossover slightly off the observed values** (for example, +0.001), or to choose scale-point anchors between possible scores. This is a methodological choice for the owner and the supervisor before Stage 10B. Nothing is changed automatically; the report will state the count.
+
+## Stage 10B — 28 October 2026
+
+### fsQCA part 2 (`fsqca.py`): truth table, minimisation, robustness, calibration sensitivity
+- **Truth table follows `QCA::truthTable`**, read from its source in this session:
+  - rows are numbered 1..2^k with the first condition as the most significant bit, as in `QCA`;
+  - a case's row is where its membership is above 0.5 in every condition or its negation. Cases with any condition at exactly 0.5 are in no row (row 0) but count in the consistency and PRI sums (the Stage 10A convention, verification item 18);
+  - outcome "?" (logical remainder) if a row has fewer cases than the frequency threshold, otherwise "1" if raw consistency and PRI both reach their thresholds, else "0";
+  - thresholds are compared like `admisc::agteb`: a value counts as reaching a threshold when value + 1.49e-8 > threshold, so a consistency that is 0.8 up to rounding passes.
+- **Defaults: frequency 1, consistency 0.80, PRI 0.70** (BLUEPRINT §7.14, still [VERIFY] item 17). These are not `QCA`'s own defaults (`incl.cut = 1`, `pri.cut = 0`), so the R reference script passes them explicitly. All three are configurable in `FsqcaSpec` and checked: frequency a whole number of at least 1, consistency above 0.5 and at most 1, PRI between 0 and 1.
+- **Minimisation:**
+  - prime implicants by Quine–McCluskey (merge terms that differ in one condition);
+  - complex solution: only rows with outcome 1; parsimonious: logical remainders as "don't care";
+  - the prime-implicant chart is solved exactly by a depth-first search that returns **every cover with the minimum number of paths**. That is what `QCA::minimize` reports as M1, M2, … with its default `all.sol = FALSE`. Checked on 12 reference cases, including ones with 2, 3, 4 and 8 models.
+  - A parsimonious path with no conditions (every combination counts as sufficient) is written "1". `QCA` stops with an error in that case instead.
+- **Fit measures** (path consistency, raw coverage, unique coverage; model consistency and coverage) as in `QCA::minimize`. Unique coverage is computed **within each model** (the per-model "(M1)", "(M2)" columns that `QCA` prints).
+  - **Difference from `QCA`:** for a model with a single path, `QCA` leaves unique coverage empty. SurveyDoctor reports it, and it equals the path's raw coverage. The reference test checks this.
+- **No solution:** when no row has outcome 1, both solutions are empty, the warnings say so, and the report says "there is no solution". `QCA::minimize` stops with "None of the values in OUT is explained" in that case.
+- **Robustness (flag variants):** reruns without each of the three flag variants (§7.2). The anchors from the full fsQCA sample stay fixed in scale points, so each respondent keeps the same memberships; only the set of respondents changes.
+- **Calibration sensitivity:** three reruns on every respondent, each moving every scale at once (owner and supervisor to confirm, [VERIFY] item 20):
+  - "crossover lower": percentile scales at the 45th percentile, scale-point scales 0.5 points lower;
+  - "crossover higher": 55th percentile, or 0.5 points higher;
+  - "outer anchors closer": 90th and 10th percentiles, or both outer anchors 0.5 points inward.
+  - The blueprint's "each anchor moved by ±0.5" was read as these three shifts, parallel to the percentile shifts. Moving the outer anchors outward was left out because it can go beyond the answer scale. A shift that puts a scale's anchors out of order is skipped and reported, not forced.
+  - The outcome scale is shifted too, since its membership is also calibrated.
+- **Comparison and verdict.** Paths are compared as expressions across all models of each solution (complex and parsimonious separately): kept, missing or new. Verdict:
+  1. "no solution" if no row has outcome 1 in the main run or in any rerun, naming those runs. It takes precedence, because there is nothing to compare there;
+  2. otherwise "changed" if any path is missing or new in any rerun, naming those reruns;
+  3. otherwise "same".
+  - Skipped reruns are listed but not counted; if every rerun is skipped, there is no verdict.
+  - The robustness verdict always carries the §7.6 caveat. The calibration verdict carries its own fixed sentence: "This shows sensitivity to the calibration anchors. It does not show which anchors are right."
+- **Report (section 8 fsQCA):** anchors (with the shifted anchors alongside), necessity table, observed truth-table rows (remainders counted, not listed), solutions with fit, and one table per check plus a path-by-run table with kept, missing or new. Limitations and Methods move to sections 9 and 10, as in §7.9. The three fsQCA limitations are added whenever the fsQCA ran.
+  - **Not in the verdict band or the summary figures.** design.md §5 defines no fsQCA status, so adding a chip would change the approved design. The section's notes use "No concerns" (same), "Review" (changed, or a rerun loses the solution) and "Not checked" (no solution on all respondents). **Owner to decide** whether fsQCA should get a chip.
+- **Pipeline:** `run_pipeline(..., fsqca_spec=...)` checks the spec before any slow step and passes the flag variants. The fsQCA takes about 0.3 seconds on bfi (main run plus six reruns).
+- **R reference cases for minimisation.** The blueprint's reference case (bfi, default thresholds) has no row with outcome 1, so it cannot test minimisation. `validation/reference_fsqca.R` therefore adds: the same bfi memberships with PRI 0.55; `QCA`'s example data `LF` (Ragin's Lipset data) and `CVF` (Cebotari and Vink) at consistency 0.8 or 0.85 and PRI 0; and eight random fuzzy data sets with fixed seeds. These are technical checks of the calculations, not findings.
+
+### Observed on bfi (conditions A, C, E, O; outcome N; default anchors; this session)
+- **Default thresholds: no solution.** All 16 rows are observed, but none has outcome 1: raw consistency is 0.71 to 0.87, PRI only 0.34 to 0.65 (all below 0.70). 1,990 respondents are in a row; the other 792 sit at exactly 0.5. The same holds in every flag variant and every anchor shift, so both checks report "no solution on all respondents".
+- **With PRI 0.55** (owner exploration: `python scripts/report_bfi.py --pri 0.55`): 6 rows have outcome 1, and both solutions are ~Agreeableness·~Conscientiousness + ~Conscientiousness·~Extraversion (consistency 0.766, coverage 0.624).
+  - Robustness: **no solution** without the respondents flagged by any rule; unchanged without those flagged by two or more rules; without the top 10% composite, the two paths are replaced by ~A·~C·~E.
+  - Calibration: **changed** with the crossover lower (path ~A·~E added) and higher (replaced by ~A·~C·~E); unchanged with the outer anchors closer.
+- The 0.5 question from Stage 10A is still open. The truth table follows the `QCA` convention, so 28% of bfi respondents are in no row. Moving the crossover off the observed scores remains an owner and supervisor decision.

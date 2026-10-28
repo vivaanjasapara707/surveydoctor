@@ -18,7 +18,7 @@ import pandas as pd
 import pytest
 
 from surveydoctor.careless import even_odd, irv, longstring, mahalanobis, psychsyn, synonym_pairs
-from surveydoctor.fsqca import FsqcaSpec, fsqca
+from surveydoctor.fsqca import FsqcaSpec, Solution, fsqca, solve, truth_table
 from surveydoctor.io import PreparedData, load_csv, prepare_data
 from surveydoctor.reliability import reliability
 from surveydoctor.schema import SurveySchema
@@ -418,3 +418,97 @@ def test_fsqca_necessity_matches_pof(fsqca_ours, fsqca_ref):
                 ref["condition"],
                 measure,
             )
+
+
+# ---------------------------------------------------------------------------- fsQCA part 2
+
+MINIMISATION_CASES = [
+    "bfi_pri_0.55", "LF_SURV", "CVF_PROTEST_0.85", "CVF_PROTEST_0.80",
+    *(f"random_{seed}" for seed in range(1, 9)),
+]  # fmt: skip
+
+
+def _check_truth_table(table: pd.DataFrame, rows: pd.Series, ref_rows, ref_case_rows, name):
+    """Rows QCA lists match ours (case counts and outcome exact; consistency and PRI within
+    tolerance where QCA computes them); every other row of ours has no cases."""
+    for ref in ref_rows:
+        ours = table.loc[ref["row"]]
+        assert (
+            table.loc[ref["row"], list(table.columns[: len(ref["config"])])].tolist()
+            == (ref["config"])
+        ), (name, ref["row"])
+        assert (int(ours["n"]), ours["outcome"]) == (ref["n"], ref["outcome"]), (name, ref["row"])
+        if ref["consistency"] is not None:  # QCA leaves rows without cases empty
+            assert ours["consistency"] == pytest.approx(ref["consistency"], abs=FSQCA_TOL)
+            assert ours["pri"] == pytest.approx(ref["pri"], abs=FSQCA_TOL)
+    listed = {r["row"] for r in ref_rows}
+    assert (table.loc[~table.index.isin(listed), "n"] == 0).all(), name
+    assert rows.tolist() == ref_case_rows, name
+
+
+def _model_key(paths) -> frozenset[frozenset[str]]:
+    """A model as a set of paths, each a set of literals ("A", "~B"), so order is ignored."""
+    return frozenset(frozenset(p.split("*")) for p in paths)
+
+
+def _check_solution(ours: Solution, ref_models, name: str) -> None:
+    """Same set of models and paths as QCA::minimize, and the same fit within tolerance."""
+    ref_models = ref_models or []
+    ref_by_key = {_model_key(p["expression"] for p in m["paths"]): m for m in ref_models}
+    ours_by_key = {_model_key(p.expression for p in m.paths): m for m in ours.models}
+    assert set(ours_by_key) == set(ref_by_key), (name, ours.kind)
+    for key, model in ours_by_key.items():
+        ref = ref_by_key[key]
+        assert (model.consistency, model.coverage) == pytest.approx(
+            (ref["consistency"], ref["coverage"]), abs=FSQCA_TOL
+        ), (name, ours.kind, model.expression)
+        ref_paths = {frozenset(p["expression"].split("*")): p for p in ref["paths"]}
+        for path in model.paths:
+            r = ref_paths[frozenset(path.expression.split("*"))]
+            assert (path.consistency, path.raw_coverage) == pytest.approx(
+                (r["consistency"], r["raw_coverage"]), abs=FSQCA_TOL
+            ), (name, path.expression)
+            # QCA leaves unique coverage empty for a one-path model; ours equals raw coverage.
+            expected = r["unique_coverage"]
+            if expected is None:
+                expected = r["raw_coverage"]
+            assert path.unique_coverage == pytest.approx(expected, abs=FSQCA_TOL), (
+                name, path.expression,
+            )  # fmt: skip
+
+
+def test_fsqca_truth_table_matches_truthtable(fsqca_ours, fsqca_ref):
+    ref = fsqca_ref["truth_table"]
+    thresholds = ref["thresholds"]
+    assert (thresholds["frequency"], thresholds["consistency"], thresholds["pri"]) == (
+        fsqca_ours.spec.frequency_threshold,
+        fsqca_ours.spec.consistency_threshold,
+        fsqca_ours.spec.pri_threshold,
+    )
+    main = fsqca_ours.main
+    _check_truth_table(main.truth_table, main.case_rows, ref["rows"], ref["case_rows"], "bfi")
+
+
+def test_fsqca_bfi_default_has_no_solution_like_minimize(fsqca_ours, fsqca_ref):
+    # At the default thresholds no bfi row passes, and QCA::minimize stops with
+    # "None of the values in OUT is explained"; the fixture stores that as null.
+    ref = fsqca_ref["truth_table"]
+    assert ref["complex"] is None and ref["parsimonious"] is None
+    assert not fsqca_ours.main.has_solution
+    assert fsqca_ours.main.parsimonious.models == []
+
+
+@pytest.mark.parametrize("name", MINIMISATION_CASES)
+def test_fsqca_minimisation_matches_minimize(fsqca_ref, name):
+    case = next((c for c in fsqca_ref["minimisation_cases"] if c["name"] == name), None)
+    if case is None:
+        pytest.skip(f"{name} not in the fixture. Rerun: Rscript validation/reference_fsqca.R")
+    data = pd.DataFrame(case["data"] if case["data"] is not None else fsqca_ref["memberships"])
+    th = case["thresholds"]
+    table, rows = truth_table(
+        data, case["outcome"], case["conditions"], th["frequency"], th["consistency"], th["pri"]
+    )
+    _check_truth_table(table, rows, case["truth_table"], case["case_rows"], name)
+    for kind in ("complex", "parsimonious"):
+        solution = solve(data, table, case["outcome"], case["conditions"], kind)
+        _check_solution(solution, case[kind], name)

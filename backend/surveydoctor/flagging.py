@@ -262,6 +262,17 @@ def composite_score(indices: pd.DataFrame) -> pd.Series:
     return pd.concat(ranks, axis=1).mean(axis=1, skipna=True).rename("composite")
 
 
+def composite_bins(composite: pd.Series, bins: int = 20) -> tuple[list[float], list[int]]:
+    """Histogram of composite scores: ``bins`` equal bins from 0 to 1, as in the report's
+    chart. The last bin includes 1; missing scores are left out.
+
+    Returns:
+        (bin edges, ``bins`` + 1 values; respondents per bin, ``bins`` values).
+    """
+    counts, edges = np.histogram(composite.dropna(), bins=bins, range=(0.0, 1.0))
+    return [float(e) for e in edges], [int(c) for c in counts]
+
+
 def top_share_mask(scores: pd.Series, share: float = 0.10) -> pd.Series:
     """True for the respondents with the highest ``share`` of scores.
 

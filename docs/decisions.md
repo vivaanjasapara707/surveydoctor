@@ -412,3 +412,35 @@ These checks were run to rule out a bug before reporting the near-chance result.
   - Robustness: **no solution** without the respondents flagged by any rule; unchanged without those flagged by two or more rules; without the top 10% composite, the two paths are replaced by ~A·~C·~E.
   - Calibration: **changed** with the crossover lower (path ~A·~E added) and higher (replaced by ~A·~C·~E); unchanged with the outer anchors closer.
 - The 0.5 question from Stage 10A is still open. The truth table follows the `QCA` convention, so 28% of bfi respondents are in no row. Moving the crossover off the observed scores remains an owner and supervisor decision.
+
+## Stage 11 — 31 October 2026
+
+### API shape (`backend/api/`)
+- **Settings travel as JSON text in form fields.** A file upload is a multipart form, which cannot also carry a JSON body. So `/api/analyze` and the other POST endpoints take `file` (the CSV) plus form fields: `schema`, and optionally `rules`, `n_factors`, `analysis` and `fsqca`. Each structured field holds JSON text. The JSON shapes are published in `/openapi.json` (`SurveySchemaModel`, `GroupComparisonModel`, `CorrelationModel`, `FsqcaSpecModel`), so the website's generated types cover them.
+- **One extra file, `api/convert.py`**, turns `Results` into the response models. BLUEPRINT §4 lists only `main.py`, `models.py` and `errors.py`; the conversion code is long enough to deserve its own file. It copies values and fills the `text.py` sentence templates, so the website and the HTML report use the same numbers and wording. It computes no statistics.
+- **`/api/analyze` returns the verdict band and the templated sentences** (summary, careless, alpha per scale, structure, sensitivity, fsQCA), plus the limitations. The frontend computes nothing (§7.12), so it cannot work these out itself.
+- **`/api/robustness` also takes optional `rules` and `n_factors`**, and returns the verdict band updated with the robustness result, next to the variant table. The verdict band depends on the factor structure, so sending the same settings as to `/api/analyze` keeps the two consistent. §7.11 lists only "CSV + schema + analysis spec"; the extra fields are optional.
+- **The composite histogram comes from the backend**: 20 equal bins from 0 to 1 (`flagging.composite_bins`, the same bins as the report's chart). The raw composite scores are sent too (one per respondent, in file order), as §7.11 asks.
+- **fsQCA output** includes the spec, anchors, necessity table, the main run (full truth table and both solutions with every model and path) and every rerun of the robustness and calibration checks (each with its truth table, solutions and kept/missing/new paths). Per-respondent memberships and row assignments are left out: the website does not show them, and on large files they would multiply the response size.
+- **Flagged respondents:** the top 200, ordered as in the report (most rules first, then highest composite). Each carries its ID (or "row N"), its CSV row, the rules that fired and the reasons text.
+- **Flags CSV** (`/api/export/flags`, built by `report.respondent_table`): respondent, CSV row, every index, the composite score, one `flag_<rule>` column per applied rule (the index columns already use the bare rule names), rules triggered, flagged, reasons. It is written as UTF-8 with a BOM so that Excel opens it correctly. Only the schema's ID column is taken from the non-question columns, and `prepare_data` refuses an ID column that looks personal.
+- **The sample CSV** is returned as text with `\n` line endings (the committed file uses `\r\n`). Both are valid CSV.
+
+### Errors
+- Every error is `{code, message}`. Codes and statuses: `invalid_csv`, `not_csv` and `data_mismatch` → 400 (the file cannot be read, is a spreadsheet or binary, or does not fit the schema); `invalid_json`, `invalid_schema`, `invalid_settings` and `invalid_request` → 422 (the request's settings are wrong or missing); `file_too_large` and `too_many_rows` → 413; `not_found` 404; `method_not_allowed` 405; `internal_error` 500.
+- `ValueError` raised by the pipeline is reported as `invalid_settings` (422): the pipeline raises it for an invalid analysis, fsQCA spec, rules or `n_factors`, before any slow step. A `DataError` is reported as `data_mismatch` (400).
+- **Unexpected errors** return a fixed 500 message. They are caught by a small middleware, not by Starlette's default handler, because that handler re-raises the error after replying, so the server would print the full message, which can quote uploaded answers. The log line holds only the exception type, the code location and the path. A test checks that a planted email address and answer label do not reach the response or the log.
+
+### Limits and privacy
+- **10 MB per file** (10 × 1024 × 1024 bytes) and **50,000 rows**. A request whose Content-Length is over 11 MB (10 MB plus 1 MB for the form framing and settings) is refused with 413 before it is read. A body sent without a Content-Length is counted as it arrives and refused once it passes the limit. The file itself is then checked against 10 MB, and the rows after reading.
+- **Uploads stay in memory.** Starlette writes uploaded files over 1 MB to a temporary file on disk. `MultiPartParser.spool_max_size` is raised to the request limit, so nothing is written to disk (§2 rule 7).
+- **Excel files are refused with a clear message.** Files starting with the ZIP (`.xlsx`) or OLE (`.xls`) signature, or containing NUL bytes (e.g. UTF-16 "Unicode text"), get `not_csv` with instructions to save as "CSV UTF-8".
+- **CORS:** `ALLOWED_ORIGINS` (comma-separated) sets the allowed website addresses. Without it, only the local Vite dev server (`http://localhost:5173`, `http://127.0.0.1:5173`) is allowed. `Content-Disposition` is exposed so the website can read download file names. Error responses carry CORS headers too, so the website can show their messages.
+- Endpoints are plain (non-async) functions, so FastAPI runs the CPU-heavy pipeline in its thread pool instead of blocking the server.
+
+### Fix to the report (found while building the flags export)
+- `report._respondent_ids` labelled respondents without an ID column by their position after empty rows were removed, not by their CSV row. On the Google Forms fixture (CSV row 11 is all blank), the respondent in CSV row 12 was labelled "row 11". It now uses the CSV row (header = row 1). It is public now as `respondent_ids`, together with `csv_rows` and `rule_status`.
+
+### Not done
+- The frontend's `src/api/schema.ts` cannot be generated yet: the frontend is created in Stage 12, which will generate it from `/openapi.json`.
+- Starlette warns that its test client should use `httpx2` instead of `httpx`. `httpx` is the test dependency listed in BLUEPRINT §3, so it was not changed.

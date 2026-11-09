@@ -14,6 +14,7 @@ from surveydoctor.flagging import (
     DEFAULT_RULES,
     VARIANT_NAMES,
     apply_flags,
+    composite_bins,
     composite_score,
     flag_variants,
     longstring_threshold,
@@ -296,3 +297,15 @@ def test_flags_on_bfi(bfi_csv_path):
     n_top = int(variants["composite_top10"].sum())
     assert n_top >= math.ceil(0.10 * len(composite))
     assert variants["two_rules"].sum() <= variants["any_rule"].sum()
+
+
+def test_composite_bins_hand_checked() -> None:
+    # 20 bins of width 0.05: 0 and 0.04 fall in bin 1, 0.05 in bin 2, 0.5 in bin 11, and 1
+    # (the top edge) in the last bin; NaN is left out.
+    scores = pd.Series([0.0, 0.04, 0.05, 0.5, 1.0, NAN])
+    edges, counts = composite_bins(scores)
+    assert len(edges) == 21 and edges[0] == 0.0 and edges[-1] == 1.0
+    assert edges[1] == pytest.approx(0.05)
+    expected = [0] * 20
+    expected[0], expected[1], expected[10], expected[19] = 2, 1, 1, 1
+    assert counts == expected

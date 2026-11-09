@@ -21,6 +21,15 @@ python scripts/download_data.py
 pytest
 ```
 
+## Run the API locally
+
+```bash
+cd backend
+uvicorn api.main:app --reload
+```
+
+Then open http://localhost:8000/docs to try every endpoint. The API is stateless: each request carries its CSV, which is processed in memory and discarded. Limits: 10 MB and 50,000 rows per file. Set `ALLOWED_ORIGINS` (comma-separated) to the website's address when deploying.
+
 ## Regenerate the R reference values (optional)
 
 Requires R with the packages `careless`, `psych`, `GPArotation`, `QCA` and `jsonlite`. Without R, the reference tests skip.

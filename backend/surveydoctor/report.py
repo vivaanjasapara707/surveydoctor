@@ -193,13 +193,47 @@ def _font_faces() -> str:
     return "\n".join(faces)
 
 
-def _respondent_ids(results: Results) -> pd.Series:
+def csv_rows(results: Results) -> pd.Series:
+    """Each respondent's row number in the uploaded CSV, counting the header as row 1."""
+    index = results.prepared.raw_items.index
+    return pd.Series(index + 2, index=index)
+
+
+def respondent_ids(results: Results) -> pd.Series:
     """The schema's ID column if there is one, otherwise the CSV row number (header = row 1)."""
     index = results.prepared.raw_items.index
     id_column = results.schema.id_column
     if id_column is not None and id_column in results.prepared.meta.columns:
         return results.prepared.meta.loc[index, id_column].astype(str)
-    return pd.Series([f"row {i + 2}" for i in range(len(index))], index=index)
+    return "row " + csv_rows(results).astype(str)
+
+
+def rule_status(results: Results, name: str) -> str:
+    """Whether a flag rule was applied, and if not, why."""
+    if name in results.flags.columns:
+        return "applied"
+    if not results.rules[name]["enabled"]:
+        return "switched off"
+    if name == "seconds_per_item" and results.schema.duration_column is None:
+        return "not applied (no completion-time column)"
+    return "not applied (index not computed)"
+
+
+def respondent_table(results: Results) -> pd.DataFrame:
+    """One row per respondent for the flags CSV: ID, CSV row, every index, the composite
+    score, every applied flag rule (``flag_<rule>``, since the index columns already use the
+    rule names), the number of rules triggered and the reasons.
+
+    Only the schema's ID column is taken from the uploaded non-question columns, and
+    :func:`surveydoctor.io.prepare_data` refuses an ID column that looks personal, so no
+    personal information can reach the file.
+    """
+    rule_columns = [name for name in results.rules if name in results.flags.columns]
+    table = pd.DataFrame({"respondent": respondent_ids(results), "csv_row": csv_rows(results)})
+    table = table.join(results.indices).assign(composite=results.composite)
+    flags = results.flags[rule_columns].add_prefix("flag_")
+    table = table.join(flags).join(results.flags[["n_rules_triggered", "flagged", "reasons"]])
+    return table.reset_index(drop=True)
 
 
 def _careless_section(results: Results) -> dict[str, Any]:
@@ -212,16 +246,11 @@ def _careless_section(results: Results) -> dict[str, Any]:
                 "label": RULE_LABELS[name],
                 "description": rule_description(name, settings, n_items),
                 "count": text.fmt_count(int(results.flags[name].sum())) if applied else "–",
-                "status": "applied" if applied else (
-                    "switched off" if not settings["enabled"]
-                    else "not applied (no completion-time column)"
-                    if name == "seconds_per_item" and results.schema.duration_column is None
-                    else "not applied (index not computed)"
-                ),
+                "status": rule_status(results, name),
             }
-        )  # fmt: skip
+        )
     flagged = results.flags[results.flags["flagged"]].assign(
-        composite=results.composite, respondent=_respondent_ids(results)
+        composite=results.composite, respondent=respondent_ids(results)
     )
     flagged = flagged.sort_values(["n_rules_triggered", "composite"], ascending=False)
     rows = [

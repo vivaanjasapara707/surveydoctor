@@ -76,7 +76,8 @@ function sortValue(value: LabelValue): number {
   return typeof value === 'number' ? value : Number.POSITIVE_INFINITY
 }
 
-function parseWhole(text: string): number | null {
+/** "5" -> 5; anything that is not a whole number -> null. */
+export function parseWhole(text: string): number | null {
   const trimmed = text.trim()
   if (!/^-?\d+$/.test(trimmed)) return null
   return Number(trimmed)

@@ -488,3 +488,127 @@ There were no browser errors or warnings. One bug was found and fixed: the hidde
 
 ### Not verified
 - The Google Forms and Microsoft Forms export steps on the landing page are written from general knowledge of those products, not checked against their current menus. The owner should try both once and correct the wording if needed.
+
+## Stage 13 — 9 November 2026
+
+### Scales screen (`src/screens/ScaleBuilder.tsx`, `src/lib/scales.ts`)
+- **One row per column, with a "Scale" drop-down.** Each non-personal column is a row: a tick box for "this is a rating question", the answers seen in the file, a scale drop-down and a "Reverse-worded" tick box. It works with the keyboard and on a phone (the table scrolls inside its box) and needs no drag and drop.
+  - Columns the API suggests as rating questions are ticked to start with.
+  - Reverse-worded questions are never pre-ticked for an upload (§6.1). The sample uses its own schema.
+- **One scale per question.** The backend allows a question in two scales, but the builder keeps each question in one scale. A loaded schema file that puts a question in two scales is refused with a message, not silently changed.
+- **Checks before sending.** The website checks the draft before sending it, in the same words as `schema.py`:
+  - at least two questions;
+  - a whole-number range with lowest < highest;
+  - at least one scale, each with a different name and at least two questions;
+  - ID and completion-time columns that differ.
+
+  It also refuses a range that no longer contains the confirmed answer labels' numbers. The API validates everything again, and any API error is shown as it is.
+- **The answer range** comes from the confirmed labels, or from the sample's schema. Otherwise it is left empty and the screen lists the whole numbers seen in the ticked questions (e.g. "1, 2, 3, 4, 5, 6") to help. The website does not fill the range in itself.
+- **Optional ID and completion-time columns** (with a unit) can be chosen from the columns that are not ticked as questions. Without an ID, flagged respondents are named by CSV row, as in the report.
+- **Short codes.** The schema sent to the API uses the short codes (Q1, Q2, …) and includes `question_text` (code → original header) whenever any code differs from its header. The API renames the columns with it (`io.apply_short_codes`).
+- **Schema file.** "Download schema" saves the schema as JSON, after the same checks. "Load a schema file" fills in the screen. A loaded file must use columns that exist in the upload. Its `label_map` and `question_text` are not used: the answer labels come from the label step, and the codes from this upload.
+- **Changing the scales clears the results.** They described the old scales. The Results step becomes unavailable again until the checks are rerun.
+
+### Results screen (`src/screens/Results.tsx`)
+- **Order.** Verdict band, then key figures, then sections: Careless responding, Reliability, Factor structure, Sample size, Data checks, Limitations.
+  - This follows design.md §4–5. Data checks come after the four main checks, not second as in the report: on bfi they are 25 "blank answers" lines, which would push the evidence down.
+  - fsQCA is not shown, as BLUEPRINT §7.14 says. It stays in the HTML report.
+- **Everything shown comes from `/api/analyze`:** statuses, sentences, rule descriptions, counts, histogram bins and loadings. The website only formats numbers (two decimals; "—" when the API sends no value; p below 0.001 as "< 0.001").
+  - The labels "weak" and "cross" in the loadings caption quote the thresholds in `structure.py` (0.30). The comment in `LoadingsTable.tsx` points there.
+- **Verdict band:**
+  - the status word and icon, the API's sentence, and one chip per check, each with an icon, a word and a colour;
+  - chips with a section on this screen link to it, and each chip's reason is shown on hover and under its section heading;
+  - Robustness shows "Not checked"; its screen is Stage 14;
+  - it fades in over 150 ms, the site's only animation, which is switched off for reduced motion.
+- **Flag table:** the API's top 200, in its order (most rules first, then highest composite). Every column except Reasons can be sorted, and the sort state is shown with an arrow and `aria-sort`.
+  - IDs sort as numbers ("9" before "100"), and a missing composite sorts last.
+  - 25 rows are shown at first, with "Show all 200".
+- **Charts (Recharts):**
+  - **Histogram:** the API's 20 bins, in Signal, with no legend. Its caption is the API's composite-score note.
+  - **Scree plot:** observed eigenvalues as a solid Signal line with dots; the random-data threshold as a dashed Copper line; both named at their right end and in a legend; the suggested number of factors as a Graphite rule.
+  - Both have hover tooltips, a "Show as table" switch and a text description in numbers for screen readers. Chart animation is off.
+- **Chart colours** are repeated in `src/lib/tokens.ts`, because Recharts needs colour values, not Tailwind classes. `tokens.test.ts` fails if they ever differ from `global.css`.
+- **Loading on demand.** The Results screen loads only when it is opened. The chart library is most of the code, so the first page fell from 827 KB to 265 KB (82 KB compressed). Vite still warns that the Results file is over 500 KB (563 KB, 166 KB compressed); that is the chart library itself.
+- **Development server fix.** Because the Results screen loads on demand, the dev server first meets `recharts` and `framer-motion` when results open. It then reloaded the page, which cleared the app's state and sent the user back to the landing page. `vite.config.ts` now prepares both libraries at start-up. This only affected `npm run dev`.
+
+### Tests
+- Real API responses for the bfi sample are saved as fixtures: `inspect_bfi.json`, `sample_schema_bfi.json` and `analyze_bfi.json`. The component tests use them, so they check against what the API actually sends.
+- Component tests cover the scale builder, the flag table and the Results screen (§7.12 asks for the label-mapping screen, the scale builder and the flag table). App tests run both flows end to end with a mocked API:
+  - Google Forms upload → labels → scales → results, checking the schema that is sent;
+  - the sample data;
+  - results cleared after a change to the scales;
+  - an API error.
+
+### Checked in a real browser
+Headless Edge ran both flows against the running API at 1280 px and 375 px wide:
+- the sample: scales already filled in → Run checks → results, with all 20 histogram bars and both scree lines drawn;
+- the Google Forms fixture: labels → "Create at least one scale" refused → a Teamwork scale (Q1–Q4, Q2 reverse-worded) → results.
+
+There were no browser errors or warnings and no sideways scrolling. Fixed after looking at the screenshots:
+- the scree plot's end labels overlapped;
+- "Suggested" collided with the axis on a phone;
+- row headers were centred;
+- the histogram caption was repeated;
+- long table captions were cut off on a phone.
+
+## Stage 14 — 9 November 2026
+
+### Robustness screen (`src/screens/Robustness.tsx`, `src/lib/robustness.ts`)
+- **The analysis.** The user declares one analysis (§7.6): compare a scale between two groups, or correlate two scales.
+  - The group column can be any column that is not a question, the ID or the time column. Personal columns are never offered.
+  - When the API lists every value of the column (20 or fewer), the two groups are chosen from a list. Otherwise they are typed, exactly as in the file.
+  - Nothing is pre-chosen except the first scale(s): the column and both groups are left for the user to pick.
+  - A kind of analysis the file cannot support (no column to group by, or fewer than two scales) is shown but disabled, with the reason.
+- **What is sent.** `/api/robustness` gets the same file and schema as the results, which the website keeps from the "Run checks" request.
+- **The result** shows the API's status, reason and sentence, and the variant table. In the table:
+  - N, with the group sizes for a comparison;
+  - the estimate, 95% CI, p, significant, direction, effect size and the companion test;
+  - a variant that changed the result has a tint and the words "⚠ changed".
+
+  For a correlation, the effect size is r itself, so it is not shown twice. When a new result arrives, it is scrolled into view and its heading receives focus.
+- **Verdict band.** The API's robustness response includes the verdict band updated with robustness. The Results screen then shows that band instead of the one from `/api/analyze`, so the Robustness chip changes from "Not checked" to the result. Results now has a Robustness section ("Check robustness", or the result) that the chip links to.
+- **Clearing.** A change to the labels or the scales clears the results and the robustness check together.
+
+### Downloads (`src/components/Downloads.tsx`)
+- **Report and flags CSV.** Both are made by the API from the same file and schema (`/api/report`, `/api/export/flags`). The report includes the robustness analysis once one has been checked.
+  - The file name is the one the API sends in `Content-Disposition` (e.g. `surveydoctor_report_bfi.html`).
+  - Each request shows "Preparing the report…", the wake-up message when the server is slow, and the API's error message if it fails.
+- **Schema JSON.** It is made in the browser from the schema that was sent; it is the same file as "Download schema" on the Scales screen.
+- **Where they appear.** In a Downloads section on the Results screen and on the Robustness screen. The flag table points to the CSV for the full list.
+
+### States, accessibility and layout
+- **Every request has its states.** Each request that goes to the API (upload, sample, run checks, robustness, report, flags) shows:
+  - a "…" progress message;
+  - the wake-up message after 3 s without an answer;
+  - the API's own error message in a red box (`role="alert"`).
+
+  The Results and Robustness screens show "Loading…" while their code loads. Empty states have a sentence: no flagged respondents, no robustness check yet, factor analysis skipped.
+- **"Skip to content" link.** It appears on the first Tab.
+- **Focus.** Each new screen moves focus to its heading. Error lists and new robustness results receive focus.
+- **Defects found and fixed:**
+  - Two width classes on the same robustness field clashed.
+  - Mann–Whitney U was shown without thousands separators.
+
+### Checked in a real browser (headless Edge, 1280 px and 375 px, against the running API)
+- **Accessibility audit** with the browser's accessibility tree, on the landing, upload, labels, scales, results and robustness screens. Every button, link, input, drop-down, tick box and radio button has a name; each screen has exactly one h1; no page scrolls sideways.
+- **Keyboard:** the first Tab stop is "Skip to content".
+- **Error states:**
+  - an Excel file (ZIP signature) gets the API's "This looks like an Excel workbook…" message;
+  - an empty file gets "The file is empty…" without being sent.
+- **Wake-up**, with the API stopped:
+  - after 1 s the page says "Loading the sample data…";
+  - after 4 s it adds "Starting the analysis server — this can take up to a minute on the free plan.";
+  - after the API was restarted, the sample loaded by itself 9 s after the click.
+- **Downloads** (Google Forms fixture, Teamwork scale), saved by the browser:
+  - the report (376 KB): it mentions Teamwork, loads nothing from the internet, and contains no email address or name from the file;
+  - the flags CSV: 11 respondents (the fixture's 12th row is blank and is removed), with no email addresses or names;
+  - the schema JSON: the Teamwork scale, Q2 reverse-worded, and "Strongly agre" → 5.
+- **Robustness on the sample:**
+  - the empty form is refused with "Choose the column that defines the groups";
+  - Agreeableness by gender 1 vs 2 gives "Stable", "No concern" and a 4-row variant table;
+  - back on Results, the Robustness chip says "No concern".
+- No browser errors or warnings. The deliberate bad uploads' 400 answers were not counted as errors.
+
+### For the owner
+- `docs/qa_checklist.md` is the manual click-through for desktop and phone width with the messy CSV. Its log table is for the owner to fill in.
+- Not verified: the Google Forms and Microsoft Forms export steps on the landing page (carried over from Stage 12).

@@ -14,6 +14,7 @@ interface UploadProps {
   onFile: (file: File) => void
   onSample: () => void
   onCheckLabels: () => void
+  onContinue: () => void
 }
 
 export function Upload({
@@ -23,6 +24,7 @@ export function Upload({
   onFile,
   onSample,
   onCheckLabels,
+  onContinue,
 }: UploadProps) {
   const loading = status.kind === 'loading'
   const showFile = upload !== null && !loading
@@ -66,7 +68,12 @@ export function Upload({
       )}
 
       {showFile && (
-        <FileSummary upload={upload} labelsNeeded={labelsNeeded} onCheckLabels={onCheckLabels} />
+        <FileSummary
+          upload={upload}
+          labelsNeeded={labelsNeeded}
+          onCheckLabels={onCheckLabels}
+          onContinue={onContinue}
+        />
       )}
     </div>
   )
@@ -138,10 +145,12 @@ function FileSummary({
   upload,
   labelsNeeded,
   onCheckLabels,
+  onContinue,
 }: {
   upload: UploadState
   labelsNeeded: boolean
   onCheckLabels: () => void
+  onContinue: () => void
 }) {
   const { inspect } = upload
   const suggested = inspect.columns.filter((c) => c.suggested_item).length
@@ -222,9 +231,14 @@ function FileSummary({
             </Button>
           </div>
         ) : (
-          <Notice kind="clear" title="Answers are already numbers">
-            <p>No answer labels need checking.</p>
-          </Notice>
+          <div className="space-y-3">
+            <Notice kind="clear" title="Answers are already numbers">
+              <p>No answer labels need checking.</p>
+            </Notice>
+            <Button variant="primary" onClick={onContinue}>
+              Continue to scales
+            </Button>
+          </div>
         )}
       </div>
     </section>

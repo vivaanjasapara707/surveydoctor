@@ -13,7 +13,12 @@ const upload: UploadState = {
 }
 
 function setup(status: LoadStatus, state: UploadState | null, labelsNeeded = true) {
-  const handlers = { onFile: vi.fn(), onSample: vi.fn(), onCheckLabels: vi.fn() }
+  const handlers = {
+    onFile: vi.fn(),
+    onSample: vi.fn(),
+    onCheckLabels: vi.fn(),
+    onContinue: vi.fn(),
+  }
   render(<Upload status={status} upload={state} labelsNeeded={labelsNeeded} {...handlers} />)
   return handlers
 }
@@ -87,9 +92,11 @@ describe('Upload', () => {
     expect(onCheckLabels).toHaveBeenCalled()
   })
 
-  it('says when no labels need checking', () => {
-    setup({ kind: 'idle' }, upload, false)
+  it('goes straight on to the scales when no labels need checking', () => {
+    const { onContinue } = setup({ kind: 'idle' }, upload, false)
     expect(screen.getByText('Answers are already numbers')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Check answer labels' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Continue to scales' }))
+    expect(onContinue).toHaveBeenCalled()
   })
 })

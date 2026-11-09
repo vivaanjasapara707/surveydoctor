@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ApiError, errorMessage, inspectFile, waitForServer } from './client'
+import { ApiError, errorMessage, filenameFrom, inspectFile, waitForServer } from './client'
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } })
@@ -94,5 +94,20 @@ describe('waitForServer', () => {
     fetchMock.mockResolvedValue(json({ code: 'not_found', message: 'Not found.' }, 404))
     await expect(waitForServer()).rejects.toMatchObject({ code: 'not_found' })
     expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('filenameFrom', () => {
+  const withHeader = (value: string) =>
+    new Response('', { headers: { 'Content-Disposition': value } })
+
+  it('reads the file name the API gives', () => {
+    expect(
+      filenameFrom(withHeader('attachment; filename="surveydoctor_report_bfi.html"'), 'x.html'),
+    ).toBe('surveydoctor_report_bfi.html')
+  })
+
+  it('falls back when there is no name', () => {
+    expect(filenameFrom(new Response(''), 'surveydoctor_flags.csv')).toBe('surveydoctor_flags.csv')
   })
 })

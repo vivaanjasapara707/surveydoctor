@@ -43,6 +43,8 @@ npm test           # component tests
 
 The website reads the API address from `VITE_API_URL` (default `http://localhost:8000`; see `frontend/.env.example`). After a change to the API's models, regenerate the TypeScript types with the API running: `npm run gen:api`.
 
+Before a release, click through `docs/qa_checklist.md` on a laptop-width and a phone-width window.
+
 ## Regenerate the R reference values (optional)
 
 Requires R with the packages `careless`, `psych`, `GPArotation`, `QCA` and `jsonlite`. Without R, the reference tests skip.

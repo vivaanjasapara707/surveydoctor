@@ -1,0 +1,148 @@
+{
+  "robustness": {
+    "analysis": {
+      "type": "group_comparison",
+      "scale": "Agreeableness",
+      "group_column": "gender",
+      "group_a": "1",
+      "group_b": "2"
+    },
+    "description": "the difference in Agreeableness between gender = 1 and gender = 2",
+    "estimate_label": "Difference (A − B)",
+    "effect_label": "Cohen's d",
+    "companion_label": "Mann–Whitney U",
+    "variants": [
+      {
+        "variant": "all",
+        "label": "All respondents",
+        "n_excluded": 0,
+        "n": 2790,
+        "estimate": -0.39518847002778923,
+        "ci_low": -0.4666211039613879,
+        "ci_high": -0.32375583609419056,
+        "p": 1.4491287034913495e-26,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.4499979222135906,
+        "companion": 637036.0,
+        "companion_p": 9.9209257521123e-29,
+        "n_a": 917,
+        "n_b": 1873,
+        "note": null,
+        "changed": false
+      },
+      {
+        "variant": "any_rule",
+        "label": "Excluding respondents flagged by any rule",
+        "n_excluded": 686,
+        "n": 2107,
+        "estimate": -0.39500687835001,
+        "ci_low": -0.4718756664471507,
+        "ci_high": -0.3181380902528694,
+        "p": 4.957086953029854e-23,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.48621590047297414,
+        "companion": 355361.0,
+        "companion_p": 4.811007433502665e-25,
+        "n_a": 695,
+        "n_b": 1412,
+        "note": null,
+        "changed": false
+      },
+      {
+        "variant": "two_rules",
+        "label": "Excluding respondents flagged by two or more rules",
+        "n_excluded": 72,
+        "n": 2718,
+        "estimate": -0.36978624783246605,
+        "ci_low": -0.440748756664941,
+        "ci_high": -0.2988237389999911,
+        "p": 8.122074333581153e-24,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.4283594927391357,
+        "companion": 607424.0,
+        "companion_p": 3.492537950062783e-26,
+        "n_a": 882,
+        "n_b": 1836,
+        "note": null,
+        "changed": false
+      },
+      {
+        "variant": "composite_top10",
+        "label": "Excluding the top 10% composite scores",
+        "n_excluded": 280,
+        "n": 2510,
+        "estimate": -0.36095529988888586,
+        "ci_low": -0.4338532502568513,
+        "ci_high": -0.28805734952092044,
+        "p": 1.1345429108562835e-21,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.4244360978604443,
+        "companion": 519211.5,
+        "companion_p": 7.64388167650573e-24,
+        "n_a": 813,
+        "n_b": 1697,
+        "note": null,
+        "changed": false
+      }
+    ],
+    "verdict": "stable",
+    "changed_variants": [],
+    "status": {
+      "check": "robustness",
+      "label": "Robustness",
+      "status": "clear",
+      "reason": "The declared result does not depend on excluding flagged respondents."
+    },
+    "sentence": "Stable: the difference in Agreeableness between gender = 1 and gender = 2 keeps the same direction and significance in every exclusion variant. This shows sensitivity to exclusion choices. It does not prove which respondents should be excluded.",
+    "caveat": "This shows sensitivity to exclusion choices. It does not prove which respondents should be excluded."
+  },
+  "verdict": {
+    "status": "review",
+    "headline": "Review before drawing conclusions",
+    "sentence": "Look at careless responding and reliability before drawing conclusions.",
+    "checks": [
+      {
+        "check": "careless",
+        "label": "Careless responding",
+        "status": "review",
+        "reason": "72 respondents were flagged by two or more rules."
+      },
+      {
+        "check": "reliability",
+        "label": "Reliability",
+        "status": "review",
+        "reason": "Alpha is below 0.70 for Openness."
+      },
+      {
+        "check": "structure",
+        "label": "Factor structure",
+        "status": "clear",
+        "reason": "KMO is 0.85 and every scale has a factor of its own."
+      },
+      {
+        "check": "robustness",
+        "label": "Robustness",
+        "status": "clear",
+        "reason": "The declared result does not depend on excluding flagged respondents."
+      }
+    ]
+  },
+  "warnings": [
+    "Mahalanobis distance was not computed for 364 respondents with at least one missing answer.",
+    "Even-odd consistency could not be computed for 6 respondents: their half-scale scores were identical across scales (e.g. the same answer everywhere) or fewer than 3 scales had both halves answered.",
+    "Psychometric synonyms were not computed: the data has 1 item pair(s) correlating above 0.60, and at least 3 are needed.",
+    "Person-total correlation could not be computed for 5 respondents who gave the same answer to every item or answered fewer than 3 items.",
+    "The psychsyn flag rule was not applied because the index could not be computed for any respondent.",
+    "Reliability for scale 'Agreeableness' used 2709 respondents who answered all its items; 91 respondents with a missing answer were left out.",
+    "Reliability for scale 'Conscientiousness' used 2707 respondents who answered all its items; 93 respondents with a missing answer were left out.",
+    "Reliability for scale 'Extraversion' used 2713 respondents who answered all its items; 87 respondents with a missing answer were left out.",
+    "Reliability for scale 'Neuroticism' used 2694 respondents who answered all its items; 106 respondents with a missing answer were left out.",
+    "Reliability for scale 'Openness' used 2726 respondents who answered all its items; 74 respondents with a missing answer were left out.",
+    "Factor analysis used 2436 respondents who answered all 25 analysed questions; 364 respondents with a missing answer were left out.",
+    "Robustness check: 10 respondents have no score on Agreeableness (fewer than 80% of the scale's items answered) and are left out of every variant."
+  ]
+}

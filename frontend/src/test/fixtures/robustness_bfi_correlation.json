@@ -1,0 +1,142 @@
+{
+  "robustness": {
+    "analysis": { "type": "correlation", "scale_x": "Neuroticism", "scale_y": "Extraversion" },
+    "description": "the correlation between Neuroticism and Extraversion",
+    "estimate_label": "Pearson r",
+    "effect_label": "r",
+    "companion_label": "Spearman's rho",
+    "variants": [
+      {
+        "variant": "all",
+        "label": "All respondents",
+        "n_excluded": 0,
+        "n": 2791,
+        "estimate": -0.2219706694509892,
+        "ci_low": -0.2569568882028912,
+        "ci_high": -0.18640339681668353,
+        "p": 1.6985122273759466e-32,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.2219706694509892,
+        "companion": -0.22744512582394313,
+        "companion_p": 4.47056074985424e-34,
+        "n_a": null,
+        "n_b": null,
+        "note": null,
+        "changed": false
+      },
+      {
+        "variant": "any_rule",
+        "label": "Excluding respondents flagged by any rule",
+        "n_excluded": 686,
+        "n": 2109,
+        "estimate": -0.21132997444350013,
+        "ci_low": -0.25174221230130933,
+        "ci_high": -0.17018204776832035,
+        "p": 1.0163376691467254e-22,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.21132997444350013,
+        "companion": -0.21190268353146072,
+        "companion_p": 7.758667471981445e-23,
+        "n_a": null,
+        "n_b": null,
+        "note": null,
+        "changed": false
+      },
+      {
+        "variant": "two_rules",
+        "label": "Excluding respondents flagged by two or more rules",
+        "n_excluded": 72,
+        "n": 2719,
+        "estimate": -0.22150360688317022,
+        "ci_low": -0.2569546261763842,
+        "ci_high": -0.1854572691795899,
+        "p": 1.429066670248958e-31,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.22150360688317022,
+        "companion": -0.22398632363874585,
+        "companion_p": 2.908511630253848e-32,
+        "n_a": null,
+        "n_b": null,
+        "note": null,
+        "changed": false
+      },
+      {
+        "variant": "composite_top10",
+        "label": "Excluding the top 10% composite scores",
+        "n_excluded": 280,
+        "n": 2511,
+        "estimate": -0.2538446978224855,
+        "ci_low": -0.29008105703994713,
+        "ci_high": -0.21688149791448383,
+        "p": 3.207394458630886e-38,
+        "significant": true,
+        "direction": "negative",
+        "effect_size": -0.2538446978224855,
+        "companion": -0.250068806346445,
+        "companion_p": 4.163912634416428e-37,
+        "n_a": null,
+        "n_b": null,
+        "note": null,
+        "changed": false
+      }
+    ],
+    "verdict": "stable",
+    "changed_variants": [],
+    "status": {
+      "check": "robustness",
+      "label": "Robustness",
+      "status": "clear",
+      "reason": "The declared result does not depend on excluding flagged respondents."
+    },
+    "sentence": "Stable: the correlation between Neuroticism and Extraversion keeps the same direction and significance in every exclusion variant. This shows sensitivity to exclusion choices. It does not prove which respondents should be excluded.",
+    "caveat": "This shows sensitivity to exclusion choices. It does not prove which respondents should be excluded."
+  },
+  "verdict": {
+    "status": "review",
+    "headline": "Review before drawing conclusions",
+    "sentence": "Look at careless responding and reliability before drawing conclusions.",
+    "checks": [
+      {
+        "check": "careless",
+        "label": "Careless responding",
+        "status": "review",
+        "reason": "72 respondents were flagged by two or more rules."
+      },
+      {
+        "check": "reliability",
+        "label": "Reliability",
+        "status": "review",
+        "reason": "Alpha is below 0.70 for Openness."
+      },
+      {
+        "check": "structure",
+        "label": "Factor structure",
+        "status": "clear",
+        "reason": "KMO is 0.85 and every scale has a factor of its own."
+      },
+      {
+        "check": "robustness",
+        "label": "Robustness",
+        "status": "clear",
+        "reason": "The declared result does not depend on excluding flagged respondents."
+      }
+    ]
+  },
+  "warnings": [
+    "Mahalanobis distance was not computed for 364 respondents with at least one missing answer.",
+    "Even-odd consistency could not be computed for 6 respondents: their half-scale scores were identical across scales (e.g. the same answer everywhere) or fewer than 3 scales had both halves answered.",
+    "Psychometric synonyms were not computed: the data has 1 item pair(s) correlating above 0.60, and at least 3 are needed.",
+    "Person-total correlation could not be computed for 5 respondents who gave the same answer to every item or answered fewer than 3 items.",
+    "The psychsyn flag rule was not applied because the index could not be computed for any respondent.",
+    "Reliability for scale 'Agreeableness' used 2709 respondents who answered all its items; 91 respondents with a missing answer were left out.",
+    "Reliability for scale 'Conscientiousness' used 2707 respondents who answered all its items; 93 respondents with a missing answer were left out.",
+    "Reliability for scale 'Extraversion' used 2713 respondents who answered all its items; 87 respondents with a missing answer were left out.",
+    "Reliability for scale 'Neuroticism' used 2694 respondents who answered all its items; 106 respondents with a missing answer were left out.",
+    "Reliability for scale 'Openness' used 2726 respondents who answered all its items; 74 respondents with a missing answer were left out.",
+    "Factor analysis used 2436 respondents who answered all 25 analysed questions; 364 respondents with a missing answer were left out.",
+    "Robustness check: 9 respondents have no score on Neuroticism or Extraversion (fewer than 80% of the scale's items answered) and are left out of every variant."
+  ]
+}

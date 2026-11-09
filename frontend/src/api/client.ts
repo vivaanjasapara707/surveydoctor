@@ -14,6 +14,20 @@ export type InspectResponse = Schemas['InspectResponse']
 export type ColumnInfo = Schemas['ColumnModel']
 export type LabelDetection = Schemas['LabelDetectionModel']
 export type SurveySchema = Schemas['SurveySchemaModel']
+export type DurationUnit = SurveySchema['duration_unit']
+export type AnalyzeResponse = Schemas['AnalyzeResponse']
+export type CheckStatus = Schemas['CheckStatusModel']
+export type Verdict = Schemas['VerdictModel']
+export type FlaggedRespondent = Schemas['FlaggedRespondentModel']
+export type CarelessResult = Schemas['CarelessModel']
+export type ScaleReliability = Schemas['ScaleReliabilityModel']
+export type StructureResult = Schemas['StructureModel']
+export type SensitivityResult = Schemas['SensitivityModel']
+export type GroupComparison = Schemas['GroupComparisonModel']
+export type Correlation = Schemas['CorrelationModel']
+export type Analysis = GroupComparison | Correlation
+export type RobustnessResponse = Schemas['RobustnessResponse']
+export type VariantResult = Schemas['VariantResultModel']
 
 export const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
 
@@ -158,4 +172,66 @@ export function inspectFile(file: File): Promise<InspectResponse> {
   const body = new FormData()
   body.append('file', file)
   return requestJson<InspectResponse>('/api/inspect', { method: 'POST', body })
+}
+
+/** Every check on the survey. The schema travels as JSON text in a form field, next to the
+ *  file, because a file upload cannot also carry a JSON body. */
+export function analyze(file: File, schema: SurveySchema): Promise<AnalyzeResponse> {
+  return requestJson<AnalyzeResponse>('/api/analyze', {
+    method: 'POST',
+    body: surveyForm(file, schema),
+  })
+}
+
+/** The declared analysis on all respondents and without each flag variant, with the verdict
+ *  band updated by the result. */
+export function checkRobustness(
+  file: File,
+  schema: SurveySchema,
+  analysis: Analysis,
+): Promise<RobustnessResponse> {
+  const body = surveyForm(file, schema)
+  body.append('analysis', JSON.stringify(analysis))
+  return requestJson<RobustnessResponse>('/api/robustness', { method: 'POST', body })
+}
+
+export interface Download {
+  blob: Blob
+  filename: string
+}
+
+/** The self-contained HTML report; it includes the robustness check when an analysis is
+ *  given. */
+export function downloadReport(
+  file: File,
+  schema: SurveySchema,
+  analysis: Analysis | null,
+): Promise<Download> {
+  const body = surveyForm(file, schema)
+  if (analysis) body.append('analysis', JSON.stringify(analysis))
+  return requestFile('/api/report', body, 'surveydoctor_report.html')
+}
+
+/** Every respondent's indices, flags and reasons as CSV (personal columns never included). */
+export function downloadFlags(file: File, schema: SurveySchema): Promise<Download> {
+  return requestFile('/api/export/flags', surveyForm(file, schema), 'surveydoctor_flags.csv')
+}
+
+function surveyForm(file: File, schema: SurveySchema): FormData {
+  const body = new FormData()
+  body.append('file', file)
+  body.append('schema', JSON.stringify(schema))
+  return body
+}
+
+async function requestFile(path: string, body: FormData, fallback: string): Promise<Download> {
+  const response = await request(path, { method: 'POST', body })
+  return { blob: await response.blob(), filename: filenameFrom(response, fallback) }
+}
+
+/** The file name from `Content-Disposition: attachment; filename="..."`. */
+export function filenameFrom(response: Response, fallback: string): string {
+  const header = response.headers.get('Content-Disposition') ?? ''
+  const match = /filename="?([^";]+)"?/i.exec(header)
+  return match ? match[1] : fallback
 }

@@ -1,0 +1,3461 @@
+{
+  "version": "0.1.0",
+  "overview": {
+    "n_respondents": 2800,
+    "n_items": 25,
+    "n_scales": 5,
+    "n_flagged": 686,
+    "n_flagged_two_rules": 72
+  },
+  "verdict": {
+    "status": "review",
+    "headline": "Review before drawing conclusions",
+    "sentence": "Look at careless responding and reliability before drawing conclusions. Not checked: robustness.",
+    "checks": [
+      {
+        "check": "careless",
+        "label": "Careless responding",
+        "status": "review",
+        "reason": "72 respondents were flagged by two or more rules."
+      },
+      {
+        "check": "reliability",
+        "label": "Reliability",
+        "status": "review",
+        "reason": "Alpha is below 0.70 for Openness."
+      },
+      {
+        "check": "structure",
+        "label": "Factor structure",
+        "status": "clear",
+        "reason": "KMO is 0.85 and every scale has a factor of its own."
+      },
+      {
+        "check": "robustness",
+        "label": "Robustness",
+        "status": "not_checked",
+        "reason": "No analysis was declared."
+      }
+    ]
+  },
+  "summary_sentence": "2,800 respondents, 25 questions in 5 scales.",
+  "issues": [
+    {
+      "kind": "missing_answers",
+      "count": 16,
+      "message": "16 blank or NA answer(s) in 'A1'.",
+      "column": "A1",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 27,
+      "message": "27 blank or NA answer(s) in 'A2'.",
+      "column": "A2",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 26,
+      "message": "26 blank or NA answer(s) in 'A3'.",
+      "column": "A3",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 19,
+      "message": "19 blank or NA answer(s) in 'A4'.",
+      "column": "A4",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 16,
+      "message": "16 blank or NA answer(s) in 'A5'.",
+      "column": "A5",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 21,
+      "message": "21 blank or NA answer(s) in 'C1'.",
+      "column": "C1",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 24,
+      "message": "24 blank or NA answer(s) in 'C2'.",
+      "column": "C2",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 20,
+      "message": "20 blank or NA answer(s) in 'C3'.",
+      "column": "C3",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 26,
+      "message": "26 blank or NA answer(s) in 'C4'.",
+      "column": "C4",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 16,
+      "message": "16 blank or NA answer(s) in 'C5'.",
+      "column": "C5",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 23,
+      "message": "23 blank or NA answer(s) in 'E1'.",
+      "column": "E1",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 16,
+      "message": "16 blank or NA answer(s) in 'E2'.",
+      "column": "E2",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 25,
+      "message": "25 blank or NA answer(s) in 'E3'.",
+      "column": "E3",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 9,
+      "message": "9 blank or NA answer(s) in 'E4'.",
+      "column": "E4",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 21,
+      "message": "21 blank or NA answer(s) in 'E5'.",
+      "column": "E5",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 22,
+      "message": "22 blank or NA answer(s) in 'N1'.",
+      "column": "N1",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 21,
+      "message": "21 blank or NA answer(s) in 'N2'.",
+      "column": "N2",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 11,
+      "message": "11 blank or NA answer(s) in 'N3'.",
+      "column": "N3",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 36,
+      "message": "36 blank or NA answer(s) in 'N4'.",
+      "column": "N4",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 29,
+      "message": "29 blank or NA answer(s) in 'N5'.",
+      "column": "N5",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 22,
+      "message": "22 blank or NA answer(s) in 'O1'.",
+      "column": "O1",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 28,
+      "message": "28 blank or NA answer(s) in 'O3'.",
+      "column": "O3",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 14,
+      "message": "14 blank or NA answer(s) in 'O4'.",
+      "column": "O4",
+      "examples": []
+    },
+    {
+      "kind": "missing_answers",
+      "count": 20,
+      "message": "20 blank or NA answer(s) in 'O5'.",
+      "column": "O5",
+      "examples": []
+    }
+  ],
+  "careless": {
+    "sentence": "686 of 2,800 respondents (24.5%) were flagged by at least one rule; 72 (2.6%) by two or more.",
+    "rules": [
+      {
+        "name": "longstring",
+        "label": "Longstring",
+        "enabled": true,
+        "settings": { "share_of_items": 0.5 },
+        "description": "13 or more identical answers in a row (50% of 25 questions)",
+        "status": "applied",
+        "count": 4
+      },
+      {
+        "name": "mahalanobis",
+        "label": "Mahalanobis distance",
+        "enabled": true,
+        "settings": { "p_below": 0.001 },
+        "description": "answer pattern unusual at p < 0.001",
+        "status": "applied",
+        "count": 84
+      },
+      {
+        "name": "even_odd",
+        "label": "Even-odd consistency",
+        "enabled": true,
+        "settings": { "r_below": 0.3 },
+        "description": "correlation below 0.30",
+        "status": "applied",
+        "count": 490
+      },
+      {
+        "name": "psychsyn",
+        "label": "Psychometric synonyms",
+        "enabled": true,
+        "settings": { "r_below": 0.0 },
+        "description": "correlation below 0.00",
+        "status": "not applied (index not computed)",
+        "count": null
+      },
+      {
+        "name": "person_total",
+        "label": "Person-total correlation",
+        "enabled": true,
+        "settings": { "r_below": 0.0 },
+        "description": "correlation below 0.00",
+        "status": "applied",
+        "count": 184
+      },
+      {
+        "name": "seconds_per_item",
+        "label": "Seconds per item",
+        "enabled": true,
+        "settings": { "seconds_below": 2.0 },
+        "description": "fewer than 2 seconds per question",
+        "status": "not applied (no completion-time column)",
+        "count": null
+      }
+    ],
+    "n_flagged": 686,
+    "n_shown": 200,
+    "flagged": [
+      {
+        "respondent": "62022",
+        "csv_row": 187,
+        "n_rules": 3,
+        "composite": 0.8761646416333216,
+        "rules": ["mahalanobis", "even_odd", "person_total"],
+        "reasons": "Mahalanobis D² 63.2, p < 0.001 (threshold p < 0.001); Even-odd r = 0.27 (threshold < 0.30); Person-total r = -0.06 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64438",
+        "csv_row": 1331,
+        "n_rules": 3,
+        "composite": 0.829275024851939,
+        "rules": ["mahalanobis", "even_odd", "person_total"],
+        "reasons": "Mahalanobis D² 58.0, p < 0.001 (threshold p < 0.001); Even-odd r = -0.31 (threshold < 0.30); Person-total r = -0.09 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67184",
+        "csv_row": 2610,
+        "n_rules": 3,
+        "composite": 0.7616120305140864,
+        "rules": ["mahalanobis", "even_odd", "person_total"],
+        "reasons": "Mahalanobis D² 56.1, p < 0.001 (threshold p < 0.001); Even-odd r = -0.54 (threshold < 0.30); Person-total r = -0.18 (threshold < 0.00)"
+      },
+      {
+        "respondent": "66065",
+        "csv_row": 2088,
+        "n_rules": 3,
+        "composite": 0.7556306015018717,
+        "rules": ["mahalanobis", "even_odd", "person_total"],
+        "reasons": "Mahalanobis D² 64.3, p < 0.001 (threshold p < 0.001); Even-odd r = -0.26 (threshold < 0.30); Person-total r = -0.13 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64962",
+        "csv_row": 1561,
+        "n_rules": 2,
+        "composite": 0.9526250046050145,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 62.4, p < 0.001 (threshold p < 0.001); Even-odd r = -0.17 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65747",
+        "csv_row": 1943,
+        "n_rules": 2,
+        "composite": 0.9147975632339129,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.17 (threshold < 0.30); Person-total r = -0.23 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63467",
+        "csv_row": 868,
+        "n_rules": 2,
+        "composite": 0.9103896522356969,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 106.3, p < 0.001 (threshold p < 0.001); Even-odd r = -0.17 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62181",
+        "csv_row": 264,
+        "n_rules": 2,
+        "composite": 0.9008781623465547,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 75.4, p < 0.001 (threshold p < 0.001); Even-odd r = -0.14 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62731",
+        "csv_row": 540,
+        "n_rules": 2,
+        "composite": 0.8953319257498894,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.73 (threshold < 0.30); Person-total r = -0.14 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62787",
+        "csv_row": 566,
+        "n_rules": 2,
+        "composite": 0.8818490515337554,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 56.0, p < 0.001 (threshold p < 0.001); Even-odd r = -0.29 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65170",
+        "csv_row": 1651,
+        "n_rules": 2,
+        "composite": 0.8728994397845902,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 73.2, p < 0.001 (threshold p < 0.001); Even-odd r = -0.45 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64642",
+        "csv_row": 1431,
+        "n_rules": 2,
+        "composite": 0.8727407717256347,
+        "rules": ["longstring", "mahalanobis"],
+        "reasons": "Longstring 25 (threshold 13); Mahalanobis D² 69.8, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "65974",
+        "csv_row": 2044,
+        "n_rules": 2,
+        "composite": 0.8727407717256347,
+        "rules": ["longstring", "mahalanobis"],
+        "reasons": "Longstring 25 (threshold 13); Mahalanobis D² 69.8, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "65407",
+        "csv_row": 1767,
+        "n_rules": 2,
+        "composite": 0.8605729708348236,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 90.7, p < 0.001 (threshold p < 0.001); Even-odd r = -0.61 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65687",
+        "csv_row": 1907,
+        "n_rules": 2,
+        "composite": 0.8597453482871992,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.16 (threshold < 0.30); Person-total r = -0.03 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65101",
+        "csv_row": 1623,
+        "n_rules": 2,
+        "composite": 0.8499987807290708,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.87 (threshold < 0.30); Person-total r = -0.05 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63040",
+        "csv_row": 684,
+        "n_rules": 2,
+        "composite": 0.8477332935330555,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.14 (threshold < 0.30); Person-total r = -0.02 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64557",
+        "csv_row": 1392,
+        "n_rules": 2,
+        "composite": 0.8335567555780121,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.13 (threshold < 0.30); Person-total r = -0.14 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64192",
+        "csv_row": 1214,
+        "n_rules": 2,
+        "composite": 0.8322525210431224,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 76.9, p < 0.001 (threshold p < 0.001); Person-total r = -0.16 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65995",
+        "csv_row": 2054,
+        "n_rules": 2,
+        "composite": 0.8307647560621431,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.17 (threshold < 0.30); Person-total r = -0.04 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67146",
+        "csv_row": 2594,
+        "n_rules": 2,
+        "composite": 0.8229856456501685,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 55.7, p < 0.001 (threshold p < 0.001); Even-odd r = -0.43 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63839",
+        "csv_row": 1049,
+        "n_rules": 2,
+        "composite": 0.8138771953190042,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.01 (threshold < 0.30); Person-total r = -0.10 (threshold < 0.00)"
+      },
+      {
+        "respondent": "66283",
+        "csv_row": 2189,
+        "n_rules": 2,
+        "composite": 0.8067379337862158,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 62.7, p < 0.001 (threshold p < 0.001); Even-odd r = -0.16 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64724",
+        "csv_row": 1468,
+        "n_rules": 2,
+        "composite": 0.7964034613257117,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 72.5, p < 0.001 (threshold p < 0.001); Even-odd r = 0.07 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63763",
+        "csv_row": 1008,
+        "n_rules": 2,
+        "composite": 0.795426942994856,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 82.7, p < 0.001 (threshold p < 0.001); Even-odd r = 0.02 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67480",
+        "csv_row": 2756,
+        "n_rules": 2,
+        "composite": 0.792392635214433,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 63.9, p < 0.001 (threshold p < 0.001); Person-total r = -0.18 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63862",
+        "csv_row": 1059,
+        "n_rules": 2,
+        "composite": 0.789723339036912,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 57.8, p < 0.001 (threshold p < 0.001); Person-total r = -0.09 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64341",
+        "csv_row": 1282,
+        "n_rules": 2,
+        "composite": 0.789662049436739,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 80.3, p < 0.001 (threshold p < 0.001); Person-total r = -0.31 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64689",
+        "csv_row": 1453,
+        "n_rules": 2,
+        "composite": 0.789132389791659,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.23 (threshold < 0.30); Person-total r = -0.38 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65743",
+        "csv_row": 1939,
+        "n_rules": 2,
+        "composite": 0.7882663573149579,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 54.3, p < 0.001 (threshold p < 0.001); Even-odd r = 0.15 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64718",
+        "csv_row": 1466,
+        "n_rules": 2,
+        "composite": 0.7855359599379599,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.22 (threshold < 0.30); Person-total r = -0.24 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62551",
+        "csv_row": 449,
+        "n_rules": 2,
+        "composite": 0.7834576291063553,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 57.8, p < 0.001 (threshold p < 0.001); Person-total r = -0.20 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62599",
+        "csv_row": 470,
+        "n_rules": 2,
+        "composite": 0.7798668662413797,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 67.7, p < 0.001 (threshold p < 0.001); Even-odd r = 0.19 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64378",
+        "csv_row": 1301,
+        "n_rules": 2,
+        "composite": 0.7795402996554757,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 55.0, p < 0.001 (threshold p < 0.001); Even-odd r = -0.69 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67156",
+        "csv_row": 2600,
+        "n_rules": 2,
+        "composite": 0.7781925935169014,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 52.7, p < 0.001 (threshold p < 0.001); Even-odd r = 0.16 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64844",
+        "csv_row": 1512,
+        "n_rules": 2,
+        "composite": 0.7781494450527393,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 60.2, p < 0.001 (threshold p < 0.001); Person-total r = -0.07 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64021",
+        "csv_row": 1139,
+        "n_rules": 2,
+        "composite": 0.7775827687875461,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 61.3, p < 0.001 (threshold p < 0.001); Even-odd r = 0.16 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66997",
+        "csv_row": 2523,
+        "n_rules": 2,
+        "composite": 0.7773025914146986,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 53.9, p < 0.001 (threshold p < 0.001); Person-total r = -0.21 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65727",
+        "csv_row": 1930,
+        "n_rules": 2,
+        "composite": 0.7727547213288031,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 55.1, p < 0.001 (threshold p < 0.001); Person-total r = -0.24 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62984",
+        "csv_row": 660,
+        "n_rules": 2,
+        "composite": 0.7625890457471783,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 55.7, p < 0.001 (threshold p < 0.001); Even-odd r = 0.11 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63200",
+        "csv_row": 756,
+        "n_rules": 2,
+        "composite": 0.7597570812342662,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 59.5, p < 0.001 (threshold p < 0.001); Even-odd r = 0.18 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63104",
+        "csv_row": 715,
+        "n_rules": 2,
+        "composite": 0.7595047372821472,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.17 (threshold < 0.30); Person-total r = -0.001 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62216",
+        "csv_row": 284,
+        "n_rules": 2,
+        "composite": 0.7572541793799288,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.79 (threshold < 0.30); Person-total r = -0.15 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63271",
+        "csv_row": 780,
+        "n_rules": 2,
+        "composite": 0.7507382918351941,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.44 (threshold < 0.30); Person-total r = -0.12 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67510",
+        "csv_row": 2773,
+        "n_rules": 2,
+        "composite": 0.7486341305696715,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 68.3, p < 0.001 (threshold p < 0.001); Even-odd r = -0.85 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64969",
+        "csv_row": 1565,
+        "n_rules": 2,
+        "composite": 0.740430797450213,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 53.6, p < 0.001 (threshold p < 0.001); Even-odd r = -0.29 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65439",
+        "csv_row": 1786,
+        "n_rules": 2,
+        "composite": 0.7368801176520609,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 85.9, p < 0.001 (threshold p < 0.001); Person-total r = -0.18 (threshold < 0.00)"
+      },
+      {
+        "respondent": "61685",
+        "csv_row": 37,
+        "n_rules": 2,
+        "composite": 0.7287806867102393,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.12 (threshold < 0.30); Person-total r = -0.28 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64266",
+        "csv_row": 1243,
+        "n_rules": 2,
+        "composite": 0.7279112135553125,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 53.7, p < 0.001 (threshold p < 0.001); Even-odd r = 0.27 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63406",
+        "csv_row": 836,
+        "n_rules": 2,
+        "composite": 0.7270169492014499,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 77.9, p < 0.001 (threshold p < 0.001); Even-odd r = -0.68 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65049",
+        "csv_row": 1595,
+        "n_rules": 2,
+        "composite": 0.7257392685119722,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.25 (threshold < 0.30); Person-total r = -0.15 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63955",
+        "csv_row": 1102,
+        "n_rules": 2,
+        "composite": 0.7222563332548537,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.47 (threshold < 0.30); Person-total r = -0.13 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64459",
+        "csv_row": 1339,
+        "n_rules": 2,
+        "composite": 0.7192610233684895,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.20 (threshold < 0.30); Person-total r = -0.14 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64693",
+        "csv_row": 1454,
+        "n_rules": 2,
+        "composite": 0.7180358638563645,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.000 (threshold < 0.30); Person-total r = -0.31 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62001",
+        "csv_row": 177,
+        "n_rules": 2,
+        "composite": 0.7156107325457841,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.09 (threshold < 0.30); Person-total r = -0.08 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65273",
+        "csv_row": 1703,
+        "n_rules": 2,
+        "composite": 0.7066732276703116,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.13 (threshold < 0.30); Person-total r = -0.25 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67356",
+        "csv_row": 2695,
+        "n_rules": 2,
+        "composite": 0.7060071115405473,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 58.1, p < 0.001 (threshold p < 0.001); Even-odd r = 0.25 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63324",
+        "csv_row": 800,
+        "n_rules": 2,
+        "composite": 0.7044322964233702,
+        "rules": ["mahalanobis", "person_total"],
+        "reasons": "Mahalanobis D² 52.8, p < 0.001 (threshold p < 0.001); Person-total r = -0.70 (threshold < 0.00)"
+      },
+      {
+        "respondent": "61865",
+        "csv_row": 117,
+        "n_rules": 2,
+        "composite": 0.7027091313087133,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.10 (threshold < 0.30); Person-total r = -0.58 (threshold < 0.00)"
+      },
+      {
+        "respondent": "61629",
+        "csv_row": 9,
+        "n_rules": 2,
+        "composite": 0.693084507202402,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.25 (threshold < 0.30); Person-total r = -0.20 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65401",
+        "csv_row": 1762,
+        "n_rules": 2,
+        "composite": 0.6890236169586117,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 53.3, p < 0.001 (threshold p < 0.001); Even-odd r = 0.28 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63609",
+        "csv_row": 936,
+        "n_rules": 2,
+        "composite": 0.6837619550380551,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.04 (threshold < 0.30); Person-total r = -0.11 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64946",
+        "csv_row": 1552,
+        "n_rules": 2,
+        "composite": 0.6820441894826166,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.85 (threshold < 0.30); Person-total r = -0.02 (threshold < 0.00)"
+      },
+      {
+        "respondent": "66064",
+        "csv_row": 2087,
+        "n_rules": 2,
+        "composite": 0.6809598556888885,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 61.3, p < 0.001 (threshold p < 0.001); Even-odd r = 0.04 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63677",
+        "csv_row": 964,
+        "n_rules": 2,
+        "composite": 0.673137066611849,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 54.8, p < 0.001 (threshold p < 0.001); Even-odd r = 0.26 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66173",
+        "csv_row": 2142,
+        "n_rules": 2,
+        "composite": 0.6630548708037023,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 54.5, p < 0.001 (threshold p < 0.001); Even-odd r = 0.11 (threshold < 0.30)"
+      },
+      {
+        "respondent": "61702",
+        "csv_row": 48,
+        "n_rules": 2,
+        "composite": 0.6538676480861327,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.84 (threshold < 0.30); Person-total r = -0.11 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64839",
+        "csv_row": 1509,
+        "n_rules": 2,
+        "composite": 0.6529795706778714,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 63.7, p < 0.001 (threshold p < 0.001); Even-odd r = 0.04 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64562",
+        "csv_row": 1393,
+        "n_rules": 2,
+        "composite": 0.6500324762290468,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.06 (threshold < 0.30); Person-total r = -0.10 (threshold < 0.00)"
+      },
+      {
+        "respondent": "61913",
+        "csv_row": 135,
+        "n_rules": 2,
+        "composite": 0.644482803526842,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = -0.14 (threshold < 0.30); Person-total r = -0.05 (threshold < 0.00)"
+      },
+      {
+        "respondent": "61748",
+        "csv_row": 62,
+        "n_rules": 2,
+        "composite": 0.6427023664831392,
+        "rules": ["even_odd", "person_total"],
+        "reasons": "Even-odd r = 0.12 (threshold < 0.30); Person-total r = -0.13 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64982",
+        "csv_row": 1573,
+        "n_rules": 2,
+        "composite": 0.6397894807698,
+        "rules": ["mahalanobis", "even_odd"],
+        "reasons": "Mahalanobis D² 56.3, p < 0.001 (threshold p < 0.001); Even-odd r = 0.21 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65816",
+        "csv_row": 1965,
+        "n_rules": 1,
+        "composite": 0.9282226031266564,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.01 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64264",
+        "csv_row": 1242,
+        "n_rules": 1,
+        "composite": 0.9244364392398178,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.17 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67413",
+        "csv_row": 2725,
+        "n_rules": 1,
+        "composite": 0.9177232469660597,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.07 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64032",
+        "csv_row": 1146,
+        "n_rules": 1,
+        "composite": 0.9161357745898124,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.13 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65511",
+        "csv_row": 1825,
+        "n_rules": 1,
+        "composite": 0.902926566708622,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.28 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63278",
+        "csv_row": 782,
+        "n_rules": 1,
+        "composite": 0.8970815800661525,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.42 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63518",
+        "csv_row": 895,
+        "n_rules": 1,
+        "composite": 0.8878231712185978,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.30 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62816",
+        "csv_row": 581,
+        "n_rules": 1,
+        "composite": 0.883431155587504,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.31 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64250",
+        "csv_row": 1236,
+        "n_rules": 1,
+        "composite": 0.8830568358600221,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.31 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63985",
+        "csv_row": 1120,
+        "n_rules": 1,
+        "composite": 0.8793128201073174,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.52 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63582",
+        "csv_row": 922,
+        "n_rules": 1,
+        "composite": 0.873578047400262,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.20 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63404",
+        "csv_row": 835,
+        "n_rules": 1,
+        "composite": 0.8677365614151459,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.000 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63963",
+        "csv_row": 1109,
+        "n_rules": 1,
+        "composite": 0.8645458706447403,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.08 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65164",
+        "csv_row": 1647,
+        "n_rules": 1,
+        "composite": 0.8632151816827341,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.10 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67462",
+        "csv_row": 2751,
+        "n_rules": 1,
+        "composite": 0.8626727568871193,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 66.9, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "67116",
+        "csv_row": 2579,
+        "n_rules": 1,
+        "composite": 0.8590112447429872,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.12 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64712",
+        "csv_row": 1462,
+        "n_rules": 1,
+        "composite": 0.8583949131771582,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.09 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63742",
+        "csv_row": 997,
+        "n_rules": 1,
+        "composite": 0.8566040001354855,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.62 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65421",
+        "csv_row": 1776,
+        "n_rules": 1,
+        "composite": 0.8557113283004043,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.79 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67288",
+        "csv_row": 2662,
+        "n_rules": 1,
+        "composite": 0.8546739710144835,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 81.4, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "66575",
+        "csv_row": 2325,
+        "n_rules": 1,
+        "composite": 0.8520358215742334,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.06 (threshold < 0.30)"
+      },
+      {
+        "respondent": "61713",
+        "csv_row": 50,
+        "n_rules": 1,
+        "composite": 0.8507224558952446,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.09 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66475",
+        "csv_row": 2267,
+        "n_rules": 1,
+        "composite": 0.8482056664810037,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.55 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62719",
+        "csv_row": 534,
+        "n_rules": 1,
+        "composite": 0.8468697242462961,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.08 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62505",
+        "csv_row": 422,
+        "n_rules": 1,
+        "composite": 0.8441010231193107,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.26 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65256",
+        "csv_row": 1694,
+        "n_rules": 1,
+        "composite": 0.843802707598238,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.000 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62611",
+        "csv_row": 475,
+        "n_rules": 1,
+        "composite": 0.8385881061897793,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.91 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67465",
+        "csv_row": 2752,
+        "n_rules": 1,
+        "composite": 0.8367168499689266,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.22 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62708",
+        "csv_row": 527,
+        "n_rules": 1,
+        "composite": 0.8364174559373193,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.51 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65618",
+        "csv_row": 1874,
+        "n_rules": 1,
+        "composite": 0.8359358435924084,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.27 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62282",
+        "csv_row": 316,
+        "n_rules": 1,
+        "composite": 0.8336741456914716,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.44 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63807",
+        "csv_row": 1028,
+        "n_rules": 1,
+        "composite": 0.8325651869707011,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.08 (threshold < 0.30)"
+      },
+      {
+        "respondent": "61630",
+        "csv_row": 10,
+        "n_rules": 1,
+        "composite": 0.8323600749186723,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.43 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62350",
+        "csv_row": 351,
+        "n_rules": 1,
+        "composite": 0.8319827857013185,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.89 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62179",
+        "csv_row": 262,
+        "n_rules": 1,
+        "composite": 0.8304139478682594,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.09 (threshold < 0.00)"
+      },
+      {
+        "respondent": "66114",
+        "csv_row": 2113,
+        "n_rules": 1,
+        "composite": 0.8295749937862464,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.04 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64725",
+        "csv_row": 1469,
+        "n_rules": 1,
+        "composite": 0.829107095295692,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.00 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67403",
+        "csv_row": 2722,
+        "n_rules": 1,
+        "composite": 0.8246779722228911,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.04 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67168",
+        "csv_row": 2605,
+        "n_rules": 1,
+        "composite": 0.824401080804066,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.60 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66138",
+        "csv_row": 2125,
+        "n_rules": 1,
+        "composite": 0.8218554180106591,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.22 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65041",
+        "csv_row": 1591,
+        "n_rules": 1,
+        "composite": 0.8208342104669688,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.29 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64368",
+        "csv_row": 1294,
+        "n_rules": 1,
+        "composite": 0.8152881797443232,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.51 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65710",
+        "csv_row": 1921,
+        "n_rules": 1,
+        "composite": 0.8149834382528083,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.02 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64216",
+        "csv_row": 1222,
+        "n_rules": 1,
+        "composite": 0.8144658651182182,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.07 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62201",
+        "csv_row": 272,
+        "n_rules": 1,
+        "composite": 0.8138765653706038,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.04 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62380",
+        "csv_row": 370,
+        "n_rules": 1,
+        "composite": 0.810984217330689,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.08 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64347",
+        "csv_row": 1286,
+        "n_rules": 1,
+        "composite": 0.8103594404086254,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.30 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63619",
+        "csv_row": 941,
+        "n_rules": 1,
+        "composite": 0.8087170097410226,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.34 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62864",
+        "csv_row": 608,
+        "n_rules": 1,
+        "composite": 0.8083934814941691,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.29 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66289",
+        "csv_row": 2192,
+        "n_rules": 1,
+        "composite": 0.8076579038446141,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.21 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64066",
+        "csv_row": 1159,
+        "n_rules": 1,
+        "composite": 0.8058416290656936,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.05 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67541",
+        "csv_row": 2793,
+        "n_rules": 1,
+        "composite": 0.8043420555651288,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.40 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62831",
+        "csv_row": 590,
+        "n_rules": 1,
+        "composite": 0.8017596000449929,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.30 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67188",
+        "csv_row": 2613,
+        "n_rules": 1,
+        "composite": 0.8016446162457811,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.59 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62839",
+        "csv_row": 595,
+        "n_rules": 1,
+        "composite": 0.8009774924561553,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.06 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65381",
+        "csv_row": 1753,
+        "n_rules": 1,
+        "composite": 0.799055230937757,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.002 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63470",
+        "csv_row": 870,
+        "n_rules": 1,
+        "composite": 0.7990308255186838,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.20 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67161",
+        "csv_row": 2603,
+        "n_rules": 1,
+        "composite": 0.7989291591169188,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.13 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67438",
+        "csv_row": 2736,
+        "n_rules": 1,
+        "composite": 0.7950925071217514,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.11 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62092",
+        "csv_row": 223,
+        "n_rules": 1,
+        "composite": 0.7946720228742752,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.29 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62199",
+        "csv_row": 271,
+        "n_rules": 1,
+        "composite": 0.7940454311170605,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.52 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64605",
+        "csv_row": 1414,
+        "n_rules": 1,
+        "composite": 0.7931674407682772,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.13 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67082",
+        "csv_row": 2566,
+        "n_rules": 1,
+        "composite": 0.7873622844773311,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.05 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67190",
+        "csv_row": 2615,
+        "n_rules": 1,
+        "composite": 0.78690621241665,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.26 (threshold < 0.30)"
+      },
+      {
+        "respondent": "61782",
+        "csv_row": 80,
+        "n_rules": 1,
+        "composite": 0.7867778506468548,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.17 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63625",
+        "csv_row": 944,
+        "n_rules": 1,
+        "composite": 0.7863535435677672,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.11 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64958",
+        "csv_row": 1558,
+        "n_rules": 1,
+        "composite": 0.7852520587207458,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.42 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65589",
+        "csv_row": 1861,
+        "n_rules": 1,
+        "composite": 0.7844214330021566,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.41 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64944",
+        "csv_row": 1551,
+        "n_rules": 1,
+        "composite": 0.7840330575432319,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.98 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66554",
+        "csv_row": 2314,
+        "n_rules": 1,
+        "composite": 0.7824293969567646,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 55.0, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "62438",
+        "csv_row": 389,
+        "n_rules": 1,
+        "composite": 0.7814560745212183,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.25 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64753",
+        "csv_row": 1481,
+        "n_rules": 1,
+        "composite": 0.7798655609147266,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.18 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67155",
+        "csv_row": 2599,
+        "n_rules": 1,
+        "composite": 0.7787779829710089,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.01 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62542",
+        "csv_row": 442,
+        "n_rules": 1,
+        "composite": 0.7786092897979339,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.22 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63798",
+        "csv_row": 1024,
+        "n_rules": 1,
+        "composite": 0.7780652508390102,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.78 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63705",
+        "csv_row": 978,
+        "n_rules": 1,
+        "composite": 0.7779033542079045,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.22 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67429",
+        "csv_row": 2733,
+        "n_rules": 1,
+        "composite": 0.7764101888496301,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.28 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67451",
+        "csv_row": 2745,
+        "n_rules": 1,
+        "composite": 0.7755796155562681,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.18 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65549",
+        "csv_row": 1842,
+        "n_rules": 1,
+        "composite": 0.7755287748379535,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.27 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65430",
+        "csv_row": 1780,
+        "n_rules": 1,
+        "composite": 0.7745511567134348,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.11 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65987",
+        "csv_row": 2049,
+        "n_rules": 1,
+        "composite": 0.7729387745375427,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.21 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65105",
+        "csv_row": 1624,
+        "n_rules": 1,
+        "composite": 0.7721661626683897,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.05 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67471",
+        "csv_row": 2753,
+        "n_rules": 1,
+        "composite": 0.7708468202723511,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.48 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65888",
+        "csv_row": 1999,
+        "n_rules": 1,
+        "composite": 0.7679219378443993,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 62.0, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "63946",
+        "csv_row": 1097,
+        "n_rules": 1,
+        "composite": 0.7678872325122242,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.28 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62343",
+        "csv_row": 344,
+        "n_rules": 1,
+        "composite": 0.7675031090142811,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.10 (threshold < 0.00)"
+      },
+      {
+        "respondent": "65836",
+        "csv_row": 1974,
+        "n_rules": 1,
+        "composite": 0.7665902162268481,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.21 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62647",
+        "csv_row": 493,
+        "n_rules": 1,
+        "composite": 0.7654561751823329,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.30 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65863",
+        "csv_row": 1989,
+        "n_rules": 1,
+        "composite": 0.7651711303008768,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.18 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65828",
+        "csv_row": 1971,
+        "n_rules": 1,
+        "composite": 0.7639107312638551,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.13 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63762",
+        "csv_row": 1007,
+        "n_rules": 1,
+        "composite": 0.7631679496492547,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 69.6, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "67331",
+        "csv_row": 2680,
+        "n_rules": 1,
+        "composite": 0.7627131773621637,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.22 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65240",
+        "csv_row": 1686,
+        "n_rules": 1,
+        "composite": 0.7618850165531197,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.06 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62668",
+        "csv_row": 504,
+        "n_rules": 1,
+        "composite": 0.761743082803786,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.24 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63980",
+        "csv_row": 1116,
+        "n_rules": 1,
+        "composite": 0.7613854350903386,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.02 (threshold < 0.00)"
+      },
+      {
+        "respondent": "66718",
+        "csv_row": 2395,
+        "n_rules": 1,
+        "composite": 0.7593694386246117,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.19 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66447",
+        "csv_row": 2258,
+        "n_rules": 1,
+        "composite": 0.7579073994662766,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.30 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65084",
+        "csv_row": 1613,
+        "n_rules": 1,
+        "composite": 0.7564913960732231,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.23 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65779",
+        "csv_row": 1954,
+        "n_rules": 1,
+        "composite": 0.7561585483886802,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.53 (threshold < 0.30)"
+      },
+      {
+        "respondent": "67213",
+        "csv_row": 2621,
+        "n_rules": 1,
+        "composite": 0.7559158014511888,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.21 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66788",
+        "csv_row": 2430,
+        "n_rules": 1,
+        "composite": 0.7556416071159349,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.04 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66474",
+        "csv_row": 2266,
+        "n_rules": 1,
+        "composite": 0.7545287350902165,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.02 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65392",
+        "csv_row": 1760,
+        "n_rules": 1,
+        "composite": 0.7538063621347775,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.35 (threshold < 0.00)"
+      },
+      {
+        "respondent": "63621",
+        "csv_row": 942,
+        "n_rules": 1,
+        "composite": 0.7536307771851265,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.04 (threshold < 0.00)"
+      },
+      {
+        "respondent": "62328",
+        "csv_row": 337,
+        "n_rules": 1,
+        "composite": 0.752096432149307,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.02 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64993",
+        "csv_row": 1579,
+        "n_rules": 1,
+        "composite": 0.7520562019575202,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.44 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66564",
+        "csv_row": 2318,
+        "n_rules": 1,
+        "composite": 0.7518125693783986,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.30 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66198",
+        "csv_row": 2150,
+        "n_rules": 1,
+        "composite": 0.7513889031028296,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.34 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63504",
+        "csv_row": 888,
+        "n_rules": 1,
+        "composite": 0.749062622170019,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 60.1, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "64729",
+        "csv_row": 1471,
+        "n_rules": 1,
+        "composite": 0.7490507195723041,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.13 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67029",
+        "csv_row": 2539,
+        "n_rules": 1,
+        "composite": 0.7488706805501464,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.70 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63420",
+        "csv_row": 841,
+        "n_rules": 1,
+        "composite": 0.748617728224503,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.80 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66568",
+        "csv_row": 2320,
+        "n_rules": 1,
+        "composite": 0.747347118683888,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.37 (threshold < 0.30)"
+      },
+      {
+        "respondent": "61643",
+        "csv_row": 17,
+        "n_rules": 1,
+        "composite": 0.7472670457859814,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.36 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63414",
+        "csv_row": 840,
+        "n_rules": 1,
+        "composite": 0.7445987448269895,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.16 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64158",
+        "csv_row": 1206,
+        "n_rules": 1,
+        "composite": 0.7439916860172422,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.40 (threshold < 0.00)"
+      },
+      {
+        "respondent": "64049",
+        "csv_row": 1152,
+        "n_rules": 1,
+        "composite": 0.7438529252248813,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 63.1, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "64125",
+        "csv_row": 1186,
+        "n_rules": 1,
+        "composite": 0.7436281398020773,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.18 (threshold < 0.00)"
+      },
+      {
+        "respondent": "66464",
+        "csv_row": 2263,
+        "n_rules": 1,
+        "composite": 0.7433877568786981,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.30 (threshold < 0.30)"
+      },
+      {
+        "respondent": "62527",
+        "csv_row": 431,
+        "n_rules": 1,
+        "composite": 0.7429596620040101,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = 0.19 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63597",
+        "csv_row": 933,
+        "n_rules": 1,
+        "composite": 0.7425973235692507,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.41 (threshold < 0.30)"
+      },
+      {
+        "respondent": "63227",
+        "csv_row": 764,
+        "n_rules": 1,
+        "composite": 0.7422570096581661,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.90 (threshold < 0.30)"
+      },
+      {
+        "respondent": "65247",
+        "csv_row": 1689,
+        "n_rules": 1,
+        "composite": 0.7418483723240139,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.07 (threshold < 0.00)"
+      },
+      {
+        "respondent": "66651",
+        "csv_row": 2360,
+        "n_rules": 1,
+        "composite": 0.7414131099961148,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.54 (threshold < 0.30)"
+      },
+      {
+        "respondent": "66349",
+        "csv_row": 2218,
+        "n_rules": 1,
+        "composite": 0.7399492898118536,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 52.7, p < 0.001 (threshold p < 0.001)"
+      },
+      {
+        "respondent": "65577",
+        "csv_row": 1855,
+        "n_rules": 1,
+        "composite": 0.7391072437394339,
+        "rules": ["person_total"],
+        "reasons": "Person-total r = -0.21 (threshold < 0.00)"
+      },
+      {
+        "respondent": "67544",
+        "csv_row": 2794,
+        "n_rules": 1,
+        "composite": 0.739071883914595,
+        "rules": ["even_odd"],
+        "reasons": "Even-odd r = -0.46 (threshold < 0.30)"
+      },
+      {
+        "respondent": "64389",
+        "csv_row": 1305,
+        "n_rules": 1,
+        "composite": 0.7372527890889775,
+        "rules": ["mahalanobis"],
+        "reasons": "Mahalanobis D² 66.8, p < 0.001 (threshold p < 0.001)"
+      }
+    ],
+    "composite_scores": [
+      0.5068474000674766, 0.7345875744529955, 0.5096933681822947, 0.7210441807876142,
+      0.44310207065162466, 0.47726293188541363, 0.09492324287746491, 0.693084507202402,
+      0.8323600749186723, 0.4974735440352942, 0.363088579651794, 0.619487502288958,
+      0.4855186680401645, 0.2857999533381572, 0.5329763131239135, 0.7472670457859814,
+      0.6046947565755717, 0.658281508679373, 0.6381846758357175, 0.5449217174061229,
+      0.48750469635191196, 0.562589947614319, 0.591685996349417, 0.41185718466078136,
+      0.16912657747248364, 0.575462333934853, 0.42808310419479784, 0.29532421509723134,
+      0.5137275795122324, 0.5596773103773961, 0.6479860814056289, 0.18457945980201165,
+      0.6793576502270775, 0.5052016565912614, 0.6298798018803512, 0.7287806867102393,
+      0.7189001386758701, 0.455459460943171, 0.45094374383838, 0.16783399309730024,
+      0.2206111040444642, 0.5541542865515123, 0.3649049899955025, 0.7188813949145536,
+      0.20286339569830578, 0.701375554057325, 0.6538676480861327, 0.48186423722189675,
+      0.8507224558952446, 0.28238075753946523, 0.6267117476185085, 0.7930394537201859,
+      0.41936056440841346, 0.6537149588379332, 0.25102981707438904, 0.537791867812796,
+      0.7755593557199894, 0.7227753754555677, 0.7319190151336475, 0.4274917120180102,
+      0.6427023664831392, 0.48846512451621216, 0.3482245608721987, 0.32304802015698525,
+      0.6411487939649819, 0.40414552448406144, 0.7281312566844793, 0.5655580971564234,
+      0.35911340392178065, 0.45113107186150403, 0.2858745336513733, 0.5501552566032516,
+      0.651067193301834, 0.27639656947094204, 0.16277391834584412, 0.24400211265925,
+      0.3007064452266599, 0.5126683060356653, 0.7867778506468548, 0.5876735259972155,
+      0.31436404589978084, 0.5496992785589334, 0.6298410044596936, 0.22141649778060826,
+      0.6623238734496008, 0.6194563847974257, 0.5397592257068977, 0.22096991422148374,
+      0.18702945551852415, 0.45835776222495683, 0.42389029553326424, 0.3989178364190697,
+      0.734360833646886, 0.5467310104542317, 0.5695787690787482, 0.5703373898727492,
+      0.6428960897268892, 0.353265549110666, 0.7278930791472408, 0.5743629160843566,
+      0.3082014845467052, 0.38935957222300943, 0.5532007411373501, 0.7354327935513825,
+      0.6370309587539581, 0.3016451677363831, 0.3505777164756747, 0.7453326144092349,
+      0.5823115852665216, 0.6728758060730878, 0.2649582258608291, 0.5960616288887209,
+      0.22522614978040478, 0.6378550185367886, 0.2627065345502212, 0.7027091313087133,
+      0.2811520338609743, 0.5621194879479823, 0.06700019101735781, 0.33949366054866104,
+      0.45838738270500684, 0.7160594386051251, 0.3926675097273214, 0.6199036950975165,
+      0.5575382561366264, 0.473849035496961, 0.23457275309994474, 0.17314259835775844,
+      0.6449769216388433, 0.6255115138325631, 0.6419977644279571, 0.5896506953194993,
+      0.701954857844347, 0.644482803526842, 0.7543490371500666, 0.5745601778673256,
+      0.5519175302204967, 0.35482461023615114, 0.42824251160601906, 0.3527803816777373,
+      0.6682863138637015, 0.5885455538733346, 0.6230054122409141, 0.3266877012876664,
+      0.4839686994909114, 0.32680252920882596, 0.6574572325307753, 0.34084102382780035,
+      0.7011681965708658, 0.5948394669038191, 0.45187386452506406, 0.19779884780560616,
+      0.3330359466739515, 0.48707359607281225, 0.4012765176969484, 0.30144887728936887,
+      0.2735834880965675, 0.6571253690939953, 0.5872200097596659, 0.6444857443176736,
+      0.2594613494757699, 0.46003303697344, 0.46299683797489355, 0.6702026710467421,
+      0.3388707725485875, 0.5437330304177371, 0.11395505040717922, 0.608497084539705,
+      0.4482886571762098, 0.6926025698630047, 0.7186389895321745, 0.570505818281474,
+      0.33400496488164766, 0.5869776349713731, 0.24026736309567467, 0.7156107325457841,
+      0.2573410658226519, 0.5188263833568965, 0.6930887129588225, 0.46954105729541773,
+      0.5113996188234695, 0.16812505503584368, 0.5339686659018114, 0.38405771824156854,
+      0.2451015702866582, 0.8761646416333216, 0.4887908995990676, 0.38338892599792973,
+      0.714783880050522, 0.6395396311641778, 0.530798692342046, 0.5028049471769498,
+      0.40690702975382864, 0.8021378035392792, 0.4794886463980499, 0.6724053218815431,
+      0.3938680814405881, 0.4339726203701299, 0.4001618717366137, 0.4258028319840942,
+      0.4237428902031054, 0.8780018188826908, 0.5886065089367681, 0.24079842066905705,
+      0.25571016254481377, 0.5658517037646614, 0.5741580868370695, 0.5698873923336017,
+      0.24614972058139795, 0.6789205358254521, 0.342753086764837, 0.7190458301083643,
+      0.5971730957042714, 0.5967958079660259, 0.22845735377666343, 0.4380558286036138,
+      0.4783484760320525, 0.7195516002435779, 0.5821354920141318, 0.6727765251091806,
+      0.42430291089305006, 0.7946720228742752, 0.31187384044996247, 0.3710955832057302,
+      0.29895221589137183, 0.6660060031475543, 0.5142910211177794, 0.37227233404146975,
+      0.26429416739363365, 0.28200333835178326, 0.548584574168888, 0.34011837093055836,
+      0.6892784370131382, 0.45708599207047645, 0.1748393260915144, 0.37869347256385005,
+      0.40726529429491337, 0.40159974647001384, 0.31357912265623256, 0.2952236851626075,
+      0.17334359736277882, 0.5160712030294067, 0.3953911020964094, 0.17661246226392935,
+      0.5069336408705026, 0.4158368770050783, 0.5536569096331403, 0.6459455706332167,
+      0.557876676595089, 0.5154764990224128, 0.23428080737604895, 0.547462650259175,
+      0.6800221087250924, 0.453563151870351, 0.5615968000222988, 0.35062811940812255,
+      0.38406408097043376, 0.3649080273883444, 0.622942119149286, 0.5946010398039954,
+      0.8304139478682594, 0.5258476501638811, 0.9008781623465547, 0.2125328078752498,
+      0.5554637486373357, 0.2566032924290873, 0.7299832648278386, 0.3442320557883184,
+      0.4507499566243406, 0.7940454311170605, 0.8138765653706038, 0.20634884777372417,
+      0.2749249480785502, 0.6444064635805621, 0.4961652009787713, 0.5502975768789016,
+      0.21732973828402463, 0.6734233795018754, 0.36811765770776256, 0.6318664268556313,
+      0.46619262808887596, 0.2264274048043086, 0.7572541793799288, 0.5739578256134329,
+      0.5516649974629144, 0.15186384711575684, 0.6458723854471305, 0.44626397048919564,
+      0.26594180875913925, 0.5403357475380429, 0.6371852579002988, 0.3249876648179386,
+      0.625159589464433, 0.3159441557828888, 0.40430329904303464, 0.6439955756879958,
+      0.5981386011510259, 0.49281426474916246, 0.45322678579755205, 0.5663818967259054,
+      0.3815427708856959, 0.3471537886240851, 0.7314428432846297, 0.3919388564472948,
+      0.41736882154583455, 0.5858402626336613, 0.425357044237868, 0.5028500084548755,
+      0.4664533679762157, 0.32386081758380786, 0.5448910585538492, 0.5701990235167479,
+      0.11675844645804243, 0.38524512975816183, 0.8336741456914716, 0.6259397668562046,
+      0.688383729765852, 0.6134933200070435, 0.39531558454229754, 0.3789571615114927,
+      0.7384697428216638, 0.26612703612895805, 0.4894503986544273, 0.7201044796383866,
+      0.4168043121961641, 0.2524284390484333, 0.42772526175222564, 0.5338964303565567,
+      0.7753492887835349, 0.5016486455546203, 0.29134233208559823, 0.2505301659062417,
+      0.6632762302946829, 0.34317102874953725, 0.526028091651375, 0.752096432149307,
+      0.6151652128585549, 0.5104676228034059, 0.4761605595917373, 0.6349050803354499,
+      0.5674213581187938, 0.5368696531143885, 0.7675031090142811, 0.2970550081080689,
+      0.21442688922811493, 0.48872881073627633, 0.4609391596634701, 0.6880644144153535,
+      0.3158906455419642, 0.8319827857013185, 0.585717384970788, 0.29206312360078446,
+      0.6934067454814117, 0.5606106120828838, 0.4994964139303447, 0.6335367167472093,
+      0.6606159909924082, 0.43317280109333994, 0.38793845938559984, 0.6566600613068534,
+      0.6651009505060606, 0.5294504349139391, 0.3326603854987704, 0.4487617808462619,
+      0.6836782261731253, 0.32819583396682017, 0.39472013939487843, 0.5020940481563891,
+      0.810984217330689, 0.8237867003491471, 0.3763134930433001, 0.45262881743900957,
+      0.24003638505593, 0.4385798945425316, 0.2982877520525336, 0.2654599500083011,
+      0.21088266049793794, 0.6552210394680333, 0.603639781335513, 0.5974791578135686,
+      0.5029488636096858, 0.5678196024611477, 0.41807207609381836, 0.5857828850176863,
+      0.5551048570863548, 0.27311236158822727, 0.3352652451596019, 0.7814560745212183,
+      0.517571358234205, 0.4577626062560476, 0.5375774858334557, 0.5485653470124666,
+      0.7285634050291867, 0.28018340295561733, 0.11881288000904017, 0.4576759739223116,
+      0.5828357837456446, 0.31253494102557244, 0.5623968542742873, 0.5601404634465674,
+      0.5113528894581867, 0.6523252099840617, 0.10782496275861257, 0.18284209145246502,
+      0.6458207821653024, 0.5913122647485611, 0.31116809907455684, 0.5167108836043215,
+      0.3257767055280793, 0.6356602969328333, 0.2969395253900132, 0.7091125450532614,
+      0.630015947091892, 0.5737031514064879, 0.5555633129382274, 0.6131237424023556,
+      0.6496175436464907, 0.4594025206651908, 0.157549969575364, 0.5570017789995934,
+      0.8441010231193107, 0.26096934172767355, 0.5561178963290192, 0.5039677338013265,
+      0.45434581204975816, 0.2666290579425647, 0.3095374236030709, 0.2502446079969163,
+      0.7956503153066481, 0.7429596620040101, 0.5694787284155804, 0.5490101038726894,
+      0.49315226766208536, 0.5614004596614534, 0.5928150304634201, 0.5313807298558911,
+      0.5583127108933947, 0.7513356539590387, 0.5925939122786952, 0.4155990515199566,
+      0.7786092897979339, 0.3300693778387882, 0.6695799498698602, 0.587956530320142,
+      0.5294107529135079, 0.591513361438475, 0.15044541772796868, 0.7834576291063553,
+      0.728847893948547, 0.15801870990399247, 0.6581233111275883, 0.352387113817026,
+      0.24584787061674504, 0.7037796446878835, 0.49638168572198826, 0.21893789916792958,
+      0.48825782526102274, 0.5380182813765163, 0.6231220909117645, 0.6428173425300092,
+      0.3144200436160175, 0.6357761739959131, 0.12704684774665523, 0.47595364997286893,
+      0.449205677357543, 0.3005619594502007, 0.3987998843462586, 0.3857137593100459,
+      0.7798668662413797, 0.41643831737450127, 0.5180883800345804, 0.4177369384537474,
+      0.2626512100642119, 0.8385881061897793, 0.669057976348288, 0.6697605542504935,
+      0.7930069768623045, 0.7575707511492331, 0.5866448151539951, 0.5800741705601006,
+      0.5916508173036933, 0.24622842360018077, 0.6565797459429282, 0.5997756954484202,
+      0.1801703360255677, 0.7346133783569259, 0.4100399275994524, 0.7088203477160043,
+      0.503157959618238, 0.5189327293896172, 0.7047999689337818, 0.7654561751823329,
+      0.651912163021621, 0.5674456413251371, 0.5987029477724863, 0.6670314929217102,
+      0.24392856410793753, 0.3752828994435602, 0.7153257063598378, 0.5316722640880126,
+      0.5753355428684683, 0.4430697276987231, 0.761743082803786, 0.30556683299154797,
+      0.37127154039788657, 0.42514593041396737, 0.23661855417862157, 0.7924106287063802,
+      0.3106564885985871, 0.5078450524034591, 0.3335327095546879, 0.6270263755666537,
+      0.4783378818624531, 0.48190839728977125, 0.49995380030469166, 0.6127475932023974,
+      0.5436955883288992, 0.5205506257375606, 0.25161157598229406, 0.45726561176441083,
+      0.45604781416127266, 0.49098653923719315, 0.2984374830595761, 0.7027115173497791,
+      0.7917951647174775, 0.8364174559373193, 0.2809712374262274, 0.11798722071468198,
+      0.6381910740112747, 0.4351178813404138, 0.37832229982647875, 0.4861266070015592,
+      0.8468697242462961, 0.7189123751328653, 0.4932099150671737, 0.5661827832687206,
+      0.43488990325123816, 0.43874271046941954, 0.8953319257498894, 0.5830001850480941,
+      0.30011291510082505, 0.6502066715192094, 0.6106975392664689, 0.5053536240135239,
+      0.44432936748199087, 0.569306009948483, 0.6293743029082253, 0.3069485049015154,
+      0.14100872667831993, 0.4958991568009885, 0.6786179312579247, 0.6942557639191469,
+      0.6644431884641162, 0.36065293905443335, 0.49624509301936903, 0.2950080132042531,
+      0.6995384853473103, 0.2989337761213333, 0.4464183565290494, 0.15173793224008425,
+      0.34979579378196096, 0.6352454782297982, 0.286883722113125, 0.4116735551124561,
+      0.8818490515337554, 0.4933119280520997, 0.3565371664394062, 0.5002752809917268,
+      0.7277237084196325, 0.6643809076293477, 0.6340113970254456, 0.5972828796876394,
+      0.6220546850743378, 0.7177802683271733, 0.5539703413597413, 0.4747587456563783,
+      0.17296974050884023, 0.6386107566516374, 0.4576734869917268, 0.883431155587504,
+      0.6093053200978343, 0.5622216715915312, 0.1678516363191572, 0.24260997301749831,
+      0.6399594898466975, 0.5120304189378649, 0.6254911977829362, 0.5505990705762086,
+      0.8017596000449929, 0.4188645609555597, 0.5846947459096953, 0.5226789255577481,
+      0.6056549196128083, 0.8009774924561553, 0.1749060904567684, 0.6891925026405061,
+      0.650157033322613, 0.33206691754805656, 0.294051293099716, 0.6656271743978006,
+      0.38617033666465295, 0.47769963094274903, 0.6308636828909597, 0.22084131965474155,
+      0.2566248576314447, 0.305481197829211, 0.8083934814941691, 0.5819664666790386,
+      0.5773380497766761, 0.6739690000837227, 0.659533432599263, 0.26260755058615987,
+      0.7290120680149977, 0.3350573959093461, 0.6882786820959499, 0.44735902711590025,
+      0.3517831802628405, 0.5841449123486998, 0.504898724695923, 0.4830718553012393,
+      0.31653920860517676, 0.2520222252271888, 0.5316104807238626, 0.36093065197441293,
+      0.6771899432893299, 0.6237437547278508, 0.4487989282127261, 0.6962743039848269,
+      0.2309993031274303, 0.6643696133874155, 0.41440147466284405, 0.525874170375511,
+      0.5466948129092986, 0.4853374910967267, 0.5360176855361855, 0.6146848921261823,
+      0.6682853789567876, 0.7368213248118742, 0.6581120913969751, 0.2416354369580498,
+      0.2531504538066547, 0.14654679844076324, 0.45585592371552885, 0.6817509535148996,
+      0.5192708313324959, 0.5325512244546292, 0.4483341852721869, 0.36826734145627243,
+      0.6738107504135715, 0.41020920618143125, 0.25907925566349677, 0.3972406256096542,
+      0.5825233821066832, 0.6912474086664387, 0.4877195235028049, 0.5531431631885911,
+      0.3711628734311539, 0.24318049848527523, 0.7625890457471783, 0.5063795395777212,
+      0.7382623382875977, 0.694304533494045, 0.6601420863885918, 0.6345416282956636,
+      0.26121256492427813, 0.7457362549859345, 0.7007309077842631, 0.658853308639222,
+      0.6403455809774083, 0.47162212199971915, 0.32200756382088824, 0.5738807822068671,
+      0.31245630084425674, 0.5102379994009373, 0.7212649412955363, 0.04651066956299514,
+      0.6932965564923999, 0.6074268979357332, 0.10567481631778464, 0.6608602800663451,
+      0.5000209945641678, 0.6699219019681022, 0.8477332935330555, 0.2471310521814112,
+      0.6070868632127701, 0.5746798268881781, 0.2387676013041477, 0.44324565663537463,
+      0.37646963074769335, 0.23821460150360532, 0.49226370179978723, 0.25856247966584034,
+      0.6088130640276065, 0.43004358328064163, 0.3376222362305201, 0.5748539516154726,
+      0.30244405199849644, 0.38194111419558197, 0.41686826195805027, 0.5375027744979112,
+      0.32721335832145276, 0.4852966813191628, 0.2703210394350213, 0.6590479743056754,
+      0.3584155937018358, 0.6310192105291663, 0.3778753715155016, 0.039175260542208545,
+      0.7139827384146624, 0.5180502071308215, 0.7094045648955365, 0.3828708913434005,
+      0.4712354924413451, 0.7595047372821472, 0.6442961491380551, 0.3888460963744795,
+      0.4547448743200141, 0.6549840711291994, 0.3753684124884454, 0.5711365645723557,
+      0.45761274078287073, 0.31372327915201087, 0.6914549532223307, 0.49810790285169937,
+      0.6544626941548549, 0.19522521860050235, 0.5634482022029952, 0.13979299015395885,
+      0.30631979365946793, 0.5640740169045878, 0.24527649264961726, 0.5174564302967983,
+      0.32020585103588645, 0.46567610837714407, 0.13258175346667847, 0.5422801547421601,
+      0.3801987264715628, 0.42611141205962677, 0.6516912964443435, 0.39663227840644977,
+      0.1795796222555583, 0.38436527845771645, 0.8239154809536915, 0.6957627133746435,
+      0.47319963304267565, 0.31718593859769095, 0.38135112330022436, 0.3516072667099679,
+      0.34917187089223795, 0.683461366932929, 0.5668580687043698, 0.5439489710205551,
+      0.7263255937015833, 0.6271994362249261, 0.7597570812342662, 0.3307084049980091,
+      0.7180338251541127, 0.5328224779096872, 0.7252656078184571, 0.5011047018355603,
+      0.4341909765666131, 0.7086525841510738, 0.7422570096581661, 0.5025376335476284,
+      0.4628498355194374, 0.25520902962477304, 0.5885868696873356, 0.2946889368286568,
+      0.5020892330572373, 0.33163707205885795, 0.5408035828067329, 0.45591970601487536,
+      0.6685466417552794, 0.6459838007990384, 0.25398304581032105, 0.3631826044741471,
+      0.5254302364541545, 0.40149395199820354, 0.7507382918351941, 0.17359310009020695,
+      0.8970815800661525, 0.3536937541299782, 0.6857924395146819, 0.5074050324007722,
+      0.48101906178644876, 0.7002516333039313, 0.3571113667898412, 0.32337830562425884,
+      0.4831164545926925, 0.49595042725056726, 0.5533433546030413, 0.6987242724925782,
+      0.6148059939028836, 0.2867045145457134, 0.5534110240072068, 0.47960207279399913,
+      0.3829926465022842, 0.4280608696797807, 0.7044322964233702, 0.560886390330361,
+      0.5847868258352337, 0.713708155202683, 0.3209157671833152, 0.46133831925984864,
+      0.1812836364788846, 0.27903233577446174, 0.6767725704393984, 0.4858808451798261,
+      0.23436728621171088, 0.49876620332196386, 0.3020745797344516, 0.3374359714695122,
+      0.22005392742703628, 0.535883184891484, 0.6251806262433145, 0.2572194582723494,
+      0.40988184901568947, 0.5558533539798418, 0.44420466545551196, 0.45275236225074694,
+      0.5988445432127296, 0.2779320565749333, 0.26826268228774003, 0.35200635673305514,
+      0.5568863592957619, 0.2952236097438481, 0.627427151527591, 0.2424550252548452,
+      0.43261796895343985, 0.3340224350971009, 0.6382128327409403, 0.3833680598684719,
+      0.7147752699133295, 0.8677365614151459, 0.7270169492014499, 0.180427488258221,
+      0.26584038436474444, 0.26937014803221454, 0.7445987448269895, 0.748617728224503,
+      0.5045583837515201, 0.6596655626688137, 0.40780632764967023, 0.47029265522086283,
+      0.6508169095447066, 0.42065635615497415, 0.5801325729892578, 0.577303389173239,
+      0.38433788858158724, 0.5340390232579755, 0.7368727068700727, 0.4140306109382286,
+      0.5889331208782735, 0.46209420721803984, 0.5338273336554743, 0.2604676335119931,
+      0.5307881192564768, 0.31076076198841307, 0.27412977366611163, 0.5737258900057294,
+      0.7742737911473823, 0.38482180007930783, 0.6362159966384889, 0.4085866348921796,
+      0.5640709841751101, 0.35244546121888165, 0.9103896522356969, 0.41292581816674084,
+      0.7990308255186838, 0.6687565667485783, 0.6462490547695532, 0.2142236192278834,
+      0.40294221790195, 0.22031692828897262, 0.4378134829125573, 0.5968964528380848,
+      0.3885074817933857, 0.41519170282632706, 0.7728373961321835, 0.8475071915066288,
+      0.39083745516497115, 0.26391159479311005, 0.34980796873012404, 0.48587113612552824,
+      0.6610729374032936, 0.7180568387407025, 0.749062622170019, 0.7361841686446428,
+      0.5883896054593366, 0.646421009777524, 0.5394696454085425, 0.4760401078618324,
+      0.3396709417636375, 0.8878231712185978, 0.4230925797516915, 0.5335836429797862,
+      0.5788086265479233, 0.5242048302115001, 0.3045814197619455, 0.6346595079670702,
+      0.7190668419507001, 0.18871001953244215, 0.48380979104518745, 0.3642997279562023,
+      0.7281225789866607, 0.40448956766904287, 0.49088655602730125, 0.26062009643360595,
+      0.43396839688806355, 0.10146089634830921, 0.5278175000566989, 0.1272083107966097,
+      0.4010143152184445, 0.6070118810242844, 0.6254967883429539, 0.4454000256383437,
+      0.20736665880085878, 0.4219203101538521, 0.4680334739792103, 0.14501072806143758,
+      0.873578047400262, 0.48318336916334514, 0.5828308750243836, 0.1827674800727154,
+      0.5270930849782002, 0.47210565140516314, 0.5171446249113457, 0.5738374048455843,
+      0.7045714241344975, 0.7032844344931641, 0.5806957965712007, 0.7425973235692507,
+      0.5553462903652986, 0.6926566099434329, 0.6837619550380551, 0.378456778571702,
+      0.2193741705861739, 0.5444894340590961, 0.4346835943692001, 0.8087170097410226,
+      0.7536307771851265, 0.39547674971519164, 0.7863535435677672, 0.30463836311142484,
+      0.5033158671832927, 0.599450298261668, 0.4777209327107055, 0.5920685492714248,
+      0.6464964433772842, 0.3112218066499661, 0.4605616617558112, 0.6276181316185693,
+      0.6845612908047495, 0.763372364552342, 0.4342854963403039, 0.5792091049991133,
+      0.5047679560073577, 0.5533260073868538, 0.4663352588064515, 0.2947714731024616,
+      0.2921486097220853, 0.3735730708187419, 0.673137066611849, 0.6873234580901979,
+      0.28934945732922096, 0.7072398583413799, 0.598721709628733, 0.713132038973162,
+      0.29553860346216726, 0.46834507203519016, 0.383644836093597, 0.37102470468035814,
+      0.7094146683572822, 0.39768727587781705, 0.7715594046117835, 0.18205401652915842,
+      0.7779033542079045, 0.2695961941830372, 0.3878687440314854, 0.34738822264369795,
+      0.43681329491951953, 0.48679395298730715, 0.6345524378020282, 0.6567572085573122,
+      0.4366257514801224, 0.36479925558035664, 0.6840898986909846, 0.3772577043693057,
+      0.49252524725254754, 0.38494093668338436, 0.49338991518109193, 0.6088446741667207,
+      0.31909144305036374, 0.467240922872993, 0.3974694074618539, 0.8566040001354855,
+      0.2518238398461761, 0.25955330006967126, 0.3712312556821287, 0.799567158992301,
+      0.6241792441977848, 0.4232702348893511, 0.46725756652901684, 0.5495838959550312,
+      0.5395358860747941, 0.7631679496492547, 0.795426942994856, 0.28470566767848354,
+      0.5291933197838433, 0.437982478231803, 0.28166496398289115, 0.4194152220543907,
+      0.31877556720912864, 0.43946458496334895, 0.6455945729774375, 0.34777472938876247,
+      0.47677486098433575, 0.24740726208411054, 0.47079230440657116, 0.42947976223285983,
+      0.47827686989507046, 0.5076558013186039, 0.7780652508390102, 0.38579407824853784,
+      0.5135967589806212, 0.1775078497663864, 0.8325651869707011, 0.5212534751846225,
+      0.6132918228440889, 0.17048189823665927, 0.2560336322778487, 0.5597369457206314,
+      0.5320155710186864, 0.520498217780011, 0.527674552369014, 0.6942144417432057,
+      0.4335784305879069, 0.7111740951639187, 0.27006595811317496, 0.6797895167001099,
+      0.4887762146485938, 0.5695078142350611, 0.42179576714828443, 0.49017470446814454,
+      0.32251966956622696, 0.56463794121661, 0.29083604736849883, 0.8138771953190042,
+      0.3525340485548114, 0.6572507296864356, 0.3050566793519526, 0.4716472160117717,
+      0.2463016742323792, 0.6459415359559564, 0.5424326387432035, 0.6008736542087253,
+      0.49006983309600727, 0.789723339036912, 0.4977929004361438, 0.5998607134335481,
+      0.4185758679382727, 0.5726620656148077, 0.46211763857095134, 0.26546033709051525,
+      0.5017866949194852, 0.6357533689268139, 0.4437627410340366, 0.6396362210627964,
+      0.6642237155046342, 0.660962413560825, 0.33424067150880005, 0.5304900120833657,
+      0.6472697036866497, 0.7113806981933773, 0.363808426462205, 0.6611112465624417,
+      0.6248295316418675, 0.5960436097492572, 0.4277005065624504, 0.19155139376779579,
+      0.45281800457065974, 0.5833152303012843, 0.5401120895966814, 0.4547537584753477,
+      0.1280642805524273, 0.2452583731752181, 0.45586157673518723, 0.3742628031827425,
+      0.39349686069954476, 0.44927669548354665, 0.3023642493260107, 0.382673528784589,
+      0.5549733199664669, 0.5160477202027336, 0.3579693854295122, 0.7678872325122242,
+      0.30451727975097054, 0.5564533545433354, 0.43458480922004605, 0.6551317719544693,
+      0.7222563332548537, 0.562978209532124, 0.7675637433602238, 0.3867063361291734,
+      0.4900593376692155, 0.6773838575857891, 0.15890785914018837, 0.8645458706447403,
+      0.3000912476540302, 0.26827870744317656, 0.4557834717677099, 0.21883347779432438,
+      0.691300537199484, 0.6524873683148523, 0.7613854350903386, 0.7262633630986772,
+      0.6768685141345372, 0.6433931349294066, 0.8793128201073174, 0.2921439997925532,
+      0.34353989628427606, 0.11125, 0.4901569804045687, 0.52332030600081, 0.592778220963168,
+      0.5164697346387971, 0.4124604719707475, 0.16542846491397226, 0.49727109319435037,
+      0.7285007548680758, 0.20958775051026574, 0.7430104891205725, 0.4878143023294241,
+      0.36711791690485635, 0.37790885909331007, 0.41151983857318986, 0.5846415529017159,
+      0.7775827687875461, 0.567462727070964, 0.24638597089621478, 0.7013857022852629,
+      0.8439905400709283, 0.6743706116436694, 0.6570298319368331, 0.9161357745898124,
+      0.6490939587410981, 0.3258460267848923, 0.4663575011526611, 0.4957242265884385,
+      0.5926442785389789, 0.7438529252248813, 0.7179364136886305, 0.3461140284210693,
+      0.30028928532431626, 0.6697512133535756, 0.52303248816626, 0.4454282538344898,
+      0.8058416290656936, 0.5028980129154386, 0.5467439333016423, 0.2732906176736428,
+      0.5777704880115212, 0.5139826776562265, 0.34917032206333615, 0.7221576958095587,
+      0.28021160051036675, 0.4179321920983246, 0.44524196244821607, 0.5660763925953116,
+      0.4452554071784339, 0.4488736827394192, 0.26484258851384834, 0.5799200464899954,
+      0.49829585948670374, 0.39945904207188776, 0.3701004932657454, 0.22051333569922868,
+      0.37389338808548256, 0.32224944803603073, 0.32078160768304514, 0.5478724379112575,
+      0.3515152757070348, 0.44609792150793115, 0.6022207954317025, 0.7436281398020773,
+      0.620940892229704, 0.5373716002241491, 0.6780926959927921, 0.4932406655144356,
+      0.4461868047391394, 0.2795113319708273, 0.5160021815315583, 0.4392875282377371,
+      0.38808009207098915, 0.2990604593994166, 0.5992723638708353, 0.41098531460112836,
+      0.6072712658781231, 0.3965186040880108, 0.3656172609413636, 0.41829268842017747,
+      0.46955090174760294, 0.5306059382441716, 0.29517999640464815, 0.7439916860172422,
+      0.5558588233199919, 0.5333479901064959, 0.46656754259207234, 0.750383106638829,
+      0.28344167527535363, 0.5542780082747363, 0.4615924483026492, 0.8322525210431224,
+      0.4129222671723907, 0.12792058265253975, 0.21577841594711214, 0.6095497575701739,
+      0.5389010727403954, 0.272527460149878, 0.4336330973214316, 0.8144658651182182,
+      0.3628641929259178, 0.23428400125146528, 0.6060482632944179, 0.5849922473468393,
+      0.4953751091909246, 0.599574800527688, 0.6137876234567052, 0.3061412074161571,
+      0.45123661746264454, 0.0688193909510088, 0.8053362761855861, 0.4892204720531307,
+      0.4935305686375676, 0.8830568358600221, 0.5802867819020996, 0.329100351464784,
+      0.34157066542231684, 0.6325512699929016, 0.3001274892666694, 0.9244364392398178,
+      0.7279112135553125, 0.4846428761222297, 0.4686498753180857, 0.60179355530164,
+      0.6387838475741372, 0.21219684217692825, 0.23306801173845465, 0.26968400946773846,
+      0.37776597348283963, 0.3635522667224736, 0.6727599560144144, 0.7361473375432309,
+      0.47331773053595977, 0.3307518068523023, 0.3303313265506486, 0.5151991996640393,
+      0.3794229735655299, 0.518412458643156, 0.37755128624206735, 0.46768737932472826,
+      0.5738512927734579, 0.7224738045108212, 0.5515541294882285, 0.5676982555959837,
+      0.4967125806134723, 0.519580312518202, 0.37515968312793885, 0.5855328470895615,
+      0.5816580218325214, 0.5591959217346565, 0.3919194015765137, 0.47612531230464267,
+      0.31961065976024516, 0.24917974429281883, 0.0982311031855904, 0.45302822875848336,
+      0.3538817548261178, 0.4140843784447982, 0.25801747612649883, 0.789662049436739,
+      0.34166033599719725, 0.6637816262962875, 0.1752143544196933, 0.8103594404086254,
+      0.6552776852873956, 0.3684966591025206, 0.5322215026603966, 0.5923353810839702,
+      0.47020030465330886, 0.48833920314718127, 0.6294961672490972, 0.8152881797443232,
+      0.6412573242847003, 0.551776471536938, 0.710704030495753, 0.34809834764044745,
+      0.6854454966628138, 0.6261664418843716, 0.7795402996554757, 0.6933811036735713,
+      0.37755689340213655, 0.18377703319284572, 0.7372527890889775, 0.3587552798250303,
+      0.43667424161851925, 0.5283118326006533, 0.6813796322063111, 0.6421880989488898,
+      0.5626497167803982, 0.22548299457140322, 0.18774455969295434, 0.3808916015716767,
+      0.12094555063009867, 0.4058806707731647, 0.48367311801337914, 0.5359070506081403,
+      0.5427920266806053, 0.6093176519964195, 0.6465855904180916, 0.38695491422656697,
+      0.5630845458806601, 0.4165472271896785, 0.6484320213009244, 0.40214033057794896,
+      0.5229491282689016, 0.35582962023435105, 0.6026438493898962, 0.2982868880863142,
+      0.829275024851939, 0.3421183952121174, 0.544462423422161, 0.6841535615768025,
+      0.38882933999015545, 0.6110576759198806, 0.5914226038450654, 0.6645520666654043,
+      0.7192610233684895, 0.3387454393370659, 0.25496479181235787, 0.21706659245960655,
+      0.43022764248203726, 0.5062457347434699, 0.5196105404544793, 0.6874016062067702,
+      0.2708123596705248, 0.6971229000664706, 0.7240630746365789, 0.674444295165761,
+      0.47719041135388, 0.6284217502570486, 0.49497460056224324, 0.4219989859481036,
+      0.5194830919096164, 0.529473249923488, 0.21509251960119471, 0.524717645131175,
+      0.4037649446072674, 0.5151774385162844, 0.4805073983806071, 0.48569853946179375,
+      0.517908881423839, 0.6525168742247802, 0.4506032430779876, 0.5231594241287604,
+      0.5941289503277349, 0.29761117939633186, 0.686331733401137, 0.395519986103183,
+      0.4290870870044371, 0.572465847099379, 0.48776586902598185, 0.4961158654290478,
+      0.6127200945115929, 0.099830663522524, 0.6512474320522534, 0.6111125590855387,
+      0.275602569140732, 0.3152737701169706, 0.46016606786273084, 0.294351311773726,
+      0.18846926089581098, 0.5324453422909422, 0.6093931103553114, 0.4141331682849929,
+      0.5955698507834106, 0.4051575493711225, 0.5779113172965998, 0.43664212339482006,
+      0.3660576587126784, 0.8335567555780121, 0.6500324762290468, 0.4245427883897711,
+      0.4201622327888852, 0.634962204910208, 0.7035603597184166, 0.40013499987829126,
+      0.5894134275509023, 0.6083940616502999, 0.3629806514441943, 0.70516103339557,
+      0.6982410731267534, 0.6435934825885649, 0.3842657661772849, 0.5366563158199306,
+      0.4311524468817957, 0.6701553304311972, 0.4529635703137639, 0.1646817323944496,
+      0.5342671504532392, 0.675449080055618, 0.31469967527276527, 0.7931674407682772,
+      0.4652573705342062, 0.3764159507667568, 0.21766343585138812, 0.34617758142181326,
+      0.48974578780646805, 0.6673703011635014, 0.860124328855506, 0.6809981492605597,
+      0.6082146561898775, 0.18011052842566783, 0.3799050904506853, 0.2850269017729782,
+      0.5903299629427868, 0.4724270167158276, 0.6772196754469938, 0.4946302298838642,
+      0.8727407717256347, 0.11378141648301647, 0.22377228396625737, 0.39179885343975424,
+      0.37140242326494843, 0.3455472068221387, 0.33738873274949027, 0.5005211704977738,
+      0.45351536726732866, 0.4661939346278591, 0.6832946480081987, 0.47063181788686387,
+      0.6514167940182303, 0.6787951153425911, 0.6256252954215169, 0.2091438768919822,
+      0.4349263854118517, 0.4405620601931887, 0.6202527810283294, 0.35978026042843214,
+      0.5911633547360572, 0.47235170516846736, 0.789132389791659, 0.7180358638563645,
+      0.23798420000008536, 0.4634456321933018, 0.3281715192116395, 0.4997215461400075,
+      0.3500155629310976, 0.4397912637689657, 0.5492324250785207, 0.8583949131771582,
+      0.3426548937656679, 0.6348158978755482, 0.4738803081365191, 0.7855359599379599,
+      0.39256280922079034, 0.7964034613257117, 0.829107095295692, 0.5810931876828631,
+      0.7490507195723041, 0.551954921871146, 0.22068332790206824, 0.49470371361855603,
+      0.5562062270117113, 0.6434184160003784, 0.44186820694651885, 0.6413744472814292,
+      0.34898438143537014, 0.3682450552053149, 0.7798655609147266, 0.4936294064287884,
+      0.5284501563765991, 0.2739801623012649, 0.34188088151923995, 0.5385228423902048,
+      0.5960682023067575, 0.6362997240315382, 0.13585607850478382, 0.3056662414321288,
+      0.2776819580841852, 0.5117851642630501, 0.6320657665138988, 0.2359710160698655,
+      0.5339874841724753, 0.7738322534526357, 0.44586128021830207, 0.5805822456475954,
+      0.7014604027078651, 0.6488069885651206, 0.21352136208916495, 0.6013336085183342,
+      0.5478517812684971, 0.7290466180191048, 0.6266521569606434, 0.69575519222922,
+      0.686609891762733, 0.1905088004636863, 0.6529795706778714, 0.547459043127042,
+      0.20114637649072653, 0.7781494450527393, 0.264461549699477, 0.6671993711612398,
+      0.5286366858559609, 0.6201497887757214, 0.6216114036835757, 0.5024559327860972,
+      0.5686429735445504, 0.6191640500765571, 0.4320604939234236, 0.41984859772265887,
+      0.4914719155194426, 0.30131864633260896, 0.542034876853688, 0.6566551250141177,
+      0.3069237307619365, 0.43185609370300065, 0.7021048623445162, 0.33743580735484335,
+      0.5544907788939113, 0.5700397622428843, 0.32067296447206856, 0.5121825218572352,
+      0.5390310042437373, 0.4487961826260949, 0.49920715278626426, 0.4880715485508425,
+      0.26262720897792313, 0.4364327755310977, 0.8402116687786784, 0.3908339416910874,
+      0.30260049333802524, 0.5661864891469466, 0.6208577593764739, 0.4115826642665564,
+      0.4627120275081386, 0.38082027321073075, 0.5037387490504085, 0.5243126340452028,
+      0.7840330575432319, 0.6820441894826166, 0.2573633064354595, 0.4439627127079079,
+      0.2741286729610656, 0.6352454782297982, 0.6172423557913103, 0.7852520587207458,
+      0.46100404237742904, 0.39033108075712886, 0.9526250046050145, 0.3208629840211009,
+      0.5355278207709673, 0.7369151684181476, 0.740430797450213, 0.7314011088606042,
+      0.4483016704693592, 0.5048234178802642, 0.5203407916236796, 0.5234820552782855,
+      0.632619160731088, 0.5966366164474677, 0.6397894807698, 0.6351533658552098,
+      0.7113745631079063, 0.9014944093055419, 0.4893173350637643, 0.5601885752801514,
+      0.7520562019575202, 0.6239691067950544, 0.18503479721234026, 0.4889302755329744,
+      0.16614381688933053, 0.6138499383635349, 0.6168024478453781, 0.3108375604780165,
+      0.6286676716299642, 0.4723832705118204, 0.6239499098752626, 0.5740720475916423,
+      0.8208342104669688, 0.45284062469206815, 0.6089096164754102, 0.42343174735243455,
+      0.7257392685119722, 0.5182133437778285, 0.23641783878393474, 0.46137167758158526,
+      0.6022518071449701, 0.4683373832774106, 0.32219229272722616, 0.40734390815191035,
+      0.5994317762233693, 0.4836088651479428, 0.6262343859979366, 0.5308919659547348,
+      0.4407744356144374, 0.3650262788409794, 0.507856483971836, 0.41369617761791655,
+      0.28438761143496405, 0.2923444664552161, 0.7564913960732231, 0.720420654779938,
+      0.41181710067797506, 0.29049398153989525, 0.5624258660371552, 0.3340838465913153,
+      0.3171562253793171, 0.42727389770022406, 0.6129430975443532, 0.4727292868412363,
+      0.8499987807290708, 0.7721661626683897, 0.2924756072174147, 0.2832156834625456,
+      0.48467433462283305, 0.5494836352220827, 0.6829283726323255, 0.5645979634569179,
+      0.5493585387631866, 0.18274849470748172, 0.31605184138450987, 0.6871546332626745,
+      0.6985028743154545, 0.21116173079000003, 0.36735261357496257, 0.6145565162401337,
+      0.2631253828131038, 0.2609157446615732, 0.5811697222544476, 0.4419983388246984,
+      0.4387061217472906, 0.5807132641471255, 0.42705486578905816, 0.5435447256041585,
+      0.8632151816827341, 0.2305449214754362, 0.6655845641418339, 0.3478676018903767,
+      0.8728994397845902, 0.44375184128628814, 0.5972205974710114, 0.3948292733695614,
+      0.4161411911341368, 0.6347006923217783, 0.4401464651540444, 0.4204879534542182,
+      0.4380859300041696, 0.620013861010203, 0.6624618490725988, 0.546716209487382,
+      0.711741355450243, 0.23413558116356445, 0.6250184966253629, 0.16052285833461244,
+      0.26090781430381904, 0.4338048197453526, 0.5192240686987726, 0.6858149877820414,
+      0.3333573203092826, 0.5432691949690246, 0.4359737818396572, 0.7333341916518686,
+      0.4465373577372098, 0.500936529375016, 0.44084178473610547, 0.5634184151441909,
+      0.4016167974163818, 0.5333585897963041, 0.45324250479857203, 0.5719311708179183,
+      0.625481854153183, 0.6789160491586786, 0.4554162643715168, 0.7618850165531197,
+      0.3290675138812045, 0.5145888833896982, 0.7418483723240139, 0.6173697632963355,
+      0.7176525800399278, 0.597813255517543, 0.18488309506827175, 0.843802707598238,
+      0.4101675606701547, 0.7122417967054109, 0.4710389922940793, 0.5363889845300152,
+      0.30549255357406135, 0.38599615060594045, 0.4136236862795545, 0.619983830338759,
+      0.7066732276703116, 0.5578208773980694, 0.6640749675566799, 0.3983918346584,
+      0.669799182855007, 0.6676923015820326, 0.6833481802471649, 0.42376849425064156,
+      0.14268500490231859, 0.7282086834206212, 0.5054643954440238, 0.5909867595448403,
+      0.6253726715085393, 0.7656141396513367, 0.6620237683039293, 0.3985298339116499,
+      0.28938660245500997, 0.4300890687768505, 0.5318991338426763, 0.692260600127167,
+      0.7107682323381913, 0.6383059450112207, 0.6341530070826445, 0.6051054715438705,
+      0.25995908197285794, 0.6735192050687526, 0.46683919234568155, 0.32506931411096485,
+      0.3436135015976064, 0.5430619673503876, 0.3809511475100029, 0.3375162674085581,
+      0.3828646223943461, 0.2510907582916329, 0.3537583447216665, 0.716511856961142,
+      0.4517069511445581, 0.5393362395287981, 0.5471159556018315, 0.4634757147498455,
+      0.43347704823212574, 0.4447412865733351, 0.48432364656001975, 0.5151679940489226,
+      0.6668008894446538, 0.7609884680425435, 0.5043206212372546, 0.3429807519788849,
+      0.20612439504912347, 0.35332270708922503, 0.799055230937757, 0.4918290157794456,
+      0.5547211288573037, 0.5612722850438842, 0.5145026711641508, 0.58281684985023,
+      0.19415086430464676, 0.7538063621347775, 0.39787912745014714, 0.6890236169586117,
+      0.615872352566373, 0.7119060415760132, 0.6141416760923262, 0.6145740826061765,
+      0.8605729708348236, 0.31154952140774617, 0.24271321437338583, 0.8901861417150888,
+      0.45220272918943627, 0.5966290818928193, 0.5963208812996039, 0.5541483268018271,
+      0.28750265444437756, 0.8557113283004043, 0.4369348323958285, 0.3985463306937187,
+      0.28676278815839157, 0.7745511567134348, 0.6598192131436464, 0.73886017756354,
+      0.20666261064648297, 0.7914244519887393, 0.6106243707967393, 0.7368801176520609,
+      0.509128423541726, 0.48942750549394093, 0.69484980116036, 0.6827480190962588,
+      0.6495709130686975, 0.20316696355769856, 0.5977636394004674, 0.6262644923562327,
+      0.5474100015164416, 0.5131666355754265, 0.4975409192611561, 0.341919360154907,
+      0.26930220080075995, 0.5453266094524505, 0.5803449854434126, 0.2580317769595461,
+      0.2231691251139995, 0.25069611065471603, 0.6468721757702713, 0.4698713012681478,
+      0.6164287169009546, 0.5803499641479888, 0.6779579823459643, 0.3344805500134964,
+      0.5449930333507059, 0.5077605886181132, 0.7454048725945076, 0.292593126741362,
+      0.33539707017076126, 0.7348703205561831, 0.38497443996825975, 0.27019160676378745,
+      0.24701628020090757, 0.22853915914552586, 0.7240223918402433, 0.630212089122105,
+      0.26214925682512064, 0.41883212253281327, 0.902926566708622, 0.6250976544072336,
+      0.5954626566656659, 0.7208123091705698, 0.2587090354344954, 0.662166012206069,
+      0.14498305053256028, 0.25366272980782056, 0.37365279900882076, 0.4527498034391725,
+      0.5336737194243832, 0.44249921449617846, 0.3275867703672092, 0.1780863942411736,
+      0.6456637780976272, 0.3068345956538741, 0.24634533163534258, 0.7755287748379535,
+      0.13014911379632182, 0.3045208826606464, 0.2218466545659486, 0.4460714142817036,
+      0.3677509607169946, 0.4836325468118642, 0.5439689630219047, 0.3921285053071814,
+      0.5790344861720691, 0.22597331434940318, 0.4212363560060829, 0.8599732693449503,
+      0.7391072437394339, 0.30396955514889146, 0.5571800146087865, 0.4276664017745784,
+      0.3358709885222038, 0.2277724980482445, 0.7844214330021566, 0.5732396980487378,
+      0.3162438009659234, 0.30791092230697087, 0.2899773659929767, 0.3657504665625751,
+      0.5268272218686519, 0.3999784695977587, 0.7676280283645638, 0.2144239782330057,
+      0.36154794017250524, 0.736462297458896, 0.6053661198855038, 0.8359358435924084,
+      0.3635902584830899, 0.3072656234080364, 0.5186368283642134, 0.53679206330835,
+      0.1901452495437607, 0.4469652246117042, 0.5443104885376553, 0.4261991764691748,
+      0.30939585679550174, 0.3935829689906206, 0.16419796161835523, 0.6117480153412552,
+      0.6639713126536424, 0.34831128479040946, 0.19499247658498955, 0.3039587186295783,
+      0.17269934763664796, 0.3533485359802971, 0.6548792186825534, 0.49324291308703505,
+      0.5339185208001055, 0.4948427373005909, 0.6187338172265383, 0.31732386133812746,
+      0.48604412097670135, 0.4916621541986177, 0.560867553936512, 0.5974091545806673,
+      0.3109647516921826, 0.41871991961119454, 0.37222568991449145, 0.34620898813259493,
+      0.8597453482871992, 0.6405577221948817, 0.5415981713305922, 0.6062984331523116,
+      0.5638475266874369, 0.5718595700375299, 0.7365213275294122, 0.6824925386056945,
+      0.43133996832380833, 0.2805436978710019, 0.5350248474306825, 0.7106163351261587,
+      0.6800529229514306, 0.6877319234890023, 0.8149834382528083, 0.28716002098442595,
+      0.5731528815748739, 0.3045649715519312, 0.2276404188058793, 0.730862566906612,
+      0.408977072087628, 0.7196002160339109, 0.5037630535549932, 0.7727547213288031,
+      0.5704965277458651, 0.35864827573690655, 0.6517366758554269, 0.5111679954896569,
+      0.6568690359996029, 0.2518732831750018, 0.4337438480713542, 0.6234335834707139,
+      0.7882663573149579, 0.770916077635097, 0.6110911929175564, 0.5414394628161705,
+      0.9147975632339129, 0.43137827928469563, 0.6598428185313068, 0.30720228234624797,
+      0.40222180257837686, 0.26629687423117243, 0.3062095452774519, 0.335403289891986,
+      0.5134754876058394, 0.3015303831627595, 0.2632430210711491, 0.7561585483886802,
+      0.28528677135844177, 0.4410839785796966, 0.44751796070843874, 0.578303949092065,
+      0.7323038205879664, 0.5205232973084971, 0.6162164900929767, 0.37192146718263724,
+      0.3824545261993267, 0.22522082480609915, 0.9282226031266564, 0.38340715909098533,
+      0.6181834822412169, 0.1463729043604189, 0.5115297165481091, 0.5888451109800952,
+      0.7639107312638551, 0.683948931843566, 0.39957545303397, 0.7665902162268481,
+      0.6115365053811045, 0.5330789035584186, 0.3655832110585744, 0.675023134406947,
+      0.6050160747729203, 0.5015733093243507, 0.42706247170493844, 0.5004916655241983,
+      0.2878559543215742, 0.7436124433766808, 0.18669371761932688, 0.4735677527576747,
+      0.685158676015433, 0.5230390815598168, 0.7651711303008768, 0.42119013029331653,
+      0.41087229136308734, 0.29354164361662477, 0.5455074528835512, 0.48704197585920217,
+      0.6057412265374347, 0.3250013854357172, 0.36006043437324375, 0.584928126220616,
+      0.7679219378443993, 0.39889800122161134, 0.45457286332801944, 0.7006906155303746,
+      0.3355577061467853, 0.508606211444105, 0.584944273094651, 0.37247042680805165,
+      0.12441115977674387, 0.6339212579109395, 0.5507041365007137, 0.514168369245965,
+      0.6629963514934394, 0.6558562445230408, 0.39321095048315174, 0.48441693599936575,
+      0.3816461123485087, 0.1569617245693865, 0.6173955260828915, 0.3334437116745069,
+      0.7927418504860823, 0.731691133727304, 0.7266229152348556, 0.6934195416833671,
+      0.622890998060746, 0.47990541793882613, 0.5607797569274405, 0.4894410661577413,
+      0.4164664363130939, 0.7091919657142925, 0.5478295594569909, 0.44156640447760787,
+      0.6400960604461408, 0.6099988875343664, 0.4342862762430946, 0.6237331213628639,
+      0.357376431061251, 0.6231995117866682, 0.3042338715729637, 0.3229007129414564,
+      0.5306119525677666, 0.7190113578208588, 0.3285165145389921, 0.2079913912767328,
+      0.3396373617957624, 0.8727407717256347, 0.3089310165406675, 0.44250263393727196,
+      0.6164249747027647, 0.6069721742535511, 0.7729387745375427, 0.5968421045202664,
+      0.5695726444015744, 0.48187593252102207, 0.10956472809107914, 0.8307647560621431,
+      0.7067790826055247, 0.5896058406620468, 0.2516795995366632, 0.4986103127324973,
+      0.2630270477439609, 0.40071188661553764, 0.24295757614770291, 0.4137739835571127,
+      0.5570853162881136, 0.5991411813078892, 0.4137645348837209, 0.5373645103502075,
+      0.600650485840424, 0.6443809966748286, 0.37717129704140656, 0.33115811685370555,
+      0.21771813877083057, 0.502250818756229, 0.6701702179189901, 0.3426278310622765,
+      0.38394326497640396, 0.7302494516406922, 0.3660604118288979, 0.534287844329975,
+      0.43788250861117867, 0.5650614594630606, 0.6406434638300269, 0.3752451315973553,
+      0.627538534973862, 0.5244498775666985, 0.3478025289785818, 0.6519829558874941,
+      0.6809598556888885, 0.7556306015018717, 0.43074481021607275, 0.5925069036896083,
+      0.3586769907404233, 0.6940582232923715, 0.7413576717337476, 0.6762791303024674,
+      0.5408407772615433, 0.4840466470985997, 0.1748247312930604, 0.46118752242409844,
+      0.45872068093478024, 0.6290041315883652, 0.2630341989151518, 0.582088519709726,
+      0.19025430003391086, 0.6614077972476159, 0.4298138518414918, 0.5581538458917988,
+      0.061653715771391504, 0.721621201865491, 0.6990149904579201, 0.28697318262832583,
+      0.712731921101139, 0.5738807894512787, 0.8295749937862464, 0.3296662075410304,
+      0.4083335190991006, 0.48985484783887173, 0.5472008558095837, 0.4111125718317604,
+      0.25059606479462754, 0.2835478589806891, 0.1783800275029323, 0.2389114804345709,
+      0.4627737484750714, 0.5879114602372172, 0.8218554180106591, 0.7303227077694441,
+      0.6766596727724715, 0.20544960995425968, 0.5034570967607125, 0.36645533638829164,
+      0.1936291963217983, 0.41713972645710784, 0.5606612543746311, 0.5545203691590157,
+      0.38920392181420427, 0.520006291672523, 0.3443786748714875, 0.1662871079187542,
+      0.3388451854625021, 0.506582012375967, 0.5013971382199993, 0.6630548708037023,
+      0.538592708060109, 0.4068275638449588, 0.5939211556829292, 0.2872508496755745,
+      0.7008179553157579, 0.28905312403487354, 0.19577111795913296, 0.7513889031028296,
+      0.3654069425426786, 0.7757717112741376, 0.4776333761457882, 0.29774792491168095,
+      0.4446138837566433, 0.5436608613068574, 0.43491024818783286, 0.6704981217135288,
+      0.5048066913258313, 0.5573195480509846, 0.5443790582654585, 0.48659433921233497,
+      0.6778546630152393, 0.5088999838439043, 0.30378308302687046, 0.2580569342696854,
+      0.5513706791978562, 0.380380516679899, 0.557017579031574, 0.4724656875107426,
+      0.3920004663917318, 0.5726703446170126, 0.398108369516649, 0.3178025004457853,
+      0.46131998428178356, 0.3693420159715449, 0.17584802695016025, 0.2504917829073204,
+      0.369822990578917, 0.417970703193555, 0.16248856259863978, 0.6915631598321728,
+      0.3303491304900218, 0.5141587777430039, 0.383309942781079, 0.6105933826972962,
+      0.28793347688764603, 0.1981144590277079, 0.8067379337862158, 0.5425056155741,
+      0.4736659377232678, 0.8076579038446141, 0.2579050578359175, 0.40351758537340743,
+      0.3800170552864439, 0.20734967245821445, 0.26867481205314253, 0.3681411673344872,
+      0.39437927486383545, 0.22118818196386644, 0.6351389627153015, 0.3124660824622603,
+      0.46495618502960734, 0.20835386919647608, 0.5756451798691461, 0.6567880449545067,
+      0.5105953535202334, 0.22556145641863373, 0.39401247341095297, 0.4954071469487602,
+      0.2682772794779998, 0.6571453000458184, 0.3450498973231188, 0.6223080517579797,
+      0.2639718257452493, 0.4680921509364102, 0.4838159197996015, 0.7399492898118536,
+      0.5327577571459443, 0.41723301519533934, 0.5609622037863222, 0.26744664380056254,
+      0.22690303756331712, 0.21939229370873387, 0.22250472595904983, 0.46006226060758315,
+      0.640556804451145, 0.530894299001534, 0.26207961672943575, 0.4640794923786683,
+      0.6371465668407442, 0.4747606288754888, 0.29985402635611563, 0.5203188515911985,
+      0.45446784552480546, 0.5206657660206611, 0.3061029744044807, 0.29304715221603156,
+      0.31320430454412046, 0.23439094090867996, 0.43957244137209517, 0.6361066300882984,
+      0.36411271608511125, 0.435650035166404, 0.6489101395620052, 0.21476790061208612,
+      0.5200832791239768, 0.4012051617178745, 0.33165896214399626, 0.4669503525418588,
+      0.3085359002149654, 0.327214734555946, 0.3614587616065158, 0.7456924698217777,
+      0.3761886275066747, 0.6648779746814045, 0.5152355939067373, 0.7579073994662766,
+      0.2589960021331553, 0.43555481890020414, 0.4704486347178217, 0.4941944577583477,
+      0.7433877568786981, 0.21654886017071603, 0.7102976801313142, 0.7545287350902165,
+      0.8482056664810037, 0.5037932473962115, 0.18366674153688778, 0.5434257349731673,
+      0.41162599050759174, 0.23106866543393736, 0.6666588484609451, 0.4335645911952907,
+      0.5413638363061092, 0.3658987885641007, 0.6450973629440236, 0.3771597094615883,
+      0.5586085523220967, 0.590343840829019, 0.627090581308918, 0.5326082560420266,
+      0.6538885859546488, 0.13746758619971064, 0.5654816480544389, 0.7391067298166087,
+      0.3380080452944007, 0.518246854457589, 0.5286731806892022, 0.4810965148475666,
+      0.2971350705102852, 0.4573493077452975, 0.48406261040417464, 0.27021466776595426,
+      0.4642475893251752, 0.292493890022575, 0.7315478318066222, 0.28867890689811526,
+      0.46569203997486597, 0.14112873755243593, 0.532163743496215, 0.42513293735326024,
+      0.4904823591041084, 0.5360959564581821, 0.4272667018173793, 0.5746694064260969,
+      0.46398957060439305, 0.4046502044467161, 0.3846818202190584, 0.5439616798151534,
+      0.4872901180532902, 0.5537437737624189, 0.5004936216546148, 0.7824293969567646,
+      0.5672749982423119, 0.45420571812337446, 0.5366433411702135, 0.7518125693783986,
+      0.5523752223786618, 0.747347118683888, 0.12728504849098013, 0.7053261872691734,
+      0.6040997200707868, 0.6022551339679869, 0.8520358215742334, 0.45234472475446286,
+      0.5343532664730015, 0.5585939926385046, 0.599969654007741, 0.3521618675379434,
+      0.5771140075056482, 0.5625969771490478, 0.5209861648230071, 0.20792123634683968,
+      0.6275350594744937, 0.15545891011820068, 0.5410053506826688, 0.32699231919707716,
+      0.060233193342022644, 0.5300946991085232, 0.5878561666028732, 0.5061633252077701,
+      0.26887939282532763, 0.34955347563478145, 0.5220111610263704, 0.5936346735838193,
+      0.6493706739068402, 0.3749295987252891, 0.44382178646401954, 0.2070960542380908,
+      0.49819383974689774, 0.6692516269100564, 0.5878072202091383, 0.4774586215686569,
+      0.4516246899546938, 0.2812839044353755, 0.6074682055111463, 0.2546230566062119,
+      0.4435202534629052, 0.7414131099961148, 0.7184673336300214, 0.29561985849033423,
+      0.46246234262564995, 0.27478418058748055, 0.37663760292933496, 0.7648471432807186,
+      0.6987808786769599, 0.2983147392655428, 0.7308030865399022, 0.4465571169271566,
+      0.419999530622585, 0.17964996607633624, 0.4359728621345083, 0.5818827856403668,
+      0.5313030131533891, 0.6323818481075918, 0.6671099276593999, 0.5838465534386946,
+      0.5117600295653312, 0.3149051133443399, 0.61019266112037, 0.5314144212819123,
+      0.5530153447693733, 0.34630280962057935, 0.6788273305434985, 0.3078223327987033,
+      0.3252336758993385, 0.5070867931151214, 0.3570032748066308, 0.5939372512691589,
+      0.5950151474514473, 0.7129644659273839, 0.6968145769392087, 0.6579257839842889,
+      0.7593694386246117, 0.40209228734516395, 0.6777877401698588, 0.337643913796493,
+      0.3359823681494708, 0.5183062226762087, 0.5679727059497268, 0.5960946240325017,
+      0.40224167519708115, 0.6653894627468607, 0.467599003127419, 0.2005292889349073,
+      0.5913661540749209, 0.22071432935751198, 0.5009444801853373, 0.4685125703784362,
+      0.5007057424385764, 0.7005245223598425, 0.39082393221942113, 0.34863958293194364,
+      0.3436971456473972, 0.7132264453943176, 0.596066255677198, 0.6551969460646151,
+      0.5013730787158273, 0.4586213332105816, 0.6702115543196046, 0.5163690845106794,
+      0.61569198628737, 0.6289456221002759, 0.5448595703298033, 0.22511960306269999,
+      0.4085089512241942, 0.2481147852279533, 0.6121781310552176, 0.7556416071159349,
+      0.45731550667141163, 0.4276668384539066, 0.4109323372873709, 0.3741625368310219,
+      0.2300225864508292, 0.36529302762764054, 0.6030523301396251, 0.5690978844676657,
+      0.5219602477634057, 0.43953870512008664, 0.5776184604524294, 0.38250491886475135,
+      0.24659946521271775, 0.5637057994580418, 0.5196023812751696, 0.07565485643036923,
+      0.4943079107769345, 0.4608010198732361, 0.27371895553936393, 0.6187231395290382,
+      0.6518344441402102, 0.679911662423125, 0.4391519651443962, 0.4040527252249263,
+      0.3601000433841753, 0.6721381773082035, 0.7141917130653582, 0.5754534595570109,
+      0.36469633510426097, 0.3807820655863636, 0.5632129997822858, 0.23372753607796054,
+      0.35770039417912225, 0.4373945838724279, 0.6256282133449776, 0.6316713508926494,
+      0.29259383801115646, 0.6141608894873225, 0.4545816663282025, 0.474319024304146,
+      0.7160727962144768, 0.4474679002937394, 0.4932940088007506, 0.7306419722211343,
+      0.42036836911791126, 0.40910950826625614, 0.6905854458514405, 0.5180056927254729,
+      0.38149532695005806, 0.31812389793872126, 0.5424681908797349, 0.6259005309603931,
+      0.5259441838892343, 0.7897615515473966, 0.49778620096074705, 0.7168540993825436,
+      0.41321154849240366, 0.6964388675410679, 0.7837908817971994, 0.5624058475866398,
+      0.6999033942247852, 0.549584964361501, 0.29242552406216266, 0.6356439924302598,
+      0.2797467041138072, 0.44992542849506845, 0.4169566036614472, 0.22769482557706383,
+      0.32552525680386873, 0.6014002532709615, 0.48900296805439425, 0.7015576251779853,
+      0.34169114246462284, 0.6034846558511819, 0.7487722654889013, 0.43426175766795616,
+      0.39551848028078773, 0.31483205722442686, 0.6489483356380248, 0.45816088534397914,
+      0.4981693380635586, 0.45270536574047876, 0.6391689563908993, 0.6059311994646542,
+      0.3189608603628038, 0.7071706242698278, 0.21415197802335, 0.45518440988348097,
+      0.7199109310969882, 0.23184150781468005, 0.6317577151542468, 0.33914626547007054,
+      0.7773025914146986, 0.6369146437091987, 0.6556545488402121, 0.7259424922261636,
+      0.47937103537636355, 0.46929929732735404, 0.5484401783624346, 0.6276533588677202,
+      0.2859837611312036, 0.1972605529258011, 0.5114281451529409, 0.394988558598279,
+      0.4800341688442402, 0.46009855405209765, 0.6626700332860452, 0.34117162814971613,
+      0.7488706805501464, 0.3837554855466051, 0.5143055326498542, 0.5716170290003415,
+      0.4366931967044126, 0.7734956257195774, 0.7321388631460067, 0.3697307336650126,
+      0.37731278819826375, 0.42918471693443044, 0.32480675537497145, 0.46025190173089814,
+      0.33353321903690225, 0.37511532177318646, 0.43476330176371103, 0.2021421590220803,
+      0.7833761423910657, 0.5784299716489333, 0.48275699715493603, 0.37350809076683267,
+      0.41829701679935155, 0.4808367488180911, 0.8488829992959905, 0.35010150376423327,
+      0.486361204951856, 0.19956305249384623, 0.540989167725222, 0.7873622844773311,
+      0.34762464594586295, 0.41121553972606145, 0.7013847431481741, 0.4227245535365831,
+      0.722883735549685, 0.29362933951605225, 0.4738281079730045, 0.5676549266477398,
+      0.4190338993280817, 0.5542063246209081, 0.22478510715790026, 0.5302969142488418,
+      0.8590112447429872, 0.6726059849975338, 0.6676642068637583, 0.6849875963722127,
+      0.5278544942483769, 0.5780150032779986, 0.560148599581092, 0.6481170723251422,
+      0.6744274346478671, 0.251804060936974, 0.6657128910622314, 0.3290924569387763,
+      0.4204608315963462, 0.3872721195037253, 0.6787934185450231, 0.8229856456501685,
+      0.6600233796991074, 0.6507801407905733, 0.4564829048521426, 0.4302128107114898,
+      0.7787779829710089, 0.7781925935169014, 0.5528767609594646, 0.6334635555830005,
+      0.7989291591169188, 0.5946611498240724, 0.824401080804066, 0.3105635928011795,
+      0.6152247345831336, 0.622065088896942, 0.5685619572488194, 0.7616120305140864,
+      0.6276416714024158, 0.6846899045834739, 0.8016446162457811, 0.6194218822897178,
+      0.78690621241665, 0.7201259732607013, 0.608823054232095, 0.7264747437482179,
+      0.7217482332163571, 0.510499575654767, 0.7559158014511888, 0.6230962226393486,
+      0.6175194422710902, 0.3127953598064246, 0.3773712532355638, 0.6600939964275454,
+      0.6079557280598815, 0.6640260961322553, 0.6539461064626165, 0.5023734963898936,
+      0.2711008480780323, 0.43093974709489546, 0.5314083016511857, 0.5008808835420242,
+      0.5562529213574103, 0.683932688859681, 0.5054683312746562, 0.37681211179771107,
+      0.4969893436067865, 0.6599246801857971, 0.7111413802917999, 0.5790415561368565,
+      0.37224537013739567, 0.3840213611125986, 0.6061920674850999, 0.7241272492071752,
+      0.6311985630255481, 0.518371366895354, 0.6857120090076528, 0.4209939713975877,
+      0.722163540262381, 0.7276624372435915, 0.6201243257382737, 0.4934155572833084,
+      0.26064594711376515, 0.3356027236185265, 0.4745559528522695, 0.41235502960690656,
+      0.4765741220349623, 0.7473409168630949, 0.716576074289865, 0.8546739710144835,
+      0.10342192494625856, 0.3912130950069048, 0.14532472273828104, 0.46401674103431945,
+      0.3404048915659952, 0.49010738812669946, 0.6263641836856627, 0.39306410558855404,
+      0.3740609626412522, 0.644775666757265, 0.6337717824946209, 0.48837800582324054,
+      0.6793977133144382, 0.2532349918739952, 0.4806270454301911, 0.26919709167722117,
+      0.6850554381276638, 0.7627131773621637, 0.164194958376425, 0.42479620992001493,
+      0.3107502926605584, 0.3837525621390756, 0.15499760239284507, 0.18905923895361146,
+      0.272939110599387, 0.29890821317605837, 0.6160725099337315, 0.5335986020410509,
+      0.7088616956932212, 0.4349057818974043, 0.6623177858572431, 0.4512742188260302,
+      0.7060071115405473, 0.5597941729879621, 0.6803065964787758, 0.3436456770997957,
+      0.5415443812648264, 0.2816071654334232, 0.5663844239222766, 0.5065677716120689,
+      0.606908954211875, 0.6520391921909501, 0.6765399990417691, 0.653366806415748,
+      0.3806897761793843, 0.3681998091847104, 0.68757876096619, 0.31899519989523595,
+      0.5361664309510596, 0.2901006899667958, 0.5851079061175656, 0.5645173547307942,
+      0.7110830877286611, 0.5717788824455553, 0.6174027006425254, 0.587288665829684,
+      0.5757549760770069, 0.6378018112587971, 0.10393718289834125, 0.8246779722228911,
+      0.4174323511219956, 0.5297656882601399, 0.9177232469660597, 0.47181409352176285,
+      0.7269231175075517, 0.5239791363756301, 0.2605382671617995, 0.24807402187244715,
+      0.39199538388344474, 0.7349229234123867, 0.7764101888496301, 0.5360464238440378,
+      0.38242023876751946, 0.7950925071217514, 0.647485058244501, 0.5894137742201422,
+      0.33056351692377167, 0.4880589928587505, 0.3490162945492449, 0.5100211295658301,
+      0.6073590955642545, 0.6551613609467912, 0.7755796155562681, 0.3457428136884521,
+      0.37614778043796865, 0.588540867892923, 0.5966896764230818, 0.6116719490300336,
+      0.8626727568871193, 0.8367168499689266, 0.7708468202723511, 0.3054172873021377,
+      0.33246934367094994, 0.792392635214433, 0.43675983314288674, 0.7346572771693081,
+      0.4783328203534316, 0.6400597257988304, 0.5278504634939409, 0.6927589582108953,
+      0.681598348090291, 0.17111032380774052, 0.6771580904456735, 0.5638268589530062,
+      0.6055199332561044, 0.6235405699862937, 0.43578801115737203, 0.6560850894183766,
+      0.14539258567829697, 0.4681224336969484, 0.7486341305696715, 0.5926150551886985,
+      0.49311195141128916, 0.5828223388439264, 0.28446487535024634, 0.25322927543140306,
+      0.31784640537764175, 0.7674084027277125, 0.6767741369932889, 0.4967334754071445,
+      0.39786178517658677, 0.3437951869134344, 0.2816818805400042, 0.2282208235515839,
+      0.3307298516890218, 0.5870405216314729, 0.3168628527461873, 0.42475749156233505,
+      0.2692623828064614, 0.5337967039799449, 0.8043420555651288, 0.739071883914595,
+      0.4334510865564114, 0.6634670643672366, 0.34698991076371594, 0.40376485421738123,
+      0.6044977117576356, 0.5667168911993203, 0.5628722548566414
+    ],
+    "histogram": {
+      "bin_edges": [
+        0.0, 0.05, 0.1, 0.15000000000000002, 0.2, 0.25, 0.30000000000000004, 0.35000000000000003,
+        0.4, 0.45, 0.5, 0.55, 0.6000000000000001, 0.65, 0.7000000000000001, 0.75, 0.8,
+        0.8500000000000001, 0.9, 0.9500000000000001, 1.0
+      ],
+      "counts": [
+        2, 8, 33, 72, 114, 184, 211, 221, 245, 273, 287, 282, 257, 231, 184, 107, 50, 29, 9, 1
+      ]
+    },
+    "composite_note": "The composite score is a relative ranking within this file, not a probability. In SurveyDoctor's simulation study it separated straightlining and midpoint responding poorly; the longstring index is the one that catches those patterns.",
+    "heuristics_note": "Flag thresholds are heuristics and conventions, not proven cut-offs. A flag is a reason to look at a respondent, not proof that they answered carelessly."
+  },
+  "reliability": [
+    {
+      "scale": "Agreeableness",
+      "items": ["A1", "A2", "A3", "A4", "A5"],
+      "n_items": 5,
+      "n_used": 2709,
+      "n_excluded": 91,
+      "alpha": 0.7037558943748362,
+      "alpha_ci_low": 0.686,
+      "alpha_ci_high": 0.721,
+      "omega_total": 0.7239834661223576,
+      "loadings": {
+        "A1": 0.3769561052990051,
+        "A2": 0.6778456176169243,
+        "A3": 0.7570868375035869,
+        "A4": 0.48075314695105215,
+        "A5": 0.6128784507160461
+      },
+      "item_stats": [
+        {
+          "item": "A1",
+          "corrected_item_total": 0.3114013005801622,
+          "alpha_if_deleted": 0.7179720565650483
+        },
+        {
+          "item": "A2",
+          "corrected_item_total": 0.5630154754920236,
+          "alpha_if_deleted": 0.6184812117727613
+        },
+        {
+          "item": "A3",
+          "corrected_item_total": 0.5887730786773536,
+          "alpha_if_deleted": 0.6007538144220013
+        },
+        {
+          "item": "A4",
+          "corrected_item_total": 0.3947936801112731,
+          "alpha_if_deleted": 0.6869447415397787
+        },
+        {
+          "item": "A5",
+          "corrected_item_total": 0.48724086762900043,
+          "alpha_if_deleted": 0.644622304221595
+        }
+      ],
+      "reverse_warnings": [],
+      "sentence": "Alpha for Agreeableness is 0.70 (95% CI 0.69 to 0.72, N = 2,709), which is commonly treated as acceptable. High alpha does not prove that a scale measures a single concept."
+    },
+    {
+      "scale": "Conscientiousness",
+      "items": ["C1", "C2", "C3", "C4", "C5"],
+      "n_items": 5,
+      "n_used": 2707,
+      "n_excluded": 93,
+      "alpha": 0.729277203170442,
+      "alpha_ci_low": 0.713,
+      "alpha_ci_high": 0.745,
+      "omega_total": 0.7337932219031329,
+      "loadings": {
+        "C1": 0.5535888319319053,
+        "C2": 0.6197475648937054,
+        "C3": 0.5568644565675273,
+        "C4": 0.671904383468641,
+        "C5": 0.5755686978278476
+      },
+      "item_stats": [
+        {
+          "item": "C1",
+          "corrected_item_total": 0.4553024486636688,
+          "alpha_if_deleted": 0.6960351272426972
+        },
+        {
+          "item": "C2",
+          "corrected_item_total": 0.5066639825057879,
+          "alpha_if_deleted": 0.6767099501343449
+        },
+        {
+          "item": "C3",
+          "corrected_item_total": 0.46753340947091854,
+          "alpha_if_deleted": 0.6913564536036795
+        },
+        {
+          "item": "C4",
+          "corrected_item_total": 0.5570934988945774,
+          "alpha_if_deleted": 0.6562027019083115
+        },
+        {
+          "item": "C5",
+          "corrected_item_total": 0.4780298020564724,
+          "alpha_if_deleted": 0.6935845322525822
+        }
+      ],
+      "reverse_warnings": [],
+      "sentence": "Alpha for Conscientiousness is 0.73 (95% CI 0.71 to 0.74, N = 2,707), which is commonly treated as acceptable. High alpha does not prove that a scale measures a single concept."
+    },
+    {
+      "scale": "Extraversion",
+      "items": ["E1", "E2", "E3", "E4", "E5"],
+      "n_items": 5,
+      "n_used": 2713,
+      "n_excluded": 87,
+      "alpha": 0.7609326394695517,
+      "alpha_ci_low": 0.746,
+      "alpha_ci_high": 0.775,
+      "omega_total": 0.7634083279523991,
+      "loadings": {
+        "E1": 0.6008319624669518,
+        "E2": 0.726095921786757,
+        "E3": 0.5830608910884035,
+        "E4": 0.6878190400583276,
+        "E5": 0.5252802824142367
+      },
+      "item_stats": [
+        {
+          "item": "E1",
+          "corrected_item_total": 0.5134968865213368,
+          "alpha_if_deleted": 0.7254279636932793
+        },
+        {
+          "item": "E2",
+          "corrected_item_total": 0.6064069364338052,
+          "alpha_if_deleted": 0.6883817078444789
+        },
+        {
+          "item": "E3",
+          "corrected_item_total": 0.5008416774300686,
+          "alpha_if_deleted": 0.7279136600911086
+        },
+        {
+          "item": "E4",
+          "corrected_item_total": 0.5778895757451887,
+          "alpha_if_deleted": 0.7005891889741395
+        },
+        {
+          "item": "E5",
+          "corrected_item_total": 0.4546331308893426,
+          "alpha_if_deleted": 0.7423609116557938
+        }
+      ],
+      "reverse_warnings": [],
+      "sentence": "Alpha for Extraversion is 0.76 (95% CI 0.75 to 0.78, N = 2,713), which is commonly treated as acceptable. High alpha does not prove that a scale measures a single concept."
+    },
+    {
+      "scale": "Neuroticism",
+      "items": ["N1", "N2", "N3", "N4", "N5"],
+      "n_items": 5,
+      "n_used": 2694,
+      "n_excluded": 106,
+      "alpha": 0.8133031431614388,
+      "alpha_ci_low": 0.802,
+      "alpha_ci_high": 0.824,
+      "omega_total": 0.8182929177911843,
+      "loadings": {
+        "N1": 0.7801491812817954,
+        "N2": 0.7605692567512902,
+        "N3": 0.7597687406991128,
+        "N4": 0.5925368565844017,
+        "N5": 0.5306969913029715
+      },
+      "item_stats": [
+        {
+          "item": "N1",
+          "corrected_item_total": 0.666285806231686,
+          "alpha_if_deleted": 0.7573075145152999
+        },
+        {
+          "item": "N2",
+          "corrected_item_total": 0.6509020557548274,
+          "alpha_if_deleted": 0.762678098025769
+        },
+        {
+          "item": "N3",
+          "corrected_item_total": 0.6729470882586127,
+          "alpha_if_deleted": 0.7548653524427286
+        },
+        {
+          "item": "N4",
+          "corrected_item_total": 0.5421489979518956,
+          "alpha_if_deleted": 0.7945587221079242
+        },
+        {
+          "item": "N5",
+          "corrected_item_total": 0.48672943729752544,
+          "alpha_if_deleted": 0.8116136343827887
+        }
+      ],
+      "reverse_warnings": [],
+      "sentence": "Alpha for Neuroticism is 0.81 (95% CI 0.80 to 0.82, N = 2,694), which is commonly treated as acceptable. High alpha does not prove that a scale measures a single concept."
+    },
+    {
+      "scale": "Openness",
+      "items": ["O1", "O2", "O3", "O4", "O5"],
+      "n_items": 5,
+      "n_used": 2726,
+      "n_excluded": 74,
+      "alpha": 0.6025464285771843,
+      "alpha_ci_low": 0.578,
+      "alpha_ci_high": 0.626,
+      "omega_total": 0.6180699815397203,
+      "loadings": {
+        "O1": 0.5350942020523073,
+        "O2": 0.4532357231976436,
+        "O3": 0.6432754299248922,
+        "O4": 0.2916501536047738,
+        "O5": 0.5323051560784959
+      },
+      "item_stats": [
+        {
+          "item": "O1",
+          "corrected_item_total": 0.38905356487950843,
+          "alpha_if_deleted": 0.5358526202159943
+        },
+        {
+          "item": "O2",
+          "corrected_item_total": 0.34012260010406964,
+          "alpha_if_deleted": 0.565869660236861
+        },
+        {
+          "item": "O3",
+          "corrected_item_total": 0.451951879400042,
+          "alpha_if_deleted": 0.5003354147606763
+        },
+        {
+          "item": "O4",
+          "corrected_item_total": 0.21992333932213345,
+          "alpha_if_deleted": 0.6135892108507144
+        },
+        {
+          "item": "O5",
+          "corrected_item_total": 0.41570709912115617,
+          "alpha_if_deleted": 0.5157906628582509
+        }
+      ],
+      "reverse_warnings": [],
+      "sentence": "Alpha for Openness is 0.60 (95% CI 0.58 to 0.63, N = 2,726), which is below the 0.70 commonly treated as acceptable. High alpha does not prove that a scale measures a single concept."
+    }
+  ],
+  "structure": {
+    "items": [
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "N1",
+      "N2",
+      "N3",
+      "N4",
+      "N5",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5"
+    ],
+    "n_used": 2436,
+    "n_excluded": 364,
+    "skipped_reason": null,
+    "kmo": {
+      "overall": 0.8486452309468394,
+      "per_item": {
+        "A1": 0.7540715967261397,
+        "A2": 0.8364319767066153,
+        "A3": 0.8702024136607844,
+        "A4": 0.8780416377149103,
+        "A5": 0.9035590474637178,
+        "C1": 0.8433626432740693,
+        "C2": 0.7958161030724018,
+        "C3": 0.8519721667586444,
+        "C4": 0.8265898017231462,
+        "C5": 0.8641133215991342,
+        "E1": 0.8381301664677863,
+        "E2": 0.883889744305517,
+        "E3": 0.8970459448360809,
+        "E4": 0.8774010943827258,
+        "E5": 0.893399812591782,
+        "N1": 0.7794802024250204,
+        "N2": 0.7803909489134349,
+        "N3": 0.8623966664209971,
+        "N4": 0.8852681059793724,
+        "N5": 0.8602403091932862,
+        "O1": 0.8586863951636976,
+        "O2": 0.7803387720459799,
+        "O3": 0.8444574637208729,
+        "O4": 0.770176961942823,
+        "O5": 0.7615938190950254
+      }
+    },
+    "bartlett": { "chi_square": 18146.06557723504, "df": 300, "p_value": 0.0 },
+    "parallel": {
+      "scree": [
+        { "position": 1, "observed": 5.13431117720727, "threshold": 1.217026431167826 },
+        { "position": 2, "observed": 2.751886667996414, "threshold": 1.1797909822340598 },
+        { "position": 3, "observed": 2.1427019540111063, "threshold": 1.1574694294144847 },
+        { "position": 4, "observed": 1.8523276117202552, "threshold": 1.1356798975923088 },
+        { "position": 5, "observed": 1.5481628486210957, "threshold": 1.115735289085193 },
+        { "position": 6, "observed": 1.073582472497097, "threshold": 1.1001975901175671 },
+        { "position": 7, "observed": 0.8395389301503124, "threshold": 1.0878519193666034 },
+        { "position": 8, "observed": 0.7992061813306287, "threshold": 1.0768235942433295 },
+        { "position": 9, "observed": 0.7189891876453967, "threshold": 1.0591994625181058 },
+        { "position": 10, "observed": 0.6880887877430049, "threshold": 1.0461534461015862 },
+        { "position": 11, "observed": 0.6763733606270601, "threshold": 1.0329680677457629 },
+        { "position": 12, "observed": 0.6517998404524461, "threshold": 1.0212613142469011 },
+        { "position": 13, "observed": 0.6232529533674191, "threshold": 1.0068534063578323 },
+        { "position": 14, "observed": 0.5965628399371596, "threshold": 0.9981505217016962 },
+        { "position": 15, "observed": 0.5630908263197332, "threshold": 0.9847111581345103 },
+        { "position": 16, "observed": 0.5433053308623303, "threshold": 0.9726125040585195 },
+        { "position": 17, "observed": 0.5145175197269454, "threshold": 0.9586199898500288 },
+        { "position": 18, "observed": 0.4945031451960992, "threshold": 0.948277323088075 },
+        { "position": 19, "observed": 0.48263951503599956, "threshold": 0.9343827299533282 },
+        { "position": 20, "observed": 0.4489209993150912, "threshold": 0.9205820572595094 },
+        { "position": 21, "observed": 0.42336610822015047, "threshold": 0.9094231559822995 },
+        { "position": 22, "observed": 0.4006714506251824, "threshold": 0.8933521242489684 },
+        { "position": 23, "observed": 0.38780447907442234, "threshold": 0.8798916715406817 },
+        { "position": 24, "observed": 0.38185679413433177, "threshold": 0.8615730237855067 },
+        { "position": 25, "observed": 0.26253901818304315, "threshold": 0.8409754191213038 }
+      ],
+      "n_suggested": 5,
+      "n_kaiser": 6,
+      "n_iterations": 100,
+      "percentile": 95.0,
+      "seed": 42
+    },
+    "n_factors": 5,
+    "n_factors_source": "parallel analysis",
+    "efa": {
+      "n_factors": 5,
+      "factors": ["F1", "F2", "F3", "F4", "F5"],
+      "items": [
+        {
+          "item": "A1",
+          "loadings": {
+            "F1": -0.2036007420646018,
+            "F2": -0.06600127458165554,
+            "F3": -0.1787516229005494,
+            "F4": 0.43502332262674237,
+            "F5": 0.050939160842886806
+          },
+          "communality": 0.20390516654597166,
+          "primary_factor": "F4",
+          "primary_loading": 0.43502332262674237,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "A2",
+          "loadings": {
+            "F1": -0.018655264689303213,
+            "F2": 0.07035913535028984,
+            "F3": -0.0013222256530524622,
+            "F4": 0.655799373085341,
+            "F5": 0.02516386924689833
+          },
+          "communality": 0.4628033825870759,
+          "primary_factor": "F4",
+          "primary_loading": 0.655799373085341,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "A3",
+          "loadings": {
+            "F1": -0.022073412001881468,
+            "F2": 0.026865322841392952,
+            "F3": 0.10416070261388712,
+            "F4": 0.6784725475932812,
+            "F5": 0.027801687279552366
+          },
+          "communality": 0.53969217426587,
+          "primary_factor": "F4",
+          "primary_loading": 0.6784725475932812,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "A4",
+          "loadings": {
+            "F1": -0.05418290886684192,
+            "F2": 0.18967342467546744,
+            "F3": 0.08291679635726122,
+            "F4": 0.4480818312784627,
+            "F5": -0.15547786036485362
+          },
+          "communality": 0.3019047348143031,
+          "primary_factor": "F4",
+          "primary_loading": 0.4480818312784627,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "A5",
+          "loadings": {
+            "F1": -0.11809072223801699,
+            "F2": 0.0013386513263958307,
+            "F3": 0.2274523772652776,
+            "F4": 0.5372438046581003,
+            "F5": 0.05073083861362222
+          },
+          "communality": 0.4700202927897413,
+          "primary_factor": "F4",
+          "primary_loading": 0.5372438046581003,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "C1",
+          "loadings": {
+            "F1": 0.07190248418608783,
+            "F2": 0.5549386547288718,
+            "F3": -0.03166694805512094,
+            "F4": -0.00425699065897266,
+            "F5": 0.1578653953066883
+          },
+          "communality": 0.34839471297949076,
+          "primary_factor": "F2",
+          "primary_loading": 0.5549386547288718,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "C2",
+          "loadings": {
+            "F1": 0.15210520860191895,
+            "F2": 0.6694185383703983,
+            "F3": -0.08652889699012291,
+            "F4": 0.07847111142162874,
+            "F5": 0.04463429811403319
+          },
+          "communality": 0.4538718099817087,
+          "primary_factor": "F2",
+          "primary_loading": 0.6694185383703983,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "C3",
+          "loadings": {
+            "F1": 0.028758020775832446,
+            "F2": 0.5743828602102643,
+            "F3": -0.0567512584299289,
+            "F4": 0.08529116126074827,
+            "F5": -0.07290295719033683
+          },
+          "communality": 0.324288913153143,
+          "primary_factor": "F2",
+          "primary_loading": 0.5743828602102643,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "C4",
+          "loadings": {
+            "F1": -0.1553497866795244,
+            "F2": 0.6436180074515929,
+            "F3": -0.003746201605133814,
+            "F4": -0.03828835084600433,
+            "F5": 0.03783419060454518
+          },
+          "communality": 0.4766992589220868,
+          "primary_factor": "F2",
+          "primary_loading": 0.6436180074515929,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "C5",
+          "loadings": {
+            "F1": -0.17683121792841175,
+            "F2": 0.5628588295788888,
+            "F3": 0.14726783085711379,
+            "F4": -0.020980912344920888,
+            "F5": -0.09651290553694794
+          },
+          "communality": 0.4353828330012047,
+          "primary_factor": "F2",
+          "primary_loading": 0.5628588295788888,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "E1",
+          "loadings": {
+            "F1": 0.06237222475101272,
+            "F2": -0.10192389836345044,
+            "F3": 0.5548142947638472,
+            "F4": 0.09245345871859295,
+            "F5": 0.09732976225819398
+          },
+          "communality": 0.3478093237358758,
+          "primary_factor": "F3",
+          "primary_loading": 0.5548142947638472,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "E2",
+          "loadings": {
+            "F1": -0.09465689529835204,
+            "F2": 0.023588946772798682,
+            "F3": 0.667083829136098,
+            "F4": 0.06377166080174959,
+            "F5": 0.06783892938331004
+          },
+          "communality": 0.5455019948580304,
+          "primary_factor": "F3",
+          "primary_loading": 0.667083829136098,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "E3",
+          "loadings": {
+            "F1": 0.08791452494029568,
+            "F2": 0.001741351091581362,
+            "F3": 0.4079793602700589,
+            "F4": 0.24124397137637527,
+            "F5": 0.30202800777096134
+          },
+          "communality": 0.44105495060894767,
+          "primary_factor": "F3",
+          "primary_loading": 0.4079793602700589,
+          "weak": false,
+          "cross_loading": true,
+          "second_factor": "F5"
+        },
+        {
+          "item": "E4",
+          "loadings": {
+            "F1": 0.001683241475295015,
+            "F2": 0.02050624845075231,
+            "F3": 0.5867220870552372,
+            "F4": 0.2989513813878931,
+            "F5": -0.0625498605258912
+          },
+          "communality": 0.541256546293085,
+          "primary_factor": "F3",
+          "primary_loading": 0.5867220870552372,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "E5",
+          "loadings": {
+            "F1": 0.15748656934434924,
+            "F2": 0.26566941689455115,
+            "F3": 0.41774360448149694,
+            "F4": 0.05877484525826224,
+            "F5": 0.21587033164947722
+          },
+          "communality": 0.40714621425565645,
+          "primary_factor": "F3",
+          "primary_loading": 0.41774360448149694,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "N1",
+          "loadings": {
+            "F1": 0.8324400598065468,
+            "F2": -0.0010288605003687431,
+            "F3": 0.10516949467707278,
+            "F4": -0.10740822193202056,
+            "F5": -0.047180816483509726
+          },
+          "communality": 0.6813983816837803,
+          "primary_factor": "F1",
+          "primary_loading": 0.8324400598065468,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "N2",
+          "loadings": {
+            "F1": 0.7796803550284728,
+            "F2": 0.012811923559841301,
+            "F3": 0.03140633454597985,
+            "F4": -0.09425266688426104,
+            "F5": 0.021928956484473912
+          },
+          "communality": 0.6080029766656211,
+          "primary_factor": "F1",
+          "primary_loading": 0.7796803550284728,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "N3",
+          "loadings": {
+            "F1": 0.7028520912829621,
+            "F2": -0.03311298754342162,
+            "F3": -0.10757474385580704,
+            "F4": 0.08215513687095742,
+            "F5": 0.01518532132612272
+          },
+          "communality": 0.5444748695225345,
+          "primary_factor": "F1",
+          "primary_loading": 0.7028520912829621,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "N4",
+          "loadings": {
+            "F1": 0.4708059983916153,
+            "F2": -0.13752468745872604,
+            "F3": -0.40486213569412816,
+            "F4": 0.10131357779870766,
+            "F5": 0.08431509059142653
+          },
+          "communality": 0.5058032854398344,
+          "primary_factor": "F1",
+          "primary_loading": 0.4708059983916153,
+          "weak": false,
+          "cross_loading": true,
+          "second_factor": "F3"
+        },
+        {
+          "item": "N5",
+          "loadings": {
+            "F1": 0.4834879686084927,
+            "F2": -0.0037629086900971055,
+            "F3": -0.20822839196560908,
+            "F4": 0.20314896534086788,
+            "F5": -0.1567766972773001
+          },
+          "communality": 0.3493156374366048,
+          "primary_factor": "F1",
+          "primary_loading": 0.4834879686084927,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "O1",
+          "loadings": {
+            "F1": 0.005538936738675809,
+            "F2": 0.06962775830136372,
+            "F3": 0.08967479706315515,
+            "F4": 0.013375374644809932,
+            "F5": 0.517750570569253
+          },
+          "communality": 0.31733901866063036,
+          "primary_factor": "F5",
+          "primary_loading": 0.517750570569253,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "O2",
+          "loadings": {
+            "F1": -0.18921414106111076,
+            "F2": 0.08091432806462553,
+            "F3": -0.06743427246242818,
+            "F4": -0.15710768494606742,
+            "F5": 0.4725228790015256
+          },
+          "communality": 0.2674515049165944,
+          "primary_factor": "F5",
+          "primary_loading": 0.4725228790015256,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "O3",
+          "loadings": {
+            "F1": 0.03199823491504283,
+            "F2": 0.010997852783727115,
+            "F3": 0.15333658292425625,
+            "F4": 0.0798873895855355,
+            "F5": 0.6191126918999945
+          },
+          "communality": 0.47464268219335504,
+          "primary_factor": "F5",
+          "primary_loading": 0.6191126918999945,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        },
+        {
+          "item": "O4",
+          "loadings": {
+            "F1": 0.1097715181662321,
+            "F2": -0.029528365331383945,
+            "F3": -0.33478476655231887,
+            "F4": 0.1712280303242998,
+            "F5": 0.36324627043795393
+          },
+          "communality": 0.2460346989546112,
+          "primary_factor": "F5",
+          "primary_loading": 0.36324627043795393,
+          "weak": false,
+          "cross_loading": true,
+          "second_factor": "F3"
+        },
+        {
+          "item": "O5",
+          "loadings": {
+            "F1": -0.12472406802863151,
+            "F2": 0.033200625743354986,
+            "F3": -0.10273971761173159,
+            "F4": -0.049420835269262706,
+            "F5": 0.5401031658652531
+          },
+          "communality": 0.2962836757006076,
+          "primary_factor": "F5",
+          "primary_loading": 0.5401031658652531,
+          "weak": false,
+          "cross_loading": false,
+          "second_factor": null
+        }
+      ],
+      "factor_correlations": [
+        [
+          1.0000000000000009, -0.19089354810860754, -0.21694268738203015, -0.04621941784735442,
+          -0.0014852540045735122
+        ],
+        [
+          -0.19089354810860754, 1.0000000000000016, 0.23651257880491788, 0.20206125045336942,
+          0.19794221839169904
+        ],
+        [
+          -0.21694268738203015, 0.23651257880491788, 1.0000000000000004, 0.3296994014003197,
+          0.16640184540422617
+        ],
+        [
+          -0.04621941784735442, 0.20206125045336942, 0.3296994014003197, 1.000000000000001,
+          0.19553389644374747
+        ],
+        [
+          -0.0014852540045735122, 0.19794221839169904, 0.16640184540422617, 0.19553389644374747,
+          1.0000000000000002
+        ]
+      ]
+    },
+    "alignment": [
+      {
+        "scale": "Agreeableness",
+        "items": ["A1", "A2", "A3", "A4", "A5"],
+        "factor": "F4",
+        "n_matching": 5,
+        "share_matching": 1.0,
+        "item_factors": { "A1": "F4", "A2": "F4", "A3": "F4", "A4": "F4", "A5": "F4" },
+        "shared_with": []
+      },
+      {
+        "scale": "Conscientiousness",
+        "items": ["C1", "C2", "C3", "C4", "C5"],
+        "factor": "F2",
+        "n_matching": 5,
+        "share_matching": 1.0,
+        "item_factors": { "C1": "F2", "C2": "F2", "C3": "F2", "C4": "F2", "C5": "F2" },
+        "shared_with": []
+      },
+      {
+        "scale": "Extraversion",
+        "items": ["E1", "E2", "E3", "E4", "E5"],
+        "factor": "F3",
+        "n_matching": 5,
+        "share_matching": 1.0,
+        "item_factors": { "E1": "F3", "E2": "F3", "E3": "F3", "E4": "F3", "E5": "F3" },
+        "shared_with": []
+      },
+      {
+        "scale": "Neuroticism",
+        "items": ["N1", "N2", "N3", "N4", "N5"],
+        "factor": "F1",
+        "n_matching": 5,
+        "share_matching": 1.0,
+        "item_factors": { "N1": "F1", "N2": "F1", "N3": "F1", "N4": "F1", "N5": "F1" },
+        "shared_with": []
+      },
+      {
+        "scale": "Openness",
+        "items": ["O1", "O2", "O3", "O4", "O5"],
+        "factor": "F5",
+        "n_matching": 5,
+        "share_matching": 1.0,
+        "item_factors": { "O1": "F5", "O2": "F5", "O3": "F5", "O4": "F5", "O5": "F5" },
+        "shared_with": []
+      }
+    ],
+    "sentence": "KMO = 0.85 (0.60 or more is the usual minimum for factor analysis). Parallel analysis suggests 5 factors. With 5 factors (as suggested), 5 of 5 scales have a factor of their own."
+  },
+  "sensitivity": [
+    {
+      "test": "two_groups",
+      "effect_measure": "d",
+      "min_effect": 0.10592620043294453,
+      "label": "below small",
+      "n_total": 2800,
+      "alpha": 0.05,
+      "power": 0.8,
+      "details": { "n1": 1400, "n2": 1400 },
+      "caveat": "The small, medium and large labels are Cohen's rough conventions. What counts as a meaningful effect depends on the field and the question.",
+      "sentence": "For a comparison of two groups (t-test) with groups of 1,400 and 1,400, the smallest effect detected with 80% power at α = 0.05 is d = 0.11 (below small on Cohen's scale)."
+    },
+    {
+      "test": "correlation",
+      "effect_measure": "r",
+      "min_effect": 0.05292387487955086,
+      "label": "below small",
+      "n_total": 2800,
+      "alpha": 0.05,
+      "power": 0.8,
+      "details": {},
+      "caveat": "The small, medium and large labels are Cohen's rough conventions. What counts as a meaningful effect depends on the field and the question.",
+      "sentence": "For a correlation with 2,800 respondents, the smallest effect detected with 80% power at α = 0.05 is |r| = 0.05 (below small on Cohen's scale)."
+    },
+    {
+      "test": "anova",
+      "effect_measure": "f",
+      "min_effect": 0.05869112732027581,
+      "label": "below small",
+      "n_total": 2800,
+      "alpha": 0.05,
+      "power": 0.8,
+      "details": { "k_groups": 3 },
+      "caveat": "The small, medium and large labels are Cohen's rough conventions. What counts as a meaningful effect depends on the field and the question.",
+      "sentence": "For a comparison of 3 groups (one-way ANOVA) with 2,800 respondents in equal groups, the smallest effect detected with 80% power at α = 0.05 is f = 0.06 (below small on Cohen's scale)."
+    }
+  ],
+  "fsqca": null,
+  "limitations": [
+    "Statistical checks cannot fix who was sampled. If respondents were recruited through personal networks or social media, results may not generalise.",
+    "The data has no completion-time column, so response-time screening was not performed.",
+    "Factor analysis uses Pearson correlations, which treat ordinal answers (such as 1–5 ratings) as continuous. This can understate how strongly items are related.",
+    "Flag thresholds are heuristics and conventions, not proven cut-offs. A flag is a reason to look at a respondent, not proof that they answered carelessly.",
+    "The composite score is a relative ranking within this file, not a probability. In SurveyDoctor's simulation study it separated straightlining and midpoint responding poorly; the longstring index is the one that catches those patterns.",
+    "Longstring assumes every respondent saw the questions in the order given in the schema. If the survey shuffled the question order, treat longstring results with caution."
+  ],
+  "warnings": [
+    "Mahalanobis distance was not computed for 364 respondents with at least one missing answer.",
+    "Even-odd consistency could not be computed for 6 respondents: their half-scale scores were identical across scales (e.g. the same answer everywhere) or fewer than 3 scales had both halves answered.",
+    "Psychometric synonyms were not computed: the data has 1 item pair(s) correlating above 0.60, and at least 3 are needed.",
+    "Person-total correlation could not be computed for 5 respondents who gave the same answer to every item or answered fewer than 3 items.",
+    "The psychsyn flag rule was not applied because the index could not be computed for any respondent.",
+    "Reliability for scale 'Agreeableness' used 2709 respondents who answered all its items; 91 respondents with a missing answer were left out.",
+    "Reliability for scale 'Conscientiousness' used 2707 respondents who answered all its items; 93 respondents with a missing answer were left out.",
+    "Reliability for scale 'Extraversion' used 2713 respondents who answered all its items; 87 respondents with a missing answer were left out.",
+    "Reliability for scale 'Neuroticism' used 2694 respondents who answered all its items; 106 respondents with a missing answer were left out.",
+    "Reliability for scale 'Openness' used 2726 respondents who answered all its items; 74 respondents with a missing answer were left out.",
+    "Factor analysis used 2436 respondents who answered all 25 analysed questions; 364 respondents with a missing answer were left out."
+  ]
+}

@@ -1,0 +1,26 @@
+/* IBM Plex, self-hosted (docs/design.md §3, Proposal A). The same WOFF2 files as the HTML
+   report; licence in ./fonts/LICENSE.txt (SIL Open Font Licence 1.1). */
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/IBMPlexSans-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/IBMPlexSans-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/IBMPlexMono-Regular.woff2') format('woff2');
+}

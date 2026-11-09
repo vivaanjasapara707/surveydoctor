@@ -30,6 +30,19 @@ uvicorn api.main:app --reload
 
 Then open http://localhost:8000/docs to try every endpoint. The API is stateless: each request carries its CSV, which is processed in memory and discarded. Limits: 10 MB and 50,000 rows per file. Set `ALLOWED_ORIGINS` (comma-separated) to the website's address when deploying.
 
+## Run the website locally
+
+Requires Node.js 20 or newer. Start the API first (above), then in a second terminal:
+
+```bash
+cd frontend
+npm install        # first time only
+npm run dev        # open the address it prints, usually http://localhost:5173
+npm test           # component tests
+```
+
+The website reads the API address from `VITE_API_URL` (default `http://localhost:8000`; see `frontend/.env.example`). After a change to the API's models, regenerate the TypeScript types with the API running: `npm run gen:api`.
+
 ## Regenerate the R reference values (optional)
 
 Requires R with the packages `careless`, `psych`, `GPArotation`, `QCA` and `jsonlite`. Without R, the reference tests skip.
